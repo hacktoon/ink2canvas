@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
+    <_name>Convert to canvas</_name>
+    <id>com.nerdson.canvas</id>
+	<dependency type="executable" location="extensions">canvas.py</dependency>
+	<dependency type="executable" location="extensions">inkex.py</dependency>
+	<_param name="texthelp" type="description">Converts an object to HTML5/canvas Javascript code.</_param>
+    <effect>
+		<object-type>all</object-type>
+		<effects-menu>
+			<submenu _name="Generate from Path"/>
+		</effects-menu>
+    </effect>
+    <script>
+        <command reldir="extensions" interpreter="python">canvas.py</command>
+    </script>
+</inkscape-extension>
