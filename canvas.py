@@ -20,8 +20,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 import inkex
 import re
 
-from simplestyle import parseStyle
-from simplepath import parsePath
+from lib.simplestyle import parseStyle
+from lib.simplepath import parsePath
 
 #overwrite debug method
 log = inkex.debug
