@@ -30,20 +30,21 @@ class Canvas(inkex.Effect):
     def __init__(self):
         inkex.Effect.__init__(self)
         self.code = ""
+        self.styles = {}
 
     def out(self, text):
         """Stores text to be written to a file later"""
         self.code += text + "\n"
 
     def set_color(self, rgb, a):
-        """Returns a rgba set"""
+        """Returns rgba or hex, depending of alpha value"""
+        if float(a) == 1.0:
+            return "'%s';" % rgb
         rgb = rgb[1:]  # removes the '#'
         r = int(rgb[:2], 16)
         g = int(rgb[2:4], 16)
         b = int(rgb[4:], 16)
         a = float(a)
-        if a == 1.0:
-            return "'rgb(%d, %d, %d)';" % (r, g, b)
         return "'rgba(%d, %d, %d, %.1f)';" % (r, g, b, a)
 
     def set_style(self, style):
@@ -78,32 +79,57 @@ class Canvas(inkex.Effect):
                 alpha = style["fill-opacity"]
             self.out("ctx.fillStyle = " + self.set_color(style["fill"], alpha))
 
+    def draw_rect(self, node):
+        """Draws svg:rect elements"""
+        x = float(node.get("x"))
+        y = float(node.get("y"))
+        w = float(node.get("width"))
+        h = float(node.get("height"))
+        self.out("ctx.rect(%.2f, %.2f, %.2f, %.2f);" % (x, y, w, h))
+        pass
+    
+    def draw_path(self, node):
+        """Draws svg:path elements"""
+        path = parsePath(node.get("d"))
+        for pt in path:
+            if pt[0] == "M":
+                self.out("ctx.moveTo(%.2f, %.2f);" % (pt[1][0], pt[1][1]))
+            elif pt[0] == "L":
+                self.out("ctx.lineTo(%.2f, %.2f);" % (pt[1][0], pt[1][1]))
+            elif pt[0] == "C":
+                x1, y1, x2, y2 = pt[1][0], pt[1][1], pt[1][2], pt[1][3]
+                x, y = pt[1][4], pt[1][5]
+                comm = "ctx.bezierCurveTo(%.2f, %.2f, %.2f, %.2f, %.2f, %.2f);"
+                self.out(comm % (x1, y1, x2, y2, x, y))
+
     def effect(self):
         """Applies the effect"""
-        
+
+        self.out("var draw = function(ctx) {")
         self.out("ctx = canvas.getContext(\"2d\");")
 
         for nid, node in self.selected.iteritems():
-            self.out("// " + node.get("id"))
+            
+            self.out("\n// " + node.get("id"))
             self.out("ctx.beginPath();\n")
-
+            
             #parse the element style properties into a dictionary
             style = parseStyle(node.get("style"))
             self.set_style(style)
-
-            #start the drawing
-            path = parsePath(node.get("d"))
-            for p in path:
-                if p[0] == "M":
-                    self.out("ctx.moveTo(%d, %d);" % (p[1][0], p[1][1]))
-                elif p[0] == "L":
-                    self.out("ctx.lineTo(%d, %d);" % (p[1][0], p[1][1]))
+            
+            #get the node type and call the appropriate method
+            if node.tag == inkex.addNS("path", "svg"):
+                self.draw_path(node)
+            elif node.tag == inkex.addNS("rect", "svg"):
+                self.draw_rect(node)
+            elif node.tag == inkex.addNS("text", "svg"):
+                pass
 
             #finish the path
-            if style.has_key("stroke"):
+            if style.has_key("stroke") and style["stroke"] != "none":
                 self.out("\nctx.stroke();")
 
-            if style.has_key("fill"):
+            if style.has_key("fill") and style["fill"] != "none":
                 self.out("\nctx.fill();")
 
             self.out("\nctx.closePath();")
@@ -111,8 +137,8 @@ class Canvas(inkex.Effect):
             #reseting globalAlpha value
             if style.has_key("opacity") and float(style["opacity"]) < 1:
                 self.out("ctx.globalAlpha = 1;")
-
-            #if node.tag == inkex.addNS("text", "svg"):
+        
+        self.out("\n};")
 
         f = open("canvas.js", "w")
         f.write(self.code)
