@@ -46,33 +46,31 @@ class Canvas(inkex.Effect):
 
         #stroke properties
         if style.has_key("stroke-width"):
-            self.out("ctx.lineWidth = " + inkex.unittouu(style["stroke-width"]) + ";")
+            self.out("ctx.lineWidth = %d;" % inkex.unittouu(style["stroke-width"]))
 
         if style.has_key("stroke-linecap"):
-            self.out("ctx.lineCap = " + style["stroke-linecap"] + ";")
+            self.out("ctx.lineCap = %d;" % style["stroke-linecap"])
 
         if style.has_key("stroke-linejoin"):
-            self.out("ctx.lineJoin = " + style["stroke-linejoin"] + ";")
+            self.out("ctx.lineJoin = %d;" % style["stroke-linejoin"])
 
         if style.has_key("stroke-miterlimit"):
-            self.out("ctx.miterLimit = " + style["stroke-miterlimit"] + ";")
+            self.out("ctx.miterLimit = %d;" % style["stroke-miterlimit"])
 
-        if style.has_key("opacity"):
-            if int(style["opacity"]) < 1:
-                self.out("ctx.globalAlpha = " + style["opacity"] + ";")
+        if style.has_key("opacity") and int(style["opacity"]) < 1:
+            self.out("ctx.globalAlpha = %d;" % style["opacity"])
 
         # stroke color
-        if style.has_key("stroke"):  # stroke may be 'unset'
-            if style["stroke"] != "none":
-                r, g, b = self.rgb(style["stroke"])
-                if style.has_key("stroke-opacity"):
-                    alpha = int(style["stroke-opacity"])
-                    if alpha == 1:
-                        self.out("ctx.strokeStyle = 'rgb(%d, %d, %d)';" % (r, g, b))
-                    else:
-                        self.out("ctx.strokeStyle = 'rgba(%d, %d, %d, %d)';" % (r, g, b, alpha))
-                else:
+        if style.has_key("stroke") and style["stroke"] != "none": # stroke may be 'unset'
+            r, g, b = self.rgb(style["stroke"])
+            if style.has_key("stroke-opacity"):
+                alpha = int(style["stroke-opacity"])
+                if alpha == 1:
                     self.out("ctx.strokeStyle = 'rgb(%d, %d, %d)';" % (r, g, b))
+                else:
+                    self.out("ctx.strokeStyle = 'rgba(%d, %d, %d, %d)';" % (r, g, b, alpha))
+            else:
+                self.out("ctx.strokeStyle = 'rgb(%d, %d, %d)';" % (r, g, b))
 
         # fill color
         if style.has_key("fill"): # fill may be 'unset'
