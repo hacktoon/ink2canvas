@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 '''
-Copyright (C) 2009 Karlisson Bezerra, contato@nerdson.com
+Copyright (C) 2010 Karlisson Bezerra, contato@nerdson.com
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -36,16 +36,41 @@ class Canvas(inkex.Effect):
         """Stores text to be written to a file later"""
         self.code += text + "\n"
 
+    def set_gradient(self, href):
+        g = self.xpathSingle("//svg:linearGradient[@id='%s']" % href)
+        x1 = float(g.get("x1"))
+        y1 = float(g.get("y1"))
+        x2 = float(g.get("x2"))
+        y2 = float(g.get("y2"))
+        comm = "var %s = ctx.createLinearGradient(%.2f,%.2f,%.2f,%.2f);"
+        self.out(comm % (href, x1, y1, x2, y2))
+        #get the gradient stops
+        gstops = g.get(inkex.addNS("href", "xlink"))
+        gstops = self.xpathSingle("//svg:linearGradient[@id='%s']" % gstops[1:])
+        for stop in gstops:
+            style = parseStyle(stop.get("style"))
+            stop_color = style["stop-color"]
+            opacity = style["stop-opacity"]
+            color = self.set_color(stop_color, opacity)
+            pos = float(stop.get("offset"))
+            self.out("%s.addColorStop(%.2f, %s);" % (href, pos, color))
+        return href
+
     def set_color(self, rgb, a):
         """Returns rgba or hex, depending of alpha value"""
+
+        #if references a gradient definition. Format: url(#linearGrad)
+        if rgb[:3] == "url":
+            return self.set_gradient(rgb[5:-1])
+
         if float(a) == 1.0:
-            return "'%s';" % rgb
+            return "'%s'" % rgb
         rgb = rgb[1:]  # removes the '#'
         r = int(rgb[:2], 16)
         g = int(rgb[2:4], 16)
         b = int(rgb[4:], 16)
         a = float(a)
-        return "'rgba(%d, %d, %d, %.1f)';" % (r, g, b, a)
+        return "'rgba(%d, %d, %d, %.1f)'" % (r, g, b, a)
 
     def set_style(self, style):
         """Sets the style methods"""
@@ -54,7 +79,7 @@ class Canvas(inkex.Effect):
 
         #stroke properties
         if style.has_key("stroke-width"):
-            self.out("ctx.lineWidth = %d;" % inkex.unittouu(style["stroke-width"]))
+            self.out("ctx.lineWidth = %.2f;" % inkex.unittouu(style["stroke-width"]))
 
         if style.has_key("stroke-linecap"):
             self.out("ctx.lineCap = '%s';" % style["stroke-linecap"])
@@ -70,14 +95,14 @@ class Canvas(inkex.Effect):
             alpha = 1
             if style.has_key("stroke-opacity"):
                 alpha = style["stroke-opacity"]
-            self.out("ctx.strokeStyle = " + self.set_color(style["stroke"], alpha))
+            self.out("ctx.strokeStyle = %s;" % self.set_color(style["stroke"], alpha))
 
         # fill color
         if style.has_key("fill") and style["fill"] != "none":
             alpha = 1
             if style.has_key("fill-opacity"):
                 alpha = style["fill-opacity"]
-            self.out("ctx.fillStyle = " + self.set_color(style["fill"], alpha))
+            self.out("ctx.fillStyle = %s;" % self.set_color(style["fill"], alpha))
 
     def draw_rect(self, node):
         """Draws svg:rect elements"""
@@ -195,7 +220,7 @@ class Canvas(inkex.Effect):
         for nid, node in self.selected.iteritems():
             
             self.out("\n// " + node.get("id"))
-            self.out("ctx.beginPath();\n")
+            self.out("ctx.beginPath();")
 
             #parse the element style properties into a dictionary
             style = parseStyle(node.get("style"))
@@ -210,13 +235,13 @@ class Canvas(inkex.Effect):
                 pass
 
             if style.has_key("fill") and style["fill"] != "none":
-                self.out("\nctx.fill();")
+                self.out("ctx.fill();")
 
             #finish the path
             if style.has_key("stroke") and style["stroke"] != "none":
-                self.out("\nctx.stroke();")
+                self.out("ctx.stroke();")
 
-            self.out("\nctx.closePath();")
+            self.out("ctx.closePath();")
 
             #reseting globalAlpha value
             if style.has_key("opacity") and float(style["opacity"]) < 1:
