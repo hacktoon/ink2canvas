@@ -30,7 +30,7 @@ class Canvas:
     def __init__(self, width, height, context = "ctx"):
         self.obj = context
         self.code = []  #stores the code
-        self.cache = {}   #caches the previous style applied
+        self.styleCache = {}  #stores the previous style applied
         self.width = width
         self.height = height
     
@@ -50,11 +50,11 @@ class Canvas:
 
     def equalStyle(self, style, key):
         """Checks if the last style used is the same or there's no style yet"""
-        if not self.cache.has_key(key):
+        if not self.styleCache.has_key(key):
             return False
         if not style.has_key(key):
             return True
-        return style[key] == self.cache[key]
+        return style[key] == self.styleCache[key]
     
     def beginPath(self, elem):
         self.write("\n//Element %s" % elem)
@@ -143,7 +143,7 @@ class Canvas:
     
     def globalAlpha(self, style):
         if not style.has_key("opacity"):
-            if self.cache.has_key("opacity") and float(self.cache["opacity"] < 1):
+            if self.styleCache.has_key("opacity") and float(self.styleCache["opacity"] < 1):
                 self.write("%s.globalAlpha = 1;" % self.obj)
             return
         if float(style["opacity"]) == 1 or self.equalStyle(style, "opacity"):
@@ -292,18 +292,17 @@ class Ink2Canvas(inkex.Effect):
         self.currentPosition = data[0], data[1]
 
     def pathCurveTo(self, ctx, data):
-        current = data[4], data[5]
         x1, y1, x2, y2 = data[0], data[1], data[2], data[3]
         x, y = data[4], data[5]
         ctx.bezierCurveTo(x1, y1, x2, y2, x, y)
-        self.currentPosition = x2, y2
+        self.currentPosition = x, y
 
     def pathArcTo(self, ctx, data):
         #http://www.w3.org/TR/SVG11/implnote.html#ArcImplementationNotes
         # code adapted from http://code.google.com/p/canvg/
         import math
-        x1 = current[0]
-        y1 = current[1]
+        x1 = self.currentPosition[0]
+        y1 = self.currentPosition[1]
         x2 = data[5]
         y2 = data[6]
         rx = data[0]
@@ -375,7 +374,8 @@ class Ink2Canvas(inkex.Effect):
         for pt in path:
             cmm = pt[0]
             data = pt[1]
-            pathCommand[cmm](ctx, data)
+            if pathCommand.has_key(cmm):
+                pathCommand[cmm](ctx, data)
     
     def drawPath(self, ctx, node):
         """Draws svg:path elements"""
