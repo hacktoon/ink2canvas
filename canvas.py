@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 '''
 
 import inkex
-from simplestyle import parseStyle
+import simplestyle 
 from simplepath import parsePath
 
 log = inkex.debug  #alias to debug method
@@ -81,6 +81,8 @@ class Canvas:
     
     def getColor(self, rgb, a):
         #removes '#'
+        if simplestyle.svgcolors.has_key(rgb):
+            rgb = simplestyle.svgcolors[rgb]
         rgb = rgb[1:]
         r = int(rgb[:2], 16)
         g = int(rgb[2:4], 16)
@@ -111,7 +113,7 @@ class Canvas:
         gstops = g.get(inkex.addNS("href", "xlink"))
         gstops = inkex.xpathSingle("//svg:linearGradient[@id='%s']" % gstops[1:])
         for stop in gstops:
-            style = parseStyle(stop.get("style"))
+            style = simplestyle.parseStyle(stop.get("style"))
             stop_color = style["stop-color"]
             opacity = style["stop-opacity"]
             color = self.getColor(stop_color, opacity)
@@ -201,10 +203,10 @@ class Canvas:
         self.write("%s.scale(%.2f, %.2f);" % (self.obj, rx, ry))
         
     def closePath(self):
-        if self.style.has_key("stroke") and self.style["stroke"] != "none":
-            self.write("%s.stroke();" % self.obj)
         if self.style.has_key("fill") and self.style["fill"] != "none":
             self.write("%s.fill();" % self.obj)
+        if self.style.has_key("stroke") and self.style["stroke"] != "none":
+            self.write("%s.stroke();" % self.obj)
         #self.write("%s.closePath();" % self.obj)
 
 
@@ -216,7 +218,9 @@ class Ink2Canvas(inkex.Effect):
 
     def setStyle(self, ctx, node):
         """Translates style properties names into method calls"""
-        style = parseStyle(node.get("style"))
+        style = simplestyle.parseStyle(node.get("style"))
+        #remove any trailing space in dict keys/values
+        style = dict([(str.strip(k), str.strip(v)) for k,v in style.iteritems()])
         ctx.style = style
         for key in style:
             tmp_list = map(str.capitalize, key.split("-"))
@@ -268,7 +272,7 @@ class Ink2Canvas(inkex.Effect):
         ry = float(node.get("ry"))
         args = [ctx, cx, cy, rx, ry]
         self.drawAbstractShape(ctx, node, self.ellipseHelper, args)
-        
+    
     def pathMoveTo(self, ctx, data):
         ctx.moveTo(data[0], data[1])
         self.currentPosition = data[0], data[1]
@@ -367,12 +371,23 @@ class Ink2Canvas(inkex.Effect):
     def drawPath(self, ctx, node):
         #path data is already converted to float
         path = parsePath(node.get("d"))
-        args = [ctx, path]
         #need to call another method to draw path commands
-        self.drawAbstractShape(ctx, node, self.drawPathHelper, args)
+        self.drawAbstractShape(ctx, node, self.drawPathHelper, [ctx, path])
+
+    def drawPolygon(self, ctx, node):
+        points = node.get("points").strip().split(" ")
+        points = map(lambda x: x.split(","), points)
+        comm = []
+        for pt in points:           #creating path command similar
+            pt = map(float, pt)
+            comm.append(["L", pt])
+        comm[0][0] = "M"            #first command must be a 'M' => moveTo
+        self.drawAbstractShape(ctx, node, self.drawPathHelper, [ctx, comm])
+    
+    def drawPolyline(self, ctx, node):
+        self.drawPolygon(ctx, node)
 
     def drawText(self, ctx, node):
-        style = parseStyle(node.get("style"))
         self.setStyle(ctx, node)
         x = float(node.get("x"))
         y = float(node.get("y"))

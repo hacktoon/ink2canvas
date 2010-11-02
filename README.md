@@ -20,12 +20,12 @@ Open Inkscape file and choose HTML5 output option at "Save as" menu.
 * Add text properties support
 * Add missing path commands
 * Refactor and fix style methods error handling
-* Create polylines and polygons methods
 * Get clips and masks to work
 * Transform matrix data handling (translating, rotating, scaling, etc)
 
 ### Working
 * Rects, circles, ellipses, paths (partial), text (basic)
+* Polylines and polygons
 * Fill and stroke, gradient (initial)
 * Iterating through groups and layers
 
