@@ -252,6 +252,23 @@ class Ink2Canvas(inkex.Effect):
         args = [cx, cy, r, 0, math.pi*2, True]
         self.drawAbstractShape(ctx, node, ctx.arc, args)
 
+    def ellipseHelper(self, ctx, cx, cy, rx, ry):
+        import math
+        KAPPA = 4 * ((math.sqrt(2) - 1) / 3)
+        ctx.moveTo(cx, cy - ry)
+        ctx.bezierCurveTo(cx + (KAPPA * rx), cy - ry,  cx + rx, cy - (KAPPA * ry), cx + rx, cy)
+        ctx.bezierCurveTo(cx + rx, cy + (KAPPA * ry), cx + (KAPPA * rx), cy + ry, cx, cy + ry)
+        ctx.bezierCurveTo(cx - (KAPPA * rx), cy + ry, cx - rx, cy + (KAPPA * ry), cx - rx, cy)
+        ctx.bezierCurveTo(cx - rx, cy - (KAPPA * ry), cx - (KAPPA * rx), cy - ry, cx, cy - ry)
+
+    def drawEllipse(self, ctx, node):
+        cx = float(node.get("cx"))
+        cy = float(node.get("cy"))
+        rx = float(node.get("rx"))
+        ry = float(node.get("ry"))
+        args = [ctx, cx, cy, rx, ry]
+        self.drawAbstractShape(ctx, node, self.ellipseHelper, args)
+        
     def pathMoveTo(self, ctx, data):
         ctx.moveTo(data[0], data[1])
         self.currentPosition = data[0], data[1]
