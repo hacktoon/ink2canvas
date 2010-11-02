@@ -80,13 +80,7 @@ class Canvas:
         self.write("%s.addColorStop(%.2f, %s);" % (href, pos, color))
     
     def getColor(self, rgb, a):
-        #removes '#'
-        if simplestyle.svgcolors.has_key(rgb):
-            rgb = simplestyle.svgcolors[rgb]
-        rgb = rgb[1:]
-        r = int(rgb[:2], 16)
-        g = int(rgb[2:4], 16)
-        b = int(rgb[4:], 16)
+        r, g, b = simplestyle.parseColor(rgb)
         a = float(a)
         if a < 1:
             return "'rgba(%d, %d, %d, %.1f)'" % (r, g, b, a)
@@ -373,7 +367,15 @@ class Ink2Canvas(inkex.Effect):
         path = parsePath(node.get("d"))
         #need to call another method to draw path commands
         self.drawAbstractShape(ctx, node, self.drawPathHelper, [ctx, path])
-
+    
+    def drawLine(self, ctx, node):
+        x1 = float(node.get("x1"))
+        y1 = float(node.get("y1"))
+        x2 = float(node.get("x2"))
+        y2 = float(node.get("y2"))
+        path = [["M", [x1, y1]], ["L", [x2, y2]]]
+        self.drawAbstractShape(ctx, node, self.drawPathHelper, [ctx, path])
+    
     def drawPolygon(self, ctx, node):
         points = node.get("points").strip().split(" ")
         points = map(lambda x: x.split(","), points)
