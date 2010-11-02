@@ -10,7 +10,6 @@
         <_filetypename>HTML 5 (*.html)</_filetypename>
         <_filetypetooltip>HTML 5 canvas code</_filetypetooltip>
     </output>
-	
     <script>
         <command reldir="extensions" interpreter="python">canvas.py</command>
     </script>
