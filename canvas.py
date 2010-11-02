@@ -30,6 +30,7 @@ class Canvas:
     def __init__(self, width, height, context = "ctx"):
         self.obj = context
         self.code = []  #stores the code
+        self.style = {}
         self.styleCache = {}  #stores the previous style applied
         self.width = width
         self.height = height
@@ -38,20 +39,27 @@ class Canvas:
         self.code.append("\t" + text + "\n")
     
     def output(self):
-        #temporary ouput for faster tests
-        f = open("canvas.html", "w")
-        f.write("<html><body>\n")
-        f.write("<canvas id='canvas' width='%.2f' height='%.2f'>" % (self.width, self.height))
-        f.write("</canvas>\n<script>\n")
-        f.write('var %s = document.getElementById("canvas").getContext("2d");' % self.obj)
-        f.writelines(self.code)
-        f.write("\n</script></body></html>")
-        f.close()
+        html = """
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Inkscape Output</title>
+        </head>
+        <body>
+            <canvas id='canvas' width='%d' height='%d'></canvas>
+            <script>
+            var %s = document.getElementById("canvas").getContext("2d");
+            %s
+            </script>
+        </body>
+        </html>
+        """
+        return html % (self.width, self.height, self.obj, "".join(self.code))
 
     def equalStyle(self, style, key):
         """Checks if the last style used is the same or there's no style yet"""
-        if not self.styleCache.has_key(key):
-            return False
+        if self.styleCache.has_key(key):
+            return True
         if not style.has_key(key):
             return True
         return style[key] == self.styleCache[key]
@@ -60,124 +68,92 @@ class Canvas:
         self.write("\n//Element %s" % elem)
         self.write("%s.beginPath();" % self.obj)
     
-    def closePath(self):
-        self.write("%s.closePath();" % self.obj)
-        
-    def set_gradient(self, href):
+    def createLinearGradient(self, href, x1, y1, x2, y2):
+        data = (self.obj, href, x1, y1, x2, y2)
+        self.write("var %s = %s.createLinearGradient(%.2f,%.2f,%.2f,%.2f);" % data)
+
+    def createRadialGradient(self, href, cx1, cy1, rx, cx2, cy2, ry):
+        data = (self.obj, href, cx1, cy1, rx, cx2, cy2, ry)
+        self.write("var %s = %s.createRadialGradient(%.2f,%.2f,%.2f,%.2f,%.2f,%.2f);" % data)
+
+    def addColorStop(self, href, pos, color):
+        self.write("%s.addColorStop(%.2f, %s);" % (href, pos, color))
+    
+    def getColor(self, rgb, a):
+        #removes '#'
+        rgb = rgb[1:]
+        r = int(rgb[:2], 16)
+        g = int(rgb[2:4], 16)
+        b = int(rgb[4:], 16)
+        a = float(a)
+        if a < 1:
+            return "'rgba(%d, %d, %d, %.1f)'" % (r, g, b, a)
+        else:
+            return "'rgb(%d, %d, %d)'" % (r, g, b)
+    
+    def setGradient(self, href):
         g = inkex.xpathSingle("//*[@id='%s']" % href)
-        if g and g.get("r"):
+        if not g:
+            return
+        if g.get("r"):
             cx = float(g.get("cx"))
             cy = float(g.get("cy"))
             r = float(g.get("r"))
-            c.createRadialGradient(href, cx, cy, r, cx, cy, r)
+            self.createRadialGradient(href, cx, cy, r, cx, cy, r)
         else:
             x1 = float(g.get("x1"))
             y1 = float(g.get("y1"))
             x2 = float(g.get("x2"))
             y2 = float(g.get("y2"))
-            c.createLinearGradient(href, x1, y1, x2, y2)
+            self.createLinearGradient(href, x1, y1, x2, y2)
         
-        #get the gradient stops
+        #get gradient color stops
         gstops = g.get(inkex.addNS("href", "xlink"))
         gstops = inkex.xpathSingle("//svg:linearGradient[@id='%s']" % gstops[1:])
         for stop in gstops:
             style = parseStyle(stop.get("style"))
             stop_color = style["stop-color"]
             opacity = style["stop-opacity"]
-            color = self.set_color(stop_color, opacity)
+            color = self.getColor(stop_color, opacity)
             pos = float(stop.get("offset"))
-            c.addColorStop(href, pos, color)
+            self.addColorStop(href, pos, color)
         return href
 
-    def set_color(self, rgb, a):
+    def fillHelper(self, rgb, a):
         """Returns rgba or hex, depending on alpha value"""
         #if references a gradient definition. Format: url(#linearGrad)
-        if rgb[:3] == "url":
-            return self.set_gradient(rgb[5:-1])
-        if float(a) == 1.0:
-            return "'%s'" % rgb
+        if "url(" in rgb:
+            return self.getGradient(rgb[5:-1])
+        return self.getColor(rgb, a)
 
-        #removes the '#'
-        rgb = rgb[1:]
-        r = int(rgb[:2], 16)
-        g = int(rgb[2:4], 16)
-        b = int(rgb[4:], 16)
-        a = float(a)
-        return "'rgba(%d, %d, %d, %.1f)'" % (r, g, b, a)
+    def setOpacity(self, value):
+        self.write("%s.globalAlpha = %.1f;" % (self.obj, float(value)))
 
-    def stroke(self, style):
-        if style.has_key("stroke") and style["stroke"] != "none":
-            self.write("%s.stroke();" % self.obj)
-    
-    def fill(self, style):
-        if style.has_key("fill") and style["fill"] != "none":
-            self.write("%s.fill();" % self.obj)
-    
-    def fillStyle(self, style):
-        if not style.has_key("fill"):
-            return
-        if style["fill"] == "none":
-            return
-        if self.equalStyle(style, "fill"):
-            if self.equalStyle(style, "fill-opacity"):
-                return
-        elif style.has_key("fill-opacity"):
-            a = style["fill-opacity"]
+    def setFill(self, value):
+        if self.style.has_key("fill-opacity"):
+            a = self.style["fill-opacity"]
         else:
             a = 1
-        self.write("%s.fillStyle = %s;" % (self.obj, self.set_color(style["fill"], a)))
+        self.write("%s.fillStyle = %s;" % (self.obj, self.fillHelper(value, a)))
     
-    def strokeStyle(self, style):
-        if not style.has_key("stroke"):
-            return
-        if style["stroke"] == "none":
-            return
-        if self.equalStyle(style, "stroke"):
-            if self.equalStyle(style, "stroke-opacity"):
-                return
-        elif style.has_key("stroke-opacity"):
-            a = style["stroke-opacity"]
+    def setStroke(self, value):
+        if self.style.has_key("stroke-opacity"):
+            a = self.style["stroke-opacity"]
         else:
             a = 1
-        self.write("%s.strokeStyle = %s;" % (self.obj, self.set_color(style["stroke"], a)))
+        self.write("%s.strokeStyle = %s;" % (self.obj, self.fillHelper(value, a)))
     
-    def globalAlpha(self, style):
-        if not style.has_key("opacity"):
-            if self.styleCache.has_key("opacity") and float(self.styleCache["opacity"] < 1):
-                self.write("%s.globalAlpha = 1;" % self.obj)
-            return
-        if float(style["opacity"]) == 1 or self.equalStyle(style, "opacity"):
-            return
-        self.write("%s.globalAlpha = %.1f;" % (self.obj, float(style["opacity"])))
+    def setStrokeWidth(self, value):
+        self.write("%s.lineWidth = %.2f;" % (self.obj, inkex.unittouu(value)))
     
-    def lineWidth(self, style):
-        if not style.has_key("stroke-width"):
-            return
-        if self.equalStyle(style, "stroke-width"):
-            return
-        data = (self.obj, inkex.unittouu(style["stroke-width"]))
-        self.write("%s.lineWidth = %.2f;" % (data))
+    def setStrokeLinecap(self, value):
+        self.write("%s.lineCap = '%s';" % (self.obj, value))
     
-    def lineCap(self, style):
-        if not style.has_key("stroke-linecap"):
-            return
-        if self.equalStyle(style, "stroke-linecap"):
-            return
-        self.write("%s.lineCap = '%s';" % (self.obj, style["stroke-linecap"]))
-    
-    def lineJoin(self, style):
-        if not style.has_key("stroke-linejoin"):
-            return
-        if self.equalStyle(style, "stroke-linejoin"):
-            return
-        self.write("%s.lineJoin = '%s';" % (self.obj, style["stroke-linejoin"]))
+    def setStrokeLinejoin(self, value):
+        self.write("%s.lineJoin = '%s';" % (self.obj, value))
 
-    def miterLimit(self, style):
-        if not style.has_key("stroke-miterlimit"):
-            return
-        if self.equalStyle(style, "stroke-miterlimit"):
-            return
-        self.write("%s.miterLimit = %s;" % (self.obj, style["stroke-miterlimit"]))
+    def setStrokeMiterlimit(self, value):
+        self.write("%s.miterLimit = %s;" % (self.obj, value))
     
     def moveTo(self, x, y):
         self.write("%s.moveTo(%.2f, %.2f);" % (self.obj, x, y))
@@ -212,17 +188,6 @@ class Canvas:
         data = (self.obj, x, y, r, a1, a2, flag)
         self.write("%s.arc(%.2f, %.2f, %.2f, %.2f, %.2f, %d);" % data)
 
-    def createLinearGradient(self, href, x1, y1, x2, y2):
-        data = (self.obj, href, x1, y1, x2, y2)
-        self.write("var %s = %s.createLinearGradient(%.2f,%.2f,%.2f,%.2f);" % data)
-
-    def createRadialGradient(self, href, cx1, cy1, rx, cx2, cy2, ry):
-        data = (self.obj, href, cx1, cy1, rx, cx2, cy2, ry)
-        self.write("var %s = %s.createRadialGradient(%.2f,%.2f,%.2f,%.2f,%.2f,%.2f);" % data)
-
-    def addColorStop(self, href, pos, color):
-        self.write("%s.addColorStop(%.2f, %s);" % (href, pos, color))
-        
     def fillText(self, text, x, y):
         self.write("%s.fillText(\"%s\", %.2f, %.2f);" % (self.obj, text, x, y))
 
@@ -233,55 +198,59 @@ class Canvas:
         self.write("%s.rotate(%.2f);" % (self.obj, angle))
 
     def scale(self, rx, ry):
-        if rx == ry == 1:
-            return
         self.write("%s.scale(%.2f, %.2f);" % (self.obj, rx, ry))
+        
+    def closePath(self):
+        if self.style.has_key("stroke") and self.style["stroke"] != "none":
+            self.write("%s.stroke();" % self.obj)
+        if self.style.has_key("fill") and self.style["fill"] != "none":
+            self.write("%s.fill();" % self.obj)
+        #self.write("%s.closePath();" % self.obj)
 
 
 class Ink2Canvas(inkex.Effect):
     def __init__(self):
         inkex.Effect.__init__(self)
-        self.drawMethod = {}
-        #stores the current "pen" position
-        self.currentPosition = []
+        self.currentPosition = []  #stores the current "pen" position
+        self.content = ""
 
-    def setStyle(self, ctx, style):
-        #parse the element style properties into a dictionary
-        ctx.globalAlpha(style)
-        ctx.lineWidth(style)
-        ctx.lineCap(style)
-        ctx.lineJoin(style)
-        ctx.miterLimit(style)
-        ctx.strokeStyle(style)
-        ctx.fillStyle(style)
-    
-    def setTextStyle(self, ctx, style):
-        pass
+    def setStyle(self, ctx, node):
+        """Translates style properties names into method calls"""
+        style = parseStyle(node.get("style"))
+        ctx.style = style
+        for key in style:
+            tmp_list = map(str.capitalize, key.split("-"))
+            method = "set" + "".join(tmp_list)
+            if hasattr(ctx, method) and style[key] != "none":
+                getattr(ctx, method)(style[key])
+        #saves style to compare in next iteration
+        ctx.styleCache = style
 
     def drawAbstractShape(self, ctx, node, callback, args):
-        """Gets the node type and call the given method"""
-        style = parseStyle(node.get("style"))
-        
+        """Gets the node type and calls the given method"""
         ctx.beginPath(node.get("id"))
-        self.setStyle(ctx, style)
+        self.setStyle(ctx, node)
         #calling the appropriate method, expands "args" in parameters to callback
         callback(*args)
-        ctx.fill(style)
-        ctx.stroke(style)
-        #saves style to compare in next iteration
-        ctx.prev_style = style
         ctx.closePath()
 
     def drawRect(self, ctx, node):
-        """Draws svg:rect elements"""
         x = float(node.get("x"))
         y = float(node.get("y"))
         w = float(node.get("width"))
         h = float(node.get("height"))
         rx = float(node.get("rx"))
         ry = float(node.get("ry"))
-        args = [x, y, w, h, rx, ry]
+        args = [x, y, h, w, rx, ry]
         self.drawAbstractShape(ctx, node, ctx.rect, args)
+
+    def drawCircle(self, ctx, node):
+        import math
+        cx = float(node.get("cx"))
+        cy = float(node.get("cy"))
+        r = float(node.get("r"))
+        args = [cx, cy, r, 0, math.pi*2, True]
+        self.drawAbstractShape(ctx, node, ctx.arc, args)
 
     def pathMoveTo(self, ctx, data):
         ctx.moveTo(data[0], data[1])
@@ -367,58 +336,58 @@ class Ink2Canvas(inkex.Effect):
         self.currentPosition = x2, y2
 
     def drawPathHelper(self, ctx, path):
+        """Draws path commands"""
         pathCommand = {"M": self.pathMoveTo,
                        "L": self.pathLineTo,
                        "C": self.pathCurveTo,
                        "A": self.pathArcTo}
         for pt in path:
-            cmm = pt[0]
+            comm = pt[0]
             data = pt[1]
-            if pathCommand.has_key(cmm):
-                pathCommand[cmm](ctx, data)
+            if pathCommand.has_key(comm):
+                pathCommand[comm](ctx, data)
     
     def drawPath(self, ctx, node):
-        """Draws svg:path elements"""
         #path data is already converted to float
         path = parsePath(node.get("d"))
         args = [ctx, path]
+        #need to call another method to draw path commands
         self.drawAbstractShape(ctx, node, self.drawPathHelper, args)
 
     def drawText(self, ctx, node):
         style = parseStyle(node.get("style"))
-        self.setTextStyle(ctx, style)
+        self.setStyle(ctx, node)
         x = float(node.get("x"))
         y = float(node.get("y"))
         ctx.fillText("Teste", x, y)
 
-    def iterate(self, ctx, node):
-        """Recursive method to iterate through elements"""
+    def drawG(self, ctx, node):
+        """Recursive method to iterate through SVG groups"""
         #get layer label, if exists
         group = node.get(inkex.addNS("groupmode", "inkscape"))
         if group == "layer":
             ctx.write("\n//" + node.get(inkex.addNS("label", "inkscape")))
         
         for child in node:
-            if self.drawMethod.has_key(child.tag):
-                self.drawMethod[child.tag](ctx, child)
+            #remove namespace part from {http://www.w3.org/2000/svg}path
+            tagtype = child.tag.split("}")[1]
+            method = "draw" + tagtype.capitalize()  #"draw" + "Path"
+            if hasattr(self, method):
+                getattr(self, method)(ctx, child)
+
+    def output(self):
+        import sys
+        sys.stdout.write(self.content)
 
     def effect(self):
         """Applies the effect"""
-       
-        #define callbacks for drawing methods
-        self.drawMethod[inkex.addNS("path", "svg")] = self.drawPath
-        self.drawMethod[inkex.addNS("rect", "svg")] = self.drawRect
-        self.drawMethod[inkex.addNS("text", "svg")] = self.drawText
-        self.drawMethod[inkex.addNS("g", "svg")] = self.iterate
-        
         svg = self.document.getroot()
         width = inkex.unittouu(svg.get("width"))
         height = inkex.unittouu(svg.get("height"))
-        
         ctx = Canvas(width, height)
-        self.iterate(ctx, svg)
-
-        ctx.output()
+        #starts parsing groups passing root element
+        self.drawG(ctx, svg)
+        self.content = ctx.output()
 
 ink = Ink2Canvas()
 ink.affect()
