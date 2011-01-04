@@ -39,6 +39,7 @@ class Canvas:
         self.code.append("\t" + text + "\n")
     
     def output(self):
+        from textwrap import dedent
         html = """
         <!DOCTYPE html>
         <html>
@@ -54,7 +55,7 @@ class Canvas:
         </body>
         </html>
         """
-        return html % (self.width, self.height, self.obj, "".join(self.code))
+        return dedent(html) % (self.width, self.height, self.obj, "".join(self.code))
 
     def equalStyle(self, style, key):
         """Checks if the last style used is the same or there's no style yet"""
