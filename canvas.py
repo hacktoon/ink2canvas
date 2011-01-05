@@ -26,7 +26,7 @@ log = inkex.debug  #alias to debug method
 
 class Canvas:
     """Canvas API helper class"""
-    
+
     def __init__(self, width, height, context = "ctx"):
         self.obj = context
         self.code = []  #stores the code
@@ -34,10 +34,10 @@ class Canvas:
         self.styleCache = {}  #stores the previous style applied
         self.width = width
         self.height = height
-    
+
     def write(self, text):
         self.code.append("\t" + text + "\n")
-    
+
     def output(self):
         from textwrap import dedent
         html = """
@@ -59,16 +59,16 @@ class Canvas:
 
     def equalStyle(self, style, key):
         """Checks if the last style used is the same or there's no style yet"""
-        if self.styleCache.has_key(key):
+        if key in self.styleCache:
             return True
-        if not style.has_key(key):
+        if key not in style:
             return True
         return style[key] == self.styleCache[key]
-    
+
     def beginPath(self, elem):
         self.write("\n//Element %s" % elem)
         self.write("%s.beginPath();" % self.obj)
-    
+
     def createLinearGradient(self, href, x1, y1, x2, y2):
         data = (self.obj, href, x1, y1, x2, y2)
         self.write("var %s = %s.createLinearGradient(%.2f,%.2f,%.2f,%.2f);" % data)
@@ -79,7 +79,7 @@ class Canvas:
 
     def addColorStop(self, href, pos, color):
         self.write("%s.addColorStop(%.2f, %s);" % (href, pos, color))
-    
+
     def getColor(self, rgb, a):
         r, g, b = simplestyle.parseColor(rgb)
         a = float(a)
@@ -87,7 +87,7 @@ class Canvas:
             return "'rgba(%d, %d, %d, %.1f)'" % (r, g, b, a)
         else:
             return "'rgb(%d, %d, %d)'" % (r, g, b)
-    
+
     def setGradient(self, href):
         g = inkex.xpathSingle("//*[@id='%s']" % href)
         if not g:
@@ -103,7 +103,7 @@ class Canvas:
             x2 = float(g.get("x2"))
             y2 = float(g.get("y2"))
             self.createLinearGradient(href, x1, y1, x2, y2)
-        
+
         #get gradient color stops
         gstops = g.get(inkex.addNS("href", "xlink"))
         gstops = inkex.xpathSingle("//svg:linearGradient[@id='%s']" % gstops[1:])
@@ -116,56 +116,56 @@ class Canvas:
             self.addColorStop(href, pos, color)
         return href
 
-    def fillHelper(self, rgb, a):
+    def fillHelper(self, rgb, alpha):
         """Returns rgba or hex, depending on alpha value"""
         #if references a gradient definition. Format: url(#linearGrad)
         if "url(" in rgb:
             return self.getGradient(rgb[5:-1])
-        return self.getColor(rgb, a)
+        return self.getColor(rgb, alpha)
 
     def setOpacity(self, value):
         self.write("%s.globalAlpha = %.1f;" % (self.obj, float(value)))
 
     def setFill(self, value):
-        if self.style.has_key("fill-opacity"):
-            a = self.style["fill-opacity"]
+        if "fill-opacity" in self.style:
+            alpha = self.style["fill-opacity"]
         else:
-            a = 1
-        self.write("%s.fillStyle = %s;" % (self.obj, self.fillHelper(value, a)))
-    
+            alpha = 1
+        self.write("%s.fillStyle = %s;" % (self.obj, self.fillHelper(value, alpha)))
+
     def setStroke(self, value):
-        if self.style.has_key("stroke-opacity"):
-            a = self.style["stroke-opacity"]
+        if "stroke-opacity" in self.style:
+            alpha = self.style["stroke-opacity"]
         else:
-            a = 1
-        self.write("%s.strokeStyle = %s;" % (self.obj, self.fillHelper(value, a)))
-    
+            alpha = 1
+        self.write("%s.strokeStyle = %s;" % (self.obj, self.fillHelper(value, alpha)))
+
     def setStrokeWidth(self, value):
         self.write("%s.lineWidth = %.2f;" % (self.obj, inkex.unittouu(value)))
-    
+
     def setStrokeLinecap(self, value):
         self.write("%s.lineCap = '%s';" % (self.obj, value))
-    
+
     def setStrokeLinejoin(self, value):
         self.write("%s.lineJoin = '%s';" % (self.obj, value))
 
     def setStrokeMiterlimit(self, value):
         self.write("%s.miterLimit = %s;" % (self.obj, value))
-    
+
     def moveTo(self, x, y):
         self.write("%s.moveTo(%.2f, %.2f);" % (self.obj, x, y))
-        
+
     def lineTo(self, x, y):
         self.write("%s.lineTo(%.2f, %.2f);" % (self.obj, x, y))
-        
+
     def quadraticCurveTo(self, cpx, cpy, x, y):
         data = (self.obj, cpx, cpy, x, y)
         self.write("%s.quadraticCurveTo(%.2f, %.2f, %.2f, %.2f);" % data)
-    
+
     def bezierCurveTo(self, x1, y1, x2, y2, x, y):
         data = (self.obj, x1, y1, x2, y2, x, y)
         self.write("%s.bezierCurveTo(%.2f, %.2f, %.2f, %.2f, %.2f, %.2f);" % data)
-    
+
     def rect(self, x, y, w, h, rx = 0, ry = 0):
         if rx or ry:
             #rounded rectangle, starts top-left anticlockwise
@@ -196,11 +196,11 @@ class Canvas:
 
     def scale(self, rx, ry):
         self.write("%s.scale(%.2f, %.2f);" % (self.obj, rx, ry))
-        
+
     def closePath(self):
-        if self.style.has_key("fill") and self.style["fill"] != "none":
+        if "fill" in self.style and self.style["fill"] != "none":
             self.write("%s.fill();" % self.obj)
-        if self.style.has_key("stroke") and self.style["stroke"] != "none":
+        if "stroke" in self.style and self.style["stroke"] != "none":
             self.write("%s.stroke();" % self.obj)
         #self.write("%s.closePath();" % self.obj)
 
@@ -215,7 +215,7 @@ class Ink2Canvas(inkex.Effect):
         """Translates style properties names into method calls"""
         style = simplestyle.parseStyle(node.get("style"))
         #remove any trailing space in dict keys/values
-        style = dict([(str.strip(k), str.strip(v)) for k,v in style.iteritems()])
+        style = dict([(str.strip(k), str.strip(v)) for k,v in style.items()])
         ctx.style = style
         for key in style:
             tmp_list = map(str.capitalize, key.split("-"))
@@ -229,7 +229,7 @@ class Ink2Canvas(inkex.Effect):
         """Gets the node type and calls the given method"""
         ctx.beginPath(node.get("id"))
         self.setStyle(ctx, node)
-        #calling the appropriate method, expands "args" in parameters to callback
+        #calling the appropriate method, unpacks "args" in parameters to callback
         callback(*args)
         ctx.closePath()
 
@@ -240,7 +240,7 @@ class Ink2Canvas(inkex.Effect):
         h = float(node.get("height"))
         rx = float(node.get("rx"))
         ry = float(node.get("ry"))
-        args = [x, y, h, w, rx, ry]
+        args = [x, y, w, h, rx, ry]
         self.drawAbstractShape(ctx, node, ctx.rect, args)
 
     def drawCircle(self, ctx, node):
@@ -248,7 +248,7 @@ class Ink2Canvas(inkex.Effect):
         cx = float(node.get("cx"))
         cy = float(node.get("cy"))
         r = float(node.get("r"))
-        args = [cx, cy, r, 0, math.pi*2, True]
+        args = [cx, cy, r, 0, math.pi * 2, True]
         self.drawAbstractShape(ctx, node, ctx.arc, args)
 
     def ellipseHelper(self, ctx, cx, cy, rx, ry):
@@ -267,7 +267,7 @@ class Ink2Canvas(inkex.Effect):
         ry = float(node.get("ry"))
         args = [ctx, cx, cy, rx, ry]
         self.drawAbstractShape(ctx, node, self.ellipseHelper, args)
-    
+
     def pathMoveTo(self, ctx, data):
         ctx.moveTo(data[0], data[1])
         self.currentPosition = data[0], data[1]
@@ -358,17 +358,16 @@ class Ink2Canvas(inkex.Effect):
                        "C": self.pathCurveTo,
                        "A": self.pathArcTo}
         for pt in path:
-            comm = pt[0]
-            data = pt[1]
-            if pathCommand.has_key(comm):
+            comm, data = pt
+            if comm in pathCommand:
                 pathCommand[comm](ctx, data)
-    
+
     def drawPath(self, ctx, node):
         #path data is already converted to float
         path = parsePath(node.get("d"))
         #need to call another method to draw path commands
         self.drawAbstractShape(ctx, node, self.drawPathHelper, [ctx, path])
-    
+
     def drawLine(self, ctx, node):
         x1 = float(node.get("x1"))
         y1 = float(node.get("y1"))
@@ -376,7 +375,7 @@ class Ink2Canvas(inkex.Effect):
         y2 = float(node.get("y2"))
         path = [["M", [x1, y1]], ["L", [x2, y2]]]
         self.drawAbstractShape(ctx, node, self.drawPathHelper, [ctx, path])
-    
+ 
     def drawPolygon(self, ctx, node):
         points = node.get("points").strip().split(" ")
         points = map(lambda x: x.split(","), points)
@@ -386,7 +385,7 @@ class Ink2Canvas(inkex.Effect):
             comm.append(["L", pt])
         comm[0][0] = "M"            #first command must be a 'M' => moveTo
         self.drawAbstractShape(ctx, node, self.drawPathHelper, [ctx, comm])
-    
+ 
     def drawPolyline(self, ctx, node):
         self.drawPolygon(ctx, node)
 
