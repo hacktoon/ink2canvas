@@ -238,8 +238,10 @@ class Ink2Canvas(inkex.Effect):
         y = float(node.get("y"))
         w = float(node.get("width"))
         h = float(node.get("height"))
-        rx = float(node.get("rx"))
-        ry = float(node.get("ry"))
+        rx = node.get("rx")
+        ry = node.get("ry")
+        rx = float(rx) if rx else 0
+        ry = float(ry) if ry else 0
         args = [x, y, w, h, rx, ry]
         self.drawAbstractShape(ctx, node, ctx.rect, args)
 
