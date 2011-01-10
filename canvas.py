@@ -158,6 +158,9 @@ class Canvas:
     def setStrokeMiterlimit(self, value):
         self.write("%s.miterLimit = %s;" % (self.obj, value))
 
+    def setFont(self, value):
+        self.write("%s.font = \"%s\";" % (self.obj, value))
+
     def moveTo(self, x, y):
         self.write("%s.moveTo(%.2f, %.2f);" % (self.obj, x, y))
 
@@ -227,11 +230,15 @@ class Ink2Canvas(inkex.Effect):
         self.currentPosition = []  #stores the current "pen" position
         self.content = ""
 
-    def setStyle(self, ctx, node):
-        """Translates style properties names into method calls"""
+    def styleHelper(self, node):
         style = simplestyle.parseStyle(node.get("style"))
         #remove any trailing space in dict keys/values
         style = dict([(str.strip(k), str.strip(v)) for k,v in style.items()])
+        return style
+
+    def setStyle(self, ctx, node):
+        """Translates style properties names into method calls"""
+        style = self.styleHelper(node)
         ctx.style = style
         for key in style:
             tmp_list = map(str.capitalize, key.split("-"))
@@ -240,6 +247,15 @@ class Ink2Canvas(inkex.Effect):
                 getattr(ctx, method)(style[key])
         #saves style to compare in next iteration
         ctx.styleCache = style
+
+    def setTextStyle(self, ctx, node):
+        style = self.styleHelper(node)
+        keys = ("font-weight", "font-size", "font-family")
+        text = []
+        for key in keys:
+            if key in style:
+                text.append(style[key])
+        ctx.setFont(" ".join(text))
 
     def setTransform(self, ctx, node):
         data = node.get("transform")
@@ -418,11 +434,20 @@ class Ink2Canvas(inkex.Effect):
     def drawPolyline(self, ctx, node):
         self.drawPolygon(ctx, node)
 
+    def textHelper(self, tspan):
+        if not len(tspan):
+            return tspan.text
+        for ts in tspan:
+            return ts.text + self.textHelper(ts) + ts.tail
+
     def drawText(self, ctx, node):
         self.setStyle(ctx, node)
-        x = float(node.get("x"))
-        y = float(node.get("y"))
-        ctx.fillText("Teste", x, y)
+        self.setTextStyle(ctx, node)
+        for tspan in node:
+            text = self.textHelper(tspan)
+            x = float(tspan.get("x"))
+            y = float(tspan.get("y"))
+            ctx.fillText(text, x, y)
 
     def drawG(self, ctx, node):
         """Recursive method to iterate through SVG groups"""
