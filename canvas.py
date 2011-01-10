@@ -248,7 +248,6 @@ class Ink2Canvas(inkex.Effect):
         matrix = parseTransform(data)
         m11, m21, dx = matrix[0]
         m12, m22, dy = matrix[1]
-        print matrix
         ctx.transform(m11, m12, m21, m22, dx, dy)
 
     def drawAbstractShape(self, ctx, node, callback, args):
@@ -257,7 +256,7 @@ class Ink2Canvas(inkex.Effect):
         self.setStyle(ctx, node)
         ctx.save()
         self.setTransform(ctx, node)
-        callback(*args) # unpacks "args" in parameters to method passed
+        callback(*args) # unpacks "args" in parameters to given method
         ctx.closePath()
         ctx.restore()
 
