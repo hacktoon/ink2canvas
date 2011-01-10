@@ -8,8 +8,7 @@ Ink2canvas is an Inkscape extension written in Python that exports SVG files to 
 If you want a system wide install, copy **canvas.py** and **canvas.inx** to */usr/share/inkscape/extensions* folder (or similar), if you have permission.
 If not, put files **canvas.py** and **canvas.inx** in local Inkscape extensions folder:  *$HOME/.config/inkscape/extensions*.
 
-You will have to copy the following Python modules to that folder: **inkex.py**, **simplepath.py** and **simplestyle.py**.
-They may be found in this project at lib/ folder.
+In the seconde case, you will have to copy from */usr/share/inkscape/extensions/* the following Python modules to your folder: **inkex.py**, **simplepath.py**, **simpletransform.py** and **simplestyle.py**.
 
 
 ## How to use:
@@ -24,12 +23,13 @@ Open Inkscape file and choose HTML5 output option at "Save as" menu.
 * Refactor and fix style methods error handling
 * Get clips and masks to work
 * Radial Gradient 
-* Transform matrix data handling (translating, rotating, scaling, etc)
+* Group style must prevail over inner objects
 
 ### Working
 * Lines, rects, circles, ellipses, paths (partial), texts (initial)
 * Polylines and polygons
 * Fill and stroke, linear gradient (initial)
+* Transformation matrix (translating, rotating, scaling, etc)
 * Iterating through groups and layers
 
 ## Contributors

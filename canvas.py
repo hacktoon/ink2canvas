@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 import inkex
 import simplestyle 
 from simplepath import parsePath
+from simpletransform import parseTransform
 
 log = inkex.debug  #alias to debug method
 
@@ -202,6 +203,16 @@ class Canvas:
     def scale(self, rx, ry):
         self.write("%s.scale(%.2f, %.2f);" % (self.obj, rx, ry))
 
+    def transform(self, m11, m12, m21, m22, dx, dy):
+        self.write("%s.transform(%.2f, %.2f, %.2f, %.2f, %.2f, %.2f);" \
+                    % (self.obj, m11, m12, m21, m22, dx, dy))
+
+    def save(self):
+        self.write("%s.save();" % self.obj)
+
+    def restore(self):
+        self.write("%s.restore();" % self.obj)
+
     def closePath(self):
         if "fill" in self.style and self.style["fill"] != "none":
             self.write("%s.fill();" % self.obj)
@@ -230,13 +241,25 @@ class Ink2Canvas(inkex.Effect):
         #saves style to compare in next iteration
         ctx.styleCache = style
 
+    def setTransform(self, ctx, node):
+        data = node.get("transform")
+        if not data:
+            return
+        matrix = parseTransform(data)
+        m11, m21, dx = matrix[0]
+        m12, m22, dy = matrix[1]
+        print matrix
+        ctx.transform(m11, m12, m21, m22, dx, dy)
+
     def drawAbstractShape(self, ctx, node, callback, args):
         """Gets the node type and calls the given method"""
         ctx.beginPath(node.get("id"))
         self.setStyle(ctx, node)
-        #calling the appropriate method, unpacks "args" in parameters to callback
-        callback(*args)
+        ctx.save()
+        self.setTransform(ctx, node)
+        callback(*args) # unpacks "args" in parameters to method passed
         ctx.closePath()
+        ctx.restore()
 
     def drawRect(self, ctx, node):
         x = float(node.get("x"))
