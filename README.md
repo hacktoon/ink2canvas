@@ -23,12 +23,13 @@ Open Inkscape file and choose HTML5 output option at "Save as" menu.
 * Add missing path commands
 * Refactor and fix style methods error handling
 * Get clips and masks to work
+* Radial Gradient 
 * Transform matrix data handling (translating, rotating, scaling, etc)
 
 ### Working
-* Lines, rects, circles, ellipses, paths (partial), texts (basic)
+* Lines, rects, circles, ellipses, paths (partial), texts (initial)
 * Polylines and polygons
-* Fill and stroke, gradient (initial)
+* Fill and stroke, linear gradient (initial)
 * Iterating through groups and layers
 
 ## Contributors

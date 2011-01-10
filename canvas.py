@@ -27,9 +27,10 @@ log = inkex.debug  #alias to debug method
 class Canvas:
     """Canvas API helper class"""
 
-    def __init__(self, width, height, context = "ctx"):
+    def __init__(self, svg, width, height, context = "ctx"):
         self.obj = context
         self.code = []  #stores the code
+        self.svg = svg  #for xpath expression searchs
         self.style = {}
         self.styleCache = {}  #stores the previous style applied
         self.width = width
@@ -70,11 +71,11 @@ class Canvas:
         self.write("%s.beginPath();" % self.obj)
 
     def createLinearGradient(self, href, x1, y1, x2, y2):
-        data = (self.obj, href, x1, y1, x2, y2)
+        data = (href, self.obj, x1, y1, x2, y2)
         self.write("var %s = %s.createLinearGradient(%.2f,%.2f,%.2f,%.2f);" % data)
 
     def createRadialGradient(self, href, cx1, cy1, rx, cx2, cy2, ry):
-        data = (self.obj, href, cx1, cy1, rx, cx2, cy2, ry)
+        data = (href, self.obj, cx1, cy1, rx, cx2, cy2, ry)
         self.write("var %s = %s.createRadialGradient(%.2f,%.2f,%.2f,%.2f,%.2f,%.2f);" % data)
 
     def addColorStop(self, href, pos, color):
@@ -89,9 +90,11 @@ class Canvas:
             return "'rgb(%d, %d, %d)'" % (r, g, b)
 
     def setGradient(self, href):
-        g = inkex.xpathSingle("//*[@id='%s']" % href)
-        if not g:
+        try:
+            g = self.svg.xpath("//*[@id='%s']" % href, namespaces=inkex.NSS)[0]
+        except:
             return
+        
         if g.get("r"):
             cx = float(g.get("cx"))
             cy = float(g.get("cy"))
@@ -106,7 +109,7 @@ class Canvas:
 
         #get gradient color stops
         gstops = g.get(inkex.addNS("href", "xlink"))
-        gstops = inkex.xpathSingle("//svg:linearGradient[@id='%s']" % gstops[1:])
+        gstops = self.svg.xpath("//svg:linearGradient[@id='%s']" % gstops[1:], namespaces=inkex.NSS)[0]
         for stop in gstops:
             style = simplestyle.parseStyle(stop.get("style"))
             stop_color = style["stop-color"]
@@ -120,7 +123,7 @@ class Canvas:
         """Returns rgba or hex, depending on alpha value"""
         #if references a gradient definition. Format: url(#linearGrad)
         if "url(" in rgb:
-            return self.getGradient(rgb[5:-1])
+            return self.setGradient(rgb[5:-1])
         return self.getColor(rgb, alpha)
 
     def setOpacity(self, value):
@@ -131,7 +134,9 @@ class Canvas:
             alpha = self.style["fill-opacity"]
         else:
             alpha = 1
-        self.write("%s.fillStyle = %s;" % (self.obj, self.fillHelper(value, alpha)))
+        fill = self.fillHelper(value, alpha)
+        if fill:
+            self.write("%s.fillStyle = %s;" % (self.obj, fill))
 
     def setStroke(self, value):
         if "stroke-opacity" in self.style:
@@ -420,10 +425,11 @@ class Ink2Canvas(inkex.Effect):
         svg = self.document.getroot()
         width = inkex.unittouu(svg.get("width"))
         height = inkex.unittouu(svg.get("height"))
-        ctx = Canvas(width, height)
+        ctx = Canvas(self.document, width, height)
         #starts parsing groups passing root element
         self.drawG(ctx, svg)
         self.content = ctx.output()
 
-ink = Ink2Canvas()
-ink.affect()
+if __name__ == "__main__":
+    ink = Ink2Canvas()
+    ink.affect()
