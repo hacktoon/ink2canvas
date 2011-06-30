@@ -22,13 +22,7 @@ import simplestyle
 from simplepath import parsePath
 from simpletransform import parseTransform
 
-
-class AbstractShape():
-    def __init__(self, command, node, ctx):
-        self.node = node
-        self.command = command
-        self.ctx = ctx
-
+class Element:
     def attr(self, val, ns=""):
         if ns:
             val = inkex.addNS(val, ns)
@@ -37,6 +31,41 @@ class AbstractShape():
         except:
             attr = self.node.get(val)
         return attr
+
+
+class GradientDef(Element):
+    def __init__(self, node, stops):
+        self.node = node
+        self.stops = stops
+
+
+class LinearGradientDef(GradientDef):
+    def get_data(self):
+        x1 = self.attr("x1")
+        y1 = self.attr("y1")
+        x2 = self.attr("x2")
+        y2 = self.attr("y2")
+        #self.createLinearGradient(href, x1, y1, x2, y2)
+
+    def draw(self):
+        pass
+
+
+class RadialGradientDef(GradientDef):
+    def get_data(self):
+        cx = self.attr("cx")
+        cy = self.attr("cy")
+        r = self.attr("r")
+        #self.createRadialGradient(href, cx, cy, r, cx, cy, r)
+
+    def draw(self):
+        pass
+
+class AbstractShape(Element):
+    def __init__(self, command, node, ctx):
+        self.node = node
+        self.command = command
+        self.ctx = ctx
 
     def get_data(self):
         return
@@ -82,11 +111,13 @@ class AbstractShape():
         style = self.get_style()
         if "fill" in style:
             return style["fill"][5:-1]
+        return
 
     def has_clip(self):
         return bool(self.attr("clip-path"))
 
-    def start(self, defs):
+    def start(self, gradient):
+        self.gradient = gradient
         self.ctx.write("\n// #%s" % self.attr("id"))
         if self.has_transform() or self.has_clip():
             self.ctx.save()
@@ -98,9 +129,11 @@ class AbstractShape():
         if self.has_transform():
             trans_matrix = self.get_transform()
             self.ctx.transform(*trans_matrix) # unpacks argument list
+        if self.has_gradient():
+            self.gradient.draw()
         self.set_style(style)
         # unpacks "data" in parameters to given method
-        getattr(self.ctx, self.command.lower())(*data)
+        getattr(self.ctx, self.command)(*data)
         self.ctx.closePath()
 
     def end(self):
@@ -307,7 +340,7 @@ class Polyline(Polygon):
 class Text(AbstractShape):
     def text_helper(self, tspan):
         if not len(tspan):
-            return tspan.text
+            return unicode(tspan.text)
         for ts in tspan:
             return ts.text + self.text_helper(ts) + ts.tail
 

@@ -67,15 +67,15 @@ class Canvas:
     def createLinearGradient(self, href, x1, y1, x2, y2):
         data = (href, x1, y1, x2, y2)
         self.write("var %s = \
-                   ctx.createLinearGradient(%.2f,%.2f,%.2f,%.2f);" % data)
+                   ctx.createLinearGradient(%f,%f,%f,%f);" % data)
 
     def createRadialGradient(self, href, cx1, cy1, rx, cx2, cy2, ry):
         data = (href, cx1, cy1, rx, cx2, cy2, ry)
         self.write("var %s = ctx.createRadialGradient\
-                   (%.2f,%.2f,%.2f,%.2f,%.2f,%.2f);" % data)
+                   (%f,%f,%f,%f,%f,%f);" % data)
 
     def addColorStop(self, href, pos, color):
-        self.write("%s.addColorStop(%.2f, %s);" % (href, pos, color))
+        self.write("%s.addColorStop(%f, %s);" % (href, pos, color))
 
     def getColor(self, rgb, a):
         r, g, b = simplestyle.parseColor(rgb)
@@ -86,26 +86,7 @@ class Canvas:
             return "'rgb(%d, %d, %d)'" % (r, g, b)
 
     def setGradient(self, href):
-        try:
-            g = self.svg.xpath("//*[@id='%s']" % href, namespaces=inkex.NSS)[0]
-        except:
-            return
-
-        if g.get("r"):
-            cx = float(g.get("cx"))
-            cy = float(g.get("cy"))
-            r = float(g.get("r"))
-            self.createRadialGradient(href, cx, cy, r, cx, cy, r)
-        else:
-            x1 = float(g.get("x1"))
-            y1 = float(g.get("y1"))
-            x2 = float(g.get("x2"))
-            y2 = float(g.get("y2"))
-            self.createLinearGradient(href, x1, y1, x2, y2)
-
-        #get gradient color stops
-        gstops = g.get(inkex.addNS("href", "xlink"))
-        gstops = self.svg.xpath("//svg:linearGradient[@id='%s']" % gstops[1:], namespaces=inkex.NSS)[0]
+        """
         for stop in gstops:
             style = simplestyle.parseStyle(stop.get("style"))
             stop_color = style["stop-color"]
@@ -113,36 +94,30 @@ class Canvas:
             color = self.getColor(stop_color, opacity)
             pos = float(stop.get("offset"))
             self.addColorStop(href, pos, color)
-        return href
-
-    def fillHelper(self, rgb, alpha):
-        """Returns rgba or hex, depending on alpha value"""
-        #if references a gradient definition. Format: url(#linearGrad)
-        if "url(" in rgb:
-            return self.setGradient(rgb[5:-1])
-        return self.getColor(rgb, alpha)
+        """
+        return None #href
 
     def setOpacity(self, value):
         self.write("ctx.globalAlpha = %.1f;" % float(value))
 
     def setFill(self, value):
-        if "fill-opacity" in self.style:
+        try:
             alpha = self.style["fill-opacity"]
-        else:
+        except:
             alpha = 1
-        fill = self.fillHelper(value, alpha)
-        if fill:
+        if not value.startswith("url("):
+            fill = self.getColor(value, alpha)
             self.write("ctx.fillStyle = %s;" % fill)
 
     def setStroke(self, value):
-        if "stroke-opacity" in self.style:
+        try:
             alpha = self.style["stroke-opacity"]
-        else:
+        except:
             alpha = 1
-        self.write("ctx.strokeStyle = %s;" % self.fillHelper(value, alpha))
+        self.write("ctx.strokeStyle = %s;" % self.getColor(value, alpha))
 
     def setStrokeWidth(self, value):
-        self.write("ctx.lineWidth = %.2f;" % inkex.unittouu(value))
+        self.write("ctx.lineWidth = %f;" % inkex.unittouu(value))
 
     def setStrokeLinecap(self, value):
         self.write("ctx.lineCap = '%s';" % value)
@@ -157,18 +132,18 @@ class Canvas:
         self.write("ctx.font = \"%s\";" % value)
 
     def moveTo(self, x, y):
-        self.write("ctx.moveTo(%.2f, %.2f);" % (x, y))
+        self.write("ctx.moveTo(%f, %f);" % (x, y))
 
     def lineTo(self, x, y):
-        self.write("ctx.lineTo(%.2f, %.2f);" % (x, y))
+        self.write("ctx.lineTo(%f, %f);" % (x, y))
 
     def quadraticCurveTo(self, cpx, cpy, x, y):
         data = (cpx, cpy, x, y)
-        self.write("ctx.quadraticCurveTo(%.2f, %.2f, %.2f, %.2f);" % data)
+        self.write("ctx.quadraticCurveTo(%f, %f, %f, %f);" % data)
 
     def bezierCurveTo(self, x1, y1, x2, y2, x, y):
         data = (x1, y1, x2, y2, x, y)
-        self.write("ctx.bezierCurveTo(%.2f, %.2f, %.2f, %.2f, %.2f, %.2f);" % data)
+        self.write("ctx.bezierCurveTo(%f, %f, %f, %f, %f, %f);" % data)
 
     def rect(self, x, y, w, h, rx = 0, ry = 0):
         if rx or ry:
@@ -183,27 +158,27 @@ class Canvas:
             self.lineTo(x+rx, y)
             self.quadraticCurveTo(x, y, x, y+ry)
         else:
-            self.write("ctx.rect(%.2f, %.2f, %.2f, %.2f);" % (x, y, w, h))
+            self.write("ctx.rect(%f, %f, %f, %f);" % (x, y, w, h))
 
     def arc(self, x, y, r, a1, a2, flag):
         data = (x, y, r, a1, a2, flag)
-        self.write("ctx.arc(%.2f, %.2f, %.2f, %.2f, %.8f, %d);" % data)
+        self.write("ctx.arc(%f, %f, %f, %f, %.8f, %d);" % data)
 
     def fillText(self, text, x, y):
-        self.write("ctx.fillText(\"%s\", %.2f, %.2f);" % (text, x, y))
+        self.write("ctx.fillText(\"%s\", %f, %f);" % (text, x, y))
 
     def translate(self, cx, cy):
-        self.write("ctx.translate(%.2f, %.2f);" % (cx, cy))
+        self.write("ctx.translate(%f, %f);" % (cx, cy))
 
     def rotate(self, angle):
-        self.write("ctx.rotate(%.2f);" % angle)
+        self.write("ctx.rotate(%f);" % angle)
 
     def scale(self, rx, ry):
-        self.write("ctx.scale(%.2f, %.2f);" % (rx, ry))
+        self.write("ctx.scale(%f, %f);" % (rx, ry))
 
     def transform(self, m11, m12, m21, m22, dx, dy):
         data = (m11, m12, m21, m22, dx, dy)
-        self.write("ctx.transform(%.2f, %.2f, %.2f, %.2f, %.2f, %.2f);" % data)
+        self.write("ctx.transform(%f, %f, %f, %f, %f, %f);" % data)
 
     def save(self):
         self.write("ctx.save();")
