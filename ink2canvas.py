@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- encoding: utf-8 -*-
 '''
 Copyright (C) 2011 Karlisson Bezerra, contato@nerdson.com
 
@@ -31,7 +32,8 @@ class Ink2Canvas(inkex.Effect):
 
     def output(self):
         import sys
-        sys.stdout.write(self.canvas.output())
+        content = self.canvas.output()
+        sys.stdout.write(content.encode("utf-8"))
 
     def get_tag_name(self, node):
         # remove namespace part from "{http://www.w3.org/2000/svg}elem"
