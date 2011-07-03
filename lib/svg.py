@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- encoding: utf-8 -*-
 '''
 Copyright (C) 2011 Karlisson Bezerra, contato@nerdson.com
 
@@ -340,7 +341,7 @@ class Polyline(Polygon):
 class Text(AbstractShape):
     def text_helper(self, tspan):
         if not len(tspan):
-            return unicode(tspan.text)
+            return tspan.text
         for ts in tspan:
             return ts.text + self.text_helper(ts) + ts.tail
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- encoding: utf-8 -*-
 '''
 Copyright (C) 2011 Karlisson Bezerra, contato@nerdson.com
 
