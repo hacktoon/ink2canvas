@@ -53,9 +53,8 @@ class Ink2Canvas(inkex.Effect):
             return svg.LinearGradientDef(gradient, colors)
 
     def get_clip_defs(self, elem):
-        if elem.has_clip():
-            pass
-        return
+        url_id = elem.get_clip_href()
+        return self.xpathSingle("//*[@id='%s']" % url_id)
 
     def walk_tree(self, root):
         for node in root:
@@ -70,6 +69,10 @@ class Ink2Canvas(inkex.Effect):
             elem = getattr(svg, class_name)(tag, node, self.canvas)
             if elem.has_gradient():
                 gradient = self.get_gradient_defs(elem)
+            if elem.has_clip():
+                elem.save()
+                clip = self.get_clip_defs(elem)
+                self.walk_tree(clip)
             elem.start(gradient)
             elem.draw()
             self.walk_tree(node)
