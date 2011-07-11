@@ -113,14 +113,19 @@ class AbstractShape(Element):
             return style["fill"][5:-1]
         return
 
+    def get_clip_href(self):
+        return self.attr("clip-path")[5:-1]
+
     def has_clip(self):
         return bool(self.attr("clip-path"))
 
     def start(self, gradient):
         self.gradient = gradient
         self.ctx.write("\n// #%s" % self.attr("id"))
-        if self.has_transform() or self.has_clip():
+        if self.has_transform():
             self.ctx.save()
+        if self.has_clip():
+            self.ctx.clip()
 
     def draw(self):
         data = self.get_data()
@@ -136,10 +141,13 @@ class AbstractShape(Element):
         getattr(self.ctx, self.command)(*data)
         self.ctx.closePath()
 
+
     def end(self):
         if self.has_transform() or self.has_clip():
             self.ctx.restore()
 
+    def save(self):
+        self.ctx.save()
 
 class G(AbstractShape):
     def draw(self):
