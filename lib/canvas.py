@@ -192,3 +192,6 @@ class Canvas:
         if "stroke" in self.style and self.style["stroke"] != "none":
             self.write("ctx.stroke();")
         #self.write("%s.closePath();" % self.obj)
+
+    def clip(self):
+        self.write("ctx.clip();")
