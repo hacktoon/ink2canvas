@@ -235,6 +235,9 @@ class Path(AbstractShape):
         arcflag = data[3]
         sweepflag = data[4]
 
+        if x1 == x2 and y1 == y2:
+            return
+
         #compute (x1', y1')
         _x1 = math.cos(angle) * (x1 - x2) / 2.0 + math.sin(angle) * (y1 - y2) / 2.0
         _y1 = -math.sin(angle) * (x1 - x2) / 2.0 + math.cos(angle) * (y1 - y2) / 2.0
@@ -340,10 +343,14 @@ class Polyline(Polygon):
 
 class Text(AbstractShape):
     def text_helper(self, tspan):
-        if not len(tspan):
-            return tspan.text
+        val = ""
+        if tspan.text:
+            val += tspan.text
         for ts in tspan:
-            return ts.text + self.text_helper(ts) + ts.tail
+            val += self.text_helper(ts)
+        if tspan.tail:
+            val += tspan.tail
+        return val
 
     def set_text_style(self, style):
         keys = ("font-style", "font-weight", "font-size", "font-family")
