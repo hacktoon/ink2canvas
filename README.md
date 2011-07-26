@@ -5,8 +5,8 @@ Ink2canvas is an Inkscape extension written in Python that exports SVG files to 
 
 ## How to Install
 
-If you want a system wide install, copy **canvas.py** and **canvas.inx** to */usr/share/inkscape/extensions* folder (or similar), if you have permission.
-If not, put files **canvas.py** and **canvas.inx** in local Inkscape extensions folder:  *$HOME/.config/inkscape/extensions*.
+If you want a system wide install, copy **ink2canvas.py**, **ink2canvas.inx** and */ink2canvas* directory to */usr/share/inkscape/extensions* folder (or similar), if you have permission.
+If not, put files **ink2canvas.py**, **ink2canvas.inx**  and */ink2canvas* directory in local Inkscape extensions folder:  *$HOME/.config/inkscape/extensions*.
 
 In the seconde case, you will have to copy from */usr/share/inkscape/extensions/* the following Python modules to your folder: **inkex.py**, **simplepath.py**, **simpletransform.py** and **simplestyle.py**.
 
