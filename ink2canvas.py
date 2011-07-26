@@ -57,7 +57,6 @@ class Ink2Canvas(inkex.Effect):
     def get_clip_defs(self, elem):
         if elem.has_clip():
             pass
-        return
 
     def walk_tree(self, root):
         for node in root:
