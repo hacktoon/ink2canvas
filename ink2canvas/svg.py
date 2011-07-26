@@ -150,6 +150,14 @@ class AbstractShape(Element):
     def save(self):
         self.ctx.save()
 
+class Clippath(AbstractShape):
+    def draw(self):
+        pass
+
+class Defs(AbstractShape):
+    def draw(self):
+        pass
+
 class G(AbstractShape):
     def draw(self):
         #get layer label, if exists
