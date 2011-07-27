@@ -1,4 +1,5 @@
 *.swp
 *.swo
 *.pyc
-canvas.js
+canvg.js
+test/

@@ -19,8 +19,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 '''
 
 import inkex
-from ink2canvas.canvas import Canvas
-import ink2canvas.svg as svg
+from lib.canvas import Canvas
+import lib.svg as svg
 
 log = inkex.debug  #alias to debug method
 
