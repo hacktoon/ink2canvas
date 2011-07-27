@@ -114,11 +114,11 @@ class AbstractShape(Element):
             return style["fill"][5:-1]
         return
 
-    def get_clip_href(self):
-        return self.attr("clip-path")[5:-1]
-
     def has_clip(self):
         return bool(self.attr("clip-path"))
+
+    def get_clip_href(self):
+        return self.attr("clip-path")[5:-1]
 
     def start(self, gradient):
         self.gradient = gradient
@@ -150,13 +150,6 @@ class AbstractShape(Element):
     def save(self):
         self.ctx.save()
 
-class Clippath(AbstractShape):
-    def draw(self):
-        pass
-
-class Defs(AbstractShape):
-    def draw(self):
-        pass
 
 class G(AbstractShape):
     def draw(self):
