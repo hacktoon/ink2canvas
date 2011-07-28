@@ -18,18 +18,20 @@ Open Inkscape file and choose HTML5 output option at "Save as" menu.
 ## Project Map
 
 ### TODO
-* Add missing path commands
+* Add missing path sub-commands
 * Refactor and fix style methods error handling
 * Get clip paths (initial) and masks to work
 * Radial Gradient 
 * Group style must prevail over grouped objects
 * Linear gradient (initial)
 * Clones
+* Images
+* Patterns
 
 ### Working
-* Lines, rects, circles, ellipses, paths (partial), texts (basic)
+* Lines, rects, circles, ellipses, paths (partial), text (basic)
 * Polylines and polygons
 * Basic text attributes support
 * Fill and stroke
-* Transformation matrix (translating, rotating, scaling, etc)
+* Transformations (translating, rotating, scaling, etc)
 * Iterating through groups and layers
