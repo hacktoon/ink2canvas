@@ -20,7 +20,7 @@ Open Inkscape file and choose HTML5 output option at "Save as" menu.
 ### TODO
 * Add missing path sub-commands
 * Refactor and fix style methods error handling
-* Get clip paths (initial) and masks to work
+* Masks
 * Radial Gradient 
 * Group style must prevail over grouped objects
 * Linear gradient (initial)
@@ -33,5 +33,6 @@ Open Inkscape file and choose HTML5 output option at "Save as" menu.
 * Polylines and polygons
 * Basic text attributes support
 * Fill and stroke
+* Clips (needs more tests :-)
 * Transformations (translating, rotating, scaling, etc)
 * Iterating through groups and layers
