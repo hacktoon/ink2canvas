@@ -149,7 +149,7 @@ class AbstractShape(Element):
 
 
 class G(AbstractShape):
-    def draw(self):
+    def draw(self, is_clip=False):
         #get layer label, if exists
         gtype = self.attr("groupmode", "inkscape") or "group"
         if self.has_transform():

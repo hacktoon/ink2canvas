@@ -90,8 +90,8 @@ class Ink2Canvas(inkex.Effect):
             
             if is_clip:
                 #clipping elements are drawn differently
-                #only the top-level elements are needed
                 elem.draw(is_clip)
+                self.walk_tree(node, True)
             else:
                 elem.draw()
                 self.walk_tree(node)
