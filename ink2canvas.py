@@ -39,7 +39,9 @@ class Ink2Canvas(inkex.Effect):
         # remove namespace part from "{http://www.w3.org/2000/svg}elem"
         return node.tag.split("}")[1]
 
-    def get_gradient_defs(self, elem):
+    def get_gradient_def(self, elem):
+        if not elem.has_gradient():
+            return None
         url_id = elem.get_gradient_href()
         # get the gradient element
         gradient = self.xpathSingle("//*[@id='%s']" % url_id)
@@ -54,33 +56,45 @@ class Ink2Canvas(inkex.Effect):
         else:
             return svg.LinearGradientDef(gradient, colors)
 
-    def set_clip(self, elem):
+    def get_clip_def(self, elem):
         clip_id = elem.get_clip_href()
-        clippath = self.xpathSingle("//*[@id='%s']" % clip_id)
-        self.canvas.beginPath()
-        self.walk_tree(clippath)
-        self.canvas.clip()
+        return self.xpathSingle("//*[@id='%s']" % clip_id)
 
-    def walk_tree(self, root):
+    def walk_tree(self, root, is_clip=False):
         for node in root:
             tag = self.get_tag_name(node)
             class_name = tag.capitalize()
+
+            #if there's not an implemented class, continues
             if not hasattr(svg, class_name):
                 continue
             # creates a instance of 'elem'
             # similar to 'elem = Rect(tag, node, ctx)'
             elem = getattr(svg, class_name)(tag, node, self.canvas)
-            if elem.has_gradient():
-                gradient = self.get_gradient_defs(elem)
-            else:
-                gradient = None
-
-            if elem.has_clip():
-                self.set_clip(elem)
-
+            
+            gradient = self.get_gradient_def(elem)
             elem.start(gradient)
-            elem.draw()
-            self.walk_tree(node)
+            
+            #render only the 'first level' elements in a clipping area
+            if not is_clip and elem.has_clip():
+                clippath = self.get_clip_def(elem)
+                self.canvas.beginPath()
+                if (elem.has_transform()):
+                    self.canvas.save()
+                    trans_matrix = elem.get_transform()
+                    self.canvas.transform(*trans_matrix)
+                self.walk_tree(clippath, True)
+                if (elem.has_transform()):
+                    self.canvas.restore()
+                self.canvas.clip()
+            
+            if is_clip:
+                #clipping elements are drawn differently
+                #only the top-level elements are needed
+                elem.draw(is_clip)
+            else:
+                elem.draw()
+                self.walk_tree(node)
             elem.end()
 
     def effect(self):

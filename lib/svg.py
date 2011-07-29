@@ -67,6 +67,7 @@ class AbstractShape(Element):
         self.node = node
         self.command = command
         self.ctx = ctx
+        self.is_clip = False
 
     def get_data(self):
         return
@@ -120,35 +121,31 @@ class AbstractShape(Element):
     def get_clip_href(self):
         return self.attr("clip-path")[5:-1]
 
-    def start(self, gradient):
+    def start(self, gradient=None):
         self.gradient = gradient
         self.ctx.write("\n// #%s" % self.attr("id"))
-        if self.has_transform():
+        if self.has_transform() or self.has_clip():
             self.ctx.save()
-        if self.has_clip():
-            self.ctx.clip()
 
-    def draw(self):
+    def draw(self, is_clip=False):
         data = self.get_data()
-        style = self.get_style()
-        self.ctx.beginPath()
         if self.has_transform():
             trans_matrix = self.get_transform()
             self.ctx.transform(*trans_matrix) # unpacks argument list
-        if self.has_gradient():
+        if not is_clip:
+            style = self.get_style()
+            self.set_style(style)
+            self.ctx.beginPath()
+        if not is_clip and self.has_gradient():
             self.gradient.draw()
-        self.set_style(style)
         # unpacks "data" in parameters to given method
         getattr(self.ctx, self.command)(*data)
-        self.ctx.closePath()
-
+        if not is_clip:
+            self.ctx.closePath()
 
     def end(self):
         if self.has_transform() or self.has_clip():
             self.ctx.restore()
-
-    def save(self):
-        self.ctx.save()
 
 
 class G(AbstractShape):
@@ -192,15 +189,16 @@ class Ellipse(AbstractShape):
         ry = self.attr("ry")
         return cx, cy, rx, ry
 
-    def draw(self):
+    def draw(self, is_clip=False):
         import math
         cx, cy, rx, ry = self.get_data()
-        style = self.get_style()
-        self.ctx.beginPath()
+        if not is_clip:
+            style = self.get_style()
+            self.set_style(style)
+            self.ctx.beginPath()
         if self.has_transform():
             trans_matrix = self.get_transform()
             self.ctx.transform(*trans_matrix) # unpacks argument list
-        self.set_style(style)
 
         KAPPA = 4 * ((math.sqrt(2) - 1) / 3)
         self.ctx.moveTo(cx, cy - ry)
@@ -208,7 +206,9 @@ class Ellipse(AbstractShape):
         self.ctx.bezierCurveTo(cx + rx, cy + (KAPPA * ry), cx + (KAPPA * rx), cy + ry, cx, cy + ry)
         self.ctx.bezierCurveTo(cx - (KAPPA * rx), cy + ry, cx - rx, cy + (KAPPA * ry), cx - rx, cy)
         self.ctx.bezierCurveTo(cx - rx, cy - (KAPPA * ry), cx - (KAPPA * rx), cy - ry, cx, cy - ry)
-        self.ctx.closePath()
+        
+        if not is_clip:
+            self.ctx.closePath()
 
 
 class Path(AbstractShape):
@@ -302,17 +302,17 @@ class Path(AbstractShape):
         self.ctx.translate(-cx, -cy)
         self.currentPosition = x2, y2
 
-    def draw(self):
+    def draw(self, is_clip=False):
         path = self.get_data()
-        style = self.get_style()
-        """Gets the node type and calls the given method"""
-        self.ctx.beginPath()
+        if not is_clip:
+            style = self.get_style()
+            self.set_style(style)
+            self.ctx.beginPath()
         if self.has_transform():
             trans_matrix = self.get_transform()
             self.ctx.transform(*trans_matrix) # unpacks argument list
-        self.set_style(style)
 
-        """Draws path commands"""
+        #Draws path commands
         path_command = {"M": self.pathMoveTo,
                        "L": self.pathLineTo,
                        "C": self.pathCurveTo,
@@ -322,7 +322,8 @@ class Path(AbstractShape):
             if comm in path_command:
                 path_command[comm](data)
 
-        self.ctx.closePath()
+        if not is_clip:
+            self.ctx.closePath()
 
 
 class Line(Path):
@@ -374,7 +375,7 @@ class Text(AbstractShape):
         y = self.attr("y")
         return x, y
 
-    def draw(self):
+    def draw(self, is_clip=False):
         x, y = self.get_data()
         style = self.get_style()
         if self.has_transform():
