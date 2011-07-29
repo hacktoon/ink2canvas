@@ -88,13 +88,9 @@ class Ink2Canvas(inkex.Effect):
                     self.canvas.restore()
                 self.canvas.clip()
             
-            if is_clip:
-                #clipping elements are drawn differently
-                elem.draw(is_clip)
-                self.walk_tree(node, True)
-            else:
-                elem.draw()
-                self.walk_tree(node)
+            #clipping elements are drawn differently
+            elem.draw(is_clip)
+            self.walk_tree(node, is_clip)
             elem.end()
 
     def effect(self):
