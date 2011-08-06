@@ -323,7 +323,7 @@ class Path(AbstractShape):
                 path_command[comm](data)
 
         if not is_clip:
-            self.ctx.closePath()
+            self.ctx.closePath(comm == "Z")
 
 
 class Line(Path):

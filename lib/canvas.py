@@ -188,12 +188,12 @@ class Canvas:
     def restore(self):
         self.write("ctx.restore();")
 
-    def closePath(self):
+    def closePath(self, is_closed=False):
+        if is_closed:
+            self.write("ctx.closePath();")
         if "fill" in self.style and self.style["fill"] != "none":
             self.write("ctx.fill();")
         if "stroke" in self.style and self.style["stroke"] != "none":
             self.write("ctx.stroke();")
-        #self.write("%s.closePath();" % self.obj)
-
     def clip(self):
         self.write("ctx.clip();")
