@@ -14,6 +14,7 @@ In the seconde case, you will have to copy from */usr/share/inkscape/extensions/
 ## How to use:
 Open Inkscape file and choose HTML5 output option at "Save as" menu.
 
+You can find good SVG sample files at [Croczilla](http://croczilla.com/bits_and_pieces/svg/samples).
     
 ## Project Map
 
