@@ -19,9 +19,11 @@ NOTE: the Python modules in the *lib/* folder already exists in the Inkscape sys
 
 ## How to use:
 **Extension**
+
 Open Inkscape file and choose "HTML5 output" option at "Save as" menu.
 
 **Standalone**
+
 python standalone.py INPUT [OUTPUT]
 
 You can find good SVG sample files at [Croczilla](http://croczilla.com/bits_and_pieces/svg/samples).
