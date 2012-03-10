@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 '''
-Copyright (C) 2011 Karlisson Bezerra, contact@hacktoon.com
+Copyright (C) 2012 Karlisson Bezerra, contact@hacktoon.com
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 '''
 
-import inkex
-from lib.canvas import Canvas
-import lib.svg as svg
+from lib import inkex
+from canvas import Canvas
+import svg
 
 log = inkex.debug  #alias to debug method
 
@@ -60,6 +60,15 @@ class Ink2Canvas(inkex.Effect):
         clip_id = elem.get_clip_href()
         return self.xpathSingle("//*[@id='%s']" % clip_id)
 
+    def is_clone(self, node):
+        href = node.get(inkex.addNS("href", "xlink"))
+        return bool(href)
+
+    def get_clone(self, node):
+        href = node.get(inkex.addNS("href", "xlink"))
+        clone = self.xpathSingle("//*[@id='%s']" % href[1:])
+        return clone
+
     def walk_tree(self, root, is_clip=False):
         for node in root:
             tag = self.get_tag_name(node)
@@ -71,6 +80,14 @@ class Ink2Canvas(inkex.Effect):
             # creates a instance of 'elem'
             # similar to 'elem = Rect(tag, node, ctx)'
             elem = getattr(svg, class_name)(tag, node, self.canvas)
+            
+            if self.is_clone(node):
+                clone = self.get_clone(node)
+                if (elem.has_transform()):
+                    trans_matrix = elem.get_transform()
+                    self.canvas.transform(*trans_matrix)
+                self.walk_tree([clone])
+                continue
             
             gradient = self.get_gradient_def(elem)
             elem.start(gradient)
