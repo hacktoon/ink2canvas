@@ -2,7 +2,7 @@ import sys
 import unittest
 
 sys.path.append('..')
-from canvas import Canvas
+from ink2canvas.canvas import Canvas
 
 class TestSequenceFunctions(unittest.TestCase):
   def setUp(self):
