@@ -97,6 +97,39 @@ class TestCanvas(unittest.TestCase):
         self.canvasWithContext.setStrokeLinejoin("banana")
         self.assertEqual(self.canvasWithContext.code, ["\tfoo.lineJoin = '%s';\n" % "banana"])
         
+    def testSetStrokeLinecap(self):
+        self.canvas.setStrokeLinecap("banana")
+        self.assertEqual(self.canvas.code, ["\tctx.lineCap = '%s';\n" % "banana"])
+        
+    def testSetStrokeLinecapNewCtx(self):
+        self.canvasWithContext.setStrokeLinecap("banana")
+        self.assertEqual(self.canvasWithContext.code, ["\tfoo.lineCap = '%s';\n" % "banana"])
+    
+    def testSetStrokeWidth(self):
+        self.canvas.setStrokeWidth("2px")
+        self.assertEqual(self.canvas.code, ["\tctx.lineWidth = %f;\n" % 2])
+        
+    def testSetStrokeWidthNewCtx(self):
+        self.canvasWithContext.setStrokeWidth("2px")
+        self.assertEqual(self.canvasWithContext.code, ["\tfoo.lineWidth = %f;\n" % 2])
+
+    def testQuadraticCurveTo(self):
+        self.canvas.quadraticCurveTo(4, 6, 2.3, -4)
+        self.assertEqual(self.canvas.code, ["\tctx.quadraticCurveTo(%f, %f, %f, %f);\n" % (4, 6, 2.3, -4)])
+        
+    def testQuadraticCurveToWithNewCtx(self):
+        self.canvasWithContext.quadraticCurveTo(4, 6, 2, 4)
+        self.assertEqual(self.canvasWithContext.code, ["\tfoo.quadraticCurveTo(%f, %f, %f, %f);\n" % (4, 6, 2, 4)])
+       
+    def testFillText(self):
+        self.canvas.fillText("batata", 4, 6)
+        self.assertEqual(self.canvas.code, ["\tctx.fillText(\"%s\", %f, %f);\n" % ("batata", 4, 6)])
+        
+    def testFillTextWithNewCtx(self):
+        self.canvasWithContext.fillText("batata", 4, 6)
+        self.assertEqual(self.canvasWithContext.code, ["\tfoo.fillText(\"%s\", %f, %f);\n" % ("batata", 4, 6)])
+   
+                    
             
 if __name__ == '__main__':
     unittest.main()
