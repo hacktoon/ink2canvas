@@ -90,6 +90,42 @@ class TestCanvas(unittest.TestCase):
         expectedReturn = "\tctx.globalAlpha = %.1f;\n" % float(value)
         self.canvas.setOpacity(value)
         self.assertEqual(self.canvas.code[1], expectedReturn)
+        
+    def testSetFillNoOpacity(self):
+        value = "url()"
+        self.canvas.setFill(value)
+        self.assertEqual(self.canvas.code, [])
+        
+        value = "0 0 255"
+        fill = self.canvas.getColor(value, 1)
+        self.canvas.setFill(value)
+        self.assertEqual(self.canvas.code[0], "\tctx.fillStyle = %s;\n" % fill)
+        
+        value = "0 0 254"
+        fill = self.canvas.getColor(value, 1)
+        self.assertNotEqual(self.canvas.code[0], "\tctx.fillStyle = %s;\n" % fill)
+        
+    def testSetFillWithOpacity(self):
+        self.canvas.style["fill-opacity"] = 0.5
+        
+        value = "url()"
+        self.canvas.setFill(value)
+        self.assertEqual(self.canvas.code, [])
+        
+        value = "0 0 255"
+        fill = self.canvas.getColor(value, 0.5)
+        self.canvas.setFill(value)
+        self.assertEqual(self.canvas.code[0], "\tctx.fillStyle = %s;\n" % fill)
+        
+        value = "0 0 254"
+        fill = self.canvas.getColor(value, 0.5)
+        self.assertNotEqual(self.canvas.code[0], "\tctx.fillStyle = %s;\n" % fill)
+        
+    def testSetStroke(self):
+        value = "0 0 255"
+        self.canvas.setStroke(value)
+        self.assertEqual(self.canvas.code[0], "\tctx.strokeStyle = %s;\n" % self.canvas.getColor(value, 1))
+        
 
 if __name__ == '__main__':
     unittest.main()
