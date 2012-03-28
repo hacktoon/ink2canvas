@@ -126,6 +126,42 @@ class TestCanvas(unittest.TestCase):
         self.canvas.setStroke(value)
         self.assertEqual(self.canvas.code[0], "\tctx.strokeStyle = %s;\n" % self.canvas.getColor(value, 1))
         
+        value = "0 0 254"
+        self.assertNotEqual(self.canvas.code[0], "\tctx.strokeStyle = %s;\n" % self.canvas.getColor(value, 1))
+        
+        self.canvas.style["stroke-opacity"] = 0.5
+        
+        value = "0 0 255"
+        self.canvas.setStroke(value)
+        self.assertEqual(self.canvas.code[1], "\tctx.strokeStyle = %s;\n" % self.canvas.getColor(value, 0.5))
+        
+        value = "0 0 254"
+        self.assertNotEqual(self.canvas.code[0], "\tctx.strokeStyle = %s;\n" % self.canvas.getColor(value, 0.5))
+
+    def testSetFont(self):
+        value = "Fonte"
+        self.canvas.setFont(value)
+        self.assertEqual(self.canvas.code[0],"\tctx.font = \"%s\";\n" % value)
+    
+    def testTranslate(self):
+        cx = cy = 1.0
+        self.canvas.write("ctx.translate(%f, %f);" % (cx, cy))
+        self.assertEqual(self.canvas.code[0],"\tctx.translate(%f, %f);\n" % (cx, cy))
+        
+    def testRotate(self):
+        angle = 1.0
+        self.canvas.write("ctx.rotate(%f);" % angle)
+        self.assertEqual(self.canvas.code[0],"\tctx.rotate(%f);\n" % angle)
+
+    def testsScale(self):
+        rx, ry = 1.0, 2.0
+        self.canvas.write("ctx.scale(%f, %f);" % (rx, ry))
+        self.assertEqual(self.canvas.code[0],"\tctx.scale(%f, %f);\n" % (rx, ry))
+
+    def testsTransform(self):
+        m11, m12, m21, m22, dx, dy = 1.0, 2.0, 3.0, 4.0, 5.0, 6.0
+        self.canvas.write("ctx.transform(%f, %f, %f, %f, %f, %f);" % (m11, m12, m21, m22, dx, dy))
+        self.assertEqual(self.canvas.code[0],"\tctx.transform(%f, %f, %f, %f, %f, %f);\n" % (m11, m12, m21, m22, dx, dy))
 
 if __name__ == '__main__':
     unittest.main()
