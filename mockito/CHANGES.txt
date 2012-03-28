@@ -1,0 +1,42 @@
+MOCKITO CHANGE LOG
+==================
+
+Release 0.5.1 (August 4, 2010)
+------------------------------
+BUG Fixes:
+ - Fixed issue #9 [http://bitbucket.org/szczepiq/mockito-python/issue/9] : Generating stubs from classes caused method to be replaced in original classes.
+
+Release 0.5.0 (July 26, 2010)
+-----------------------------
+API Changes:
+ - Added possibility to spy on real objects.
+ - Added "never" syntactic sugar for verifications.
+
+BUG Fixes:
+ - Fixed issue with named arguments matching.
+
+Other Changes:
+ - Python 2.7 support
+ - Deprecated APIs now generate deprecation warnings.
+
+Release 0.4.0 (July 2, 2010)
+----------------------------
+API Changes:
+ - Added possibility to verify invocations in order.
+
+BUG Fixes:
+ - Fixed issue with installing mockito from egg without distribute installed.
+
+Release 0.3.1
+-------------
+Bug-fix release.
+Bug Fixes:
+ - Fixed annoying issue #8 [http://bitbucket.org/szczepiq/mockito-python/issue/8]
+
+Release 0.3.0
+-------------
+API Changes:
+ - Renamed mock creation method from "Mock" (upper "M") to "mock". Old name stays for compatibility until 1.0 release.
+Other Changes:
+ - Official Python3 support via distutils + 2to3.
+
