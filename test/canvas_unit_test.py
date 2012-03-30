@@ -2,7 +2,6 @@ import sys
 import unittest
 sys.path.append('..')
 
-from mockito.mockito import *
 from ink2canvas.canvas import Canvas
 
 class TestCanvas(unittest.TestCase):
@@ -21,7 +20,7 @@ class TestCanvas(unittest.TestCase):
         self.canvasWithContext.beginPath()
         self.assertEqual(self.canvasWithContext.code, ["\tfoo.beginPath();\n"])
         
-    def testGetColorWithALowerThenOne(self):    
+    def testGetColorWithALowerThenOne(self): 
         retorno = self.canvas.getColor(self.string_rgb, 0)
         self.assertEqual(retorno, "'rgba(%d, %d, %d, %.1f)'" % (251, 186, 10, 0))
                   
@@ -129,8 +128,30 @@ class TestCanvas(unittest.TestCase):
         self.canvasWithContext.fillText("batata", 4, 6)
         self.assertEqual(self.canvasWithContext.code, ["\tfoo.fillText(\"%s\", %f, %f);\n" % ("batata", 4, 6)])
    
-                    
-            
+    def testSave(self):
+        self.canvas.save()
+        self.assertEqual(self.canvas.code, ["\tctx.save();\n"])
+        
+    def testSaveWithNewCtx(self):
+        self.canvasWithContext.save()
+        self.assertEqual(self.canvasWithContext.code, ["\tfoo.save();\n"])
+     
+    def testClip(self):
+        self.canvas.clip()
+        self.assertEqual(self.canvas.code, ["\tctx.clip();\n"])
+        
+    def testClipWithNewCtx(self):
+        self.canvasWithContext.clip()
+        self.assertEqual(self.canvasWithContext.code, ["\tfoo.clip();\n"]) 
+    
+    def testArc(self):
+        self.canvas.arc(1, 2, 3, 4, 5, 1)
+        self.assertEqual(self.canvas.code, ["\tctx.arc(%f, %f, %f, %f, %.8f, %d);\n" % (1, 2, 3, 4, 5, 1)])
+        
+    def testArcWithNewCtx(self):
+        self.canvasWithContext.arc(1, 2, 3, 4, 5, 1)
+        self.assertEqual(self.canvasWithContext.code, ["\tfoo.arc(%f, %f, %f, %f, %.8f, %d);\n" % (1, 2, 3, 4, 5, 1)])
+             
 if __name__ == '__main__':
     unittest.main()
     
