@@ -24,9 +24,25 @@ class TestCanvas(unittest.TestCase):
         self.assertEqual(self.canvasWithContext.code, ["\tfoo.beginPath();\n"])
         
     #EqualStyle
-    def testEqualStyleIfKeyIsInStyleCache(self):
-        self.canvas.styleCache = {'ola':1}
-        self.assertEqual(self.canvas.equalStyle(0,'ola'), True)
+    def testPutStyleinCacheFirstElement(self):
+        self.canvas.putStyleInCache({'foo': "bar"}) 
+        self.assertEqual(self.canvas.styleCache, {'foo': "bar"})
+
+    def testPutStyleInCacheAddSecondElement(self):
+        self.canvas.putStyleInCache({'foo': "bar"}) 
+        self.canvas.putStyleInCache({'fooo': "baar"}) 
+        self.assertEqual(self.canvas.styleCache, {'fooo': "baar", 'foo':"bar"})
+        
+    def testPutStyleInCacheChangingValue(self):
+        self.canvas.putStyleInCache({'foo': "bar"}) 
+        self.canvas.putStyleInCache({'foo': "baar"}) 
+        self.assertEqual(self.canvas.styleCache, {'foo': "baar"})
+        
+    def testPutStyleInCacheWithNULLValue(self):
+        self.canvas.putStyleInCache({'foo': "bar"})
+        self.canvas.putStyleInCache({'foo':""}) 
+        self.assertEqual(self.canvas.styleCache, {'foo': "bar"})
+
 
         
       
