@@ -28,9 +28,6 @@ class TestCanvas(unittest.TestCase):
         self.canvas.styleCache = {'ola':1}
         self.assertEqual(self.canvas.equalStyle(0,'ola'), True)
 
-    def testEqualStyleIfKeyIsNOTInStyleCache(self):
-        self.canvas.styleCache = {'ola':1}
-        self.assertEqual(self.canvas.equalStyle({'olaa':1},'olaa'), False)
         
       
    
