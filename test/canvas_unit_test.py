@@ -2,7 +2,6 @@ import sys
 import unittest
 sys.path.append('..')
 
-from mockito.mockito import *
 from ink2canvas.canvas import Canvas
 
 class TestCanvas(unittest.TestCase):
@@ -162,7 +161,30 @@ class TestCanvas(unittest.TestCase):
         m11, m12, m21, m22, dx, dy = 1.0, 2.0, 3.0, 4.0, 5.0, 6.0
         self.canvas.write("ctx.transform(%f, %f, %f, %f, %f, %f);" % (m11, m12, m21, m22, dx, dy))
         self.assertEqual(self.canvas.code[0],"\tctx.transform(%f, %f, %f, %f, %f, %f);\n" % (m11, m12, m21, m22, dx, dy))
+                                    
+    def testRestore(self):
+        text = "ctx.restore();"
+        self.canvas.write(text)
+        self.assertEqual(self.canvas.code[0],"\t"+text+"\n")
+        
+    def testClosePath(self):
+        text1, text2, text3 = "ctx.closePath();","ctx.fill();","ctx.stroke();"
+        self.canvas.closePath(False)
+        self.assertEquals(self.canvas.code, [])
+        
+        self.canvas.style["fill"] = "none"
+        self.canvas.style["stroke"] = "none"
+        self.canvas.closePath(True)                                    
+        self.assertEqual(self.canvas.code[0],"\t"+text1+"\n")
 
+        self.canvas.style["fill"] = "fill"
+        self.canvas.style["stroke"] = "stroke"
+        self.canvas.closePath(True)
+        self.assertEqual(self.canvas.code[1],"\t"+text1+"\n")
+        self.assertEqual(self.canvas.code[2],"\t"+text2+"\n")
+        self.assertEqual(self.canvas.code[3],"\t"+text3+"\n")
+
+        
 if __name__ == '__main__':
     unittest.main()
-    
+        
