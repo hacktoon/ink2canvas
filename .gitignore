@@ -1,4 +1,9 @@
+.gitignore
 *.swp
 *.swo
 *.pyc
 mockito/*
+.project
+.pydevproject
+.settings/org.eclipse.core.resources.prefs
+*~
