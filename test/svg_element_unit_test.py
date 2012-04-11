@@ -10,7 +10,7 @@ class TestSvgElement(unittest.TestCase):
     def setUp(self):
         self.element = Element()
         self.effect = Effect()
-        self.document = self.effect.parse("/home/tasso/git/ink2canvas/test/arquivos_test/circulo.svg")
+        self.document = self.effect.parse("arquivos_test/circulo.svg")
         self.node = self.effect.document.getroot()
         
     def testAttrWithNs(self):
