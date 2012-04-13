@@ -41,7 +41,7 @@ class Canvas:
         <!DOCTYPE html>
         <html>
         <head>
-		    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
             <title>Inkscape Output</title>
         </head>
         <body>
@@ -55,13 +55,13 @@ class Canvas:
         """
         return dedent(html) % (self.width, self.height, self.obj, "".join(self.code))
 
-    def equalStyle(self, style, key):
+    def putStyleInCache(self, style):
         """Checks if the last style used is the same or there's no style yet"""
-        if key in self.styleCache:
-            return True
-        if key not in style:
-            return True
-        return style[key] == self.styleCache[key]
+        for x in style.values():
+            if x != "":
+                self.styleCache.update(style)
+    
+
 
     def beginPath(self):
         self.write("ctx.beginPath();")
