@@ -16,6 +16,7 @@ class TestCanvas(unittest.TestCase):
         self.canvas.beginPath()
         self.assertEqual(self.canvas.code, ["\tctx.beginPath();\n"])
         
+        
     def testBeginPathIfWritesRightWithNewCtx(self):
         self.canvasWithContext.beginPath()
         self.assertEqual(self.canvasWithContext.code, ["\tfoo.beginPath();\n"])
