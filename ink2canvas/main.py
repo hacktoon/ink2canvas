@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 import inkex
 from canvas import Canvas
 import svg
+import sys
 
 log = inkex.debug  #alias to debug method
 
@@ -30,88 +31,96 @@ class Ink2Canvas(inkex.Effect):
         inkex.Effect.__init__(self)
         self.canvas = None
 
-    def get_tag_name(self, node):
+    def output(self):
+        content = self.canvas.output()
+        sys.stdout.write(content.encode("utf-8"))
+
+    def getNodeTagName(self, node):
         # remove namespace part from "{http://www.w3.org/2000/svg}elem"
         return node.tag.split("}")[1]
 
-    def get_gradient_def(self, elem):
+    def getGradientDef(self, elem):
         if not elem.has_gradient():
             return None
-        url_id = elem.get_gradient_href()
+        gradientHref = elem.get_gradient_href()
+        
         # get the gradient element
-        gradient = self.xpathSingle("//*[@id='%s']" % url_id)
+        gradient = self.xpathSingle("//*[@id='%s']" % gradientHref)
+        
         # get the color stops
-        url_stops = gradient.get(inkex.addNS("href", "xlink"))
-        gstops = self.xpathSingle("//svg:linearGradient[@id='%s']" % url_stops[1:])
+        colorStops = gradient.get(inkex.addNS("href", "xlink"))
+        
+        colorStopsNodes = self.xpathSingle("//svg:linearGradient[@id='%s']" % colorStops[1:])
+        
         colors = []
-        for stop in gstops:
-            colors.append(stop.get("style"))
+        for color in colorStopsNodes:
+            colors.append(color.get("style"))
         if gradient.get("r"):
             return svg.RadialGradientDef(gradient, colors)
         else:
             return svg.LinearGradientDef(gradient, colors)
 
-    def get_clip_def(self, elem):
-        clip_id = elem.get_clip_href()
-        return self.xpathSingle("//*[@id='%s']" % clip_id)
+    def getClipDef(self, elem):
+        clipId = elem.get_clip_href()
+        return self.xpathSingle("//*[@id='%s']" % clipId)
 
-    def is_clone(self, node):
-        href = node.get(inkex.addNS("href", "xlink"))
-        return bool(href)
+    def isCloneNode(self, node):
+        cloneHref = node.get(inkex.addNS("cloneHref", "xlink"))
+        return bool(cloneHref)
 
-    def get_clone(self, node):
-        href = node.get(inkex.addNS("href", "xlink"))
-        clone = self.xpathSingle("//*[@id='%s']" % href[1:])
+    def getCloneNode(self, node):
+        cloneHref = node.get(inkex.addNS("cloneHref", "xlink"))
+        clone = self.xpathSingle("//*[@id='%s']" % cloneHref[1:])
         return clone
 
-    def walk_tree(self, root, is_clip=False):
-        for node in root:
-            tag = self.get_tag_name(node)
-            class_name = tag.capitalize()
+    def walkInSVGNodes(self, rootNode, isClip=False):
+        for childNode in rootNode:
+            tagName = self.getNodeTagName(childNode)
+            className = tagName.capitalize()
 
             #if there's not an implemented class, continues
-            if not hasattr(svg, class_name):
+            if not hasattr(svg, className):
                 continue
-            # creates a instance of 'elem'
-            # similar to 'elem = Rect(tag, node, ctx)'
-            elem = getattr(svg, class_name)(tag, node, self.canvas)
+            # creates a instance of 'element'
+            # similar to 'element = Rect(tagName, childNode, ctx)'
+            element = getattr(svg, className)(tagName, childNode, self.canvas)
             
-            if self.is_clone(node):
-                clone = self.get_clone(node)
-                if (elem.has_transform()):
-                    trans_matrix = elem.get_transform()
-                    self.canvas.transform(*trans_matrix)
-                self.walk_tree([clone])
+            if self.isCloneNode(childNode):
+                cloneNode = self.getCloneNode(childNode)
+                if (element.has_transform()):
+                    transMatrix = element.get_transform()
+                    self.canvas.transform(*transMatrix)
+                self.walkInSVGNodes([cloneNode])
                 continue
             
-            gradient = self.get_gradient_def(elem)
-            elem.start(gradient)
+            gradient = self.getGradientDef(element)
+            element.start(gradient)
             
             #render only the 'first level' elements in a clipping area
-            if not is_clip and elem.has_clip():
-                clippath = self.get_clip_def(elem)
+            if not isClip and element.has_clip():
+                clipPath = self.getClipDef(element)
                 self.canvas.beginPath()
-                if (elem.has_transform()):
+                if (element.has_transform()):
                     self.canvas.save()
-                    trans_matrix = elem.get_transform()
-                    self.canvas.transform(*trans_matrix)
-                self.walk_tree(clippath, True)
-                if (elem.has_transform()):
+                    transMatrix = element.get_transform()
+                    self.canvas.transform(*transMatrix)
+                self.walkInSVGNodes(clipPath, True)
+                if (element.has_transform()):
                     self.canvas.restore()
                 self.canvas.clip()
             
             #clipping elements are drawn differently
-            elem.draw(is_clip)
-            self.walk_tree(node, is_clip)
-            elem.end()
+            element.draw(isClip)
+            self.walkInSVGNodes(childNode, isClip)
+            element.end()
 
     def effect(self):
         """Applies the effect"""
-        svg_root = self.document.getroot()
-        width = inkex.unittouu(svg_root.get("width"))
-        height = inkex.unittouu(svg_root.get("height"))
+        svgRoot = self.document.getroot()
+        width = inkex.unittouu(svgRoot.get("width"))
+        height = inkex.unittouu(svgRoot.get("height"))
         self.canvas = Canvas(width, height)
-        self.walk_tree(svg_root)
+        self.walkInSVGNodes(svgRoot)
 
 
 if __name__ == "__main__":
