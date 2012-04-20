@@ -27,13 +27,8 @@ log = inkex.debug  #alias to debug method
 
 class Ink2Canvas(inkex.Effect):
     def __init__(self):
-        inkex.Effect(self)
+        inkex.Effect.__init__(self)
         self.canvas = None
-
-    def output(self):
-        import sys
-        content = self.canvas.output()
-        sys.stdout.write(content.encode("utf-8"))
 
     def get_tag_name(self, node):
         # remove namespace part from "{http://www.w3.org/2000/svg}elem"
