@@ -17,22 +17,32 @@ class TestSvgAbstractShape(unittest.TestCase):
             if tag == "path":
                 return node
         return None
-    
-    
-    
-    
+
     def setUp(self):
         self.canvas = Canvas(0,0)
         self.effect = Effect()
-        self.document = self.effect.parse("arquivos_test/circulo.svg")
-        print self.document
+        self.document = self.effect.parse("arquivos_test/imageToTestAbstractShape.svg")
         self.root = self.effect.document.getroot()
-        print self.root
         self.node = self.returnsGnode(self.root)
-        print self.node
-        self.abstractShape = AbstractShape( None,self.node,self.canvas)   
-   
-        print self.abstractShape.get_style()
+        self.abstractShape = AbstractShape( None,self.node,self.canvas)
+
+    def testGetStyle(self):
+        style = self.abstractShape.get_style()
+        strStyle = "fill:#ff0000;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+        hashStyle = dict([i.split(":") for i in strStyle.split(";") if len(i)])
+        self.assertEqual(hashStyle,style)
+
+        strStyle = "fill:ff0000;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+        hashStyle = dict([i.split(":") for i in strStyle.split(";") if len(i)])
+        self.assertNotEqual(hashStyle,style)
+
+    def testSet_style(self):
+        style = self.abstractShape.get_style()
+        strStyle = "fill:#ff0000;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+        hashStyle = dict([i.split(":") for i in strStyle.split(";") if len(i)])
+        self.abstractShape.set_style(hashStyle)
+        print self.abstractShape.ctx.lineJoin
+
         
     def testX(self):
         
