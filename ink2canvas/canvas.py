@@ -97,7 +97,7 @@ class Canvas:
             pos = float(stop.get("offset"))
             self.addColorStop(href, pos, color)
         """
-        return None #href
+        return None
 
     def setOpacity(self, value):
         self.write("ctx.globalAlpha = %.1f;" % float(value))
