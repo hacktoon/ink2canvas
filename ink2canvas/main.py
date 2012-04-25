@@ -25,7 +25,7 @@ import sys
 
 log = inkex.debug  #alias to debug method
 
-
+ 
 class Ink2Canvas(inkex.Effect):
     def __init__(self):
         inkex.Effect.__init__(self)
