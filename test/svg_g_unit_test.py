@@ -18,7 +18,6 @@ from ink2canvas.canvas import Canvas
 class TestSvgG(unittest.TestCase):
 
     def setUp(self):
-        #self.element = Element()
         self.effect = Effect()
         
         self.document = self.effect.parse("arquivos_test/Transform.svg")
@@ -27,7 +26,7 @@ class TestSvgG(unittest.TestCase):
             
         self.canvas = Canvas(0, 0)
         self.g = G(None, self.node, self.canvas)
-        
+
     def findTag(self, root, no):
         for node in root:
             tag = node.tag.split("}")[1]
