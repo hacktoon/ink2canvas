@@ -8,18 +8,17 @@ import sys
 from inkex import Effect
 sys.path.append('..')
 
-from ink2canvas.svg.AbstractShape import AbstractShape
 from ink2canvas.svg.Rect import Rect
 from ink2canvas.canvas import Canvas
-class Test(unittest.TestCase):
+
+class TestRect(unittest.TestCase):
     def setUp(self):
         self.effect = Effect()
         self.document = None
         self.effect.parse("arquivos_test/retanguloComRxRy.svg")
         self.node = None
         self.canvas = Canvas(0, 0)
-        
-        
+              
     def findNodeInG(self, root, tag):
         for node in root:
             nodeTag = node.tag.split("}")[1]
@@ -31,8 +30,6 @@ class Test(unittest.TestCase):
             if(nodeTag == tag):
                 return node
         
-        
-
     def testExitWithoutRxRy(self):
         self.document = self.effect.parse("arquivos_test/retanguloSemRxRy.svg")
         root = self.effect.document.getroot()
