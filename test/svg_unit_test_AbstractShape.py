@@ -67,7 +67,50 @@ class TestSvgAbstractShape(unittest.TestCase):
         self.assertEqual(True, canvas.abstractShape.has_transform())
 
     def testGet_transform(self):
-            
-
+        "matrix(1,0,0.3802532,0.92488243,0,0)"
+        m11 = (float(1),float(0),float(0.3802532),float(0.92488243),0.0,0.0)
+        
+        canvas = Canvas(0,1)
+        canvas.effect = Effect()
+        canvas.document = canvas.effect.parse("arquivos_test/desenho_transformado.svg")
+        canvas.root = canvas.effect.document.getroot()
+        canvas.node = self.returnsGnode(canvas.root,"rect")
+        canvas.abstractShape = AbstractShape( None,canvas.node,self.canvas)
+        
+        vetor = canvas.abstractShape.get_transform()
+        
+        self.assertEqual(m11, vetor)
+    def testHas_Gradient(self):
+        
+        canvas = Canvas(0,1)
+        canvas.effect = Effect()
+        canvas.document = canvas.effect.parse("arquivos_test/desenhoGradienteLinear.svg")
+        canvas.root = canvas.effect.document.getroot()
+        canvas.node = self.returnsGnode(canvas.root,"path")
+        canvas.abstractShape = AbstractShape( None,canvas.node,self.canvas)
+        
+        self.assertEqual(canvas.abstractShape.has_gradient(), True)
+        
+        canvas.document = canvas.effect.parse("arquivos_test/desenhoGradienteRadial.svg")
+        canvas.root = canvas.effect.document.getroot()
+        canvas.node = self.returnsGnode(canvas.root,"path")
+        canvas.abstractShape = AbstractShape( None,canvas.node,self.canvas)
+        
+        self.assertEqual(canvas.abstractShape.has_gradient(), True)
+        
+        self.assertNotEqual(self.abstractShape.has_gradient(),True)
+        
+    def test_getGradientHref(self):
+        retorno ="linearGradient3022"
+        canvas = Canvas(0,1)
+        canvas.effect = Effect()
+        canvas.document = canvas.effect.parse("arquivos_test/desenhoGradienteLinear.svg")
+        canvas.root = canvas.effect.document.getroot()
+        canvas.node = self.returnsGnode(canvas.root,"path")
+        canvas.abstractShape = AbstractShape( None,canvas.node,self.canvas)
+        
+        self.assertEqual(retorno,canvas.abstractShape.get_gradient_href())
+        
+        
 if __name__ == '__main__':
     unittest.main()
