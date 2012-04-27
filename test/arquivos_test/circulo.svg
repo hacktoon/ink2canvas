@@ -47,10 +47,7 @@
       </cc:Work>
     </rdf:RDF>
   </metadata>
-  <g
-     inkscape:label="Camada 1"
-     inkscape:groupmode="layer"
-     id="layer1">
+  <g>
     <path
        sodipodi:type="arc"
        style="fill:#ff0000;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -60,5 +57,5 @@
        sodipodi:rx="78.286819"
        sodipodi:ry="78.286819"
        d="m 395.97978,211.41019 a 78.286819,78.286819 0 1 1 -156.57364,0 78.286819,78.286819 0 1 1 156.57364,0 z" />
-  </g>
+ </g>
 </svg>

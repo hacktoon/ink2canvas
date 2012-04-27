@@ -1,10 +1,22 @@
 import sys
 import unittest
+import inkex
+
 
 sys.path.append('..')
 import Canvas
 
+
 class TestSequenceFunctions(unittest.TestCase):
+    
+    
+    
+    
+    
+    def testParse(self):
+       
+    
+    
     def setUp(self):
         self.canvas = Canvas()
         self.canvas.code = ""

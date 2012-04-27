@@ -16,6 +16,7 @@ class TestCanvas(unittest.TestCase):
         self.canvas.beginPath()
         self.assertEqual(self.canvas.code, ["\tctx.beginPath();\n"])
         
+        
     def testBeginPathIfWritesRightWithNewCtx(self):
         self.canvasWithContext.beginPath()
         self.assertEqual(self.canvasWithContext.code, ["\tfoo.beginPath();\n"])
@@ -295,28 +296,31 @@ class TestCanvas(unittest.TestCase):
     
     def testTranslate(self):
         cx = cy = 1.0
-        self.canvas.write("ctx.translate(%f, %f);" % (cx, cy))
+        self.canvas.translate(cx, cy)
         self.assertEqual(self.canvas.code[0],"\tctx.translate(%f, %f);\n" % (cx, cy))
         
     def testRotate(self):
         angle = 1.0
-        self.canvas.write("ctx.rotate(%f);" % angle)
+        self.canvas.rotate(angle)
         self.assertEqual(self.canvas.code[0],"\tctx.rotate(%f);\n" % angle)
 
     def testsScale(self):
         rx, ry = 1.0, 2.0
-        self.canvas.write("ctx.scale(%f, %f);" % (rx, ry))
+        self.canvas.scale(rx, ry)
         self.assertEqual(self.canvas.code[0],"\tctx.scale(%f, %f);\n" % (rx, ry))
 
     def testsTransform(self):
         m11, m12, m21, m22, dx, dy = 1.0, 2.0, 3.0, 4.0, 5.0, 6.0
-        self.canvas.write("ctx.transform(%f, %f, %f, %f, %f, %f);" % (m11, m12, m21, m22, dx, dy))
+        self.canvas.transform(m11, m12, m21, m22, dx, dy)
         self.assertEqual(self.canvas.code[0],"\tctx.transform(%f, %f, %f, %f, %f, %f);\n" % (m11, m12, m21, m22, dx, dy))
                                     
     def testRestore(self):
-        text = "ctx.restore();"
-        self.canvas.write(text)
-        self.assertEqual(self.canvas.code[0],"\t"+text+"\n")
+        self.canvas.restore()
+        self.assertEqual(self.canvas.code[0],"\tctx.restore();\n")
+        
+    def testSetGradient(self):
+        retorno = self.canvas.setGradient(None)
+        self.assertEqual(retorno,None)
         
     def testClosePath(self):
         text1, text2, text3 = "ctx.closePath();","ctx.fill();","ctx.stroke();"
