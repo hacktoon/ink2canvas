@@ -14,7 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.2 r9819"
-   sodipodi:docname="circulo.svg">
+   sodipodi:docname="Novo documento 1">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -24,17 +24,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.98994949"
-     inkscape:cx="260.56666"
-     inkscape:cy="766.70527"
+     inkscape:zoom="0.35"
+     inkscape:cx="350"
+     inkscape:cy="520"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1366"
-     inkscape:window-height="744"
-     inkscape:window-x="0"
+     inkscape:window-width="486"
+     inkscape:window-height="415"
+     inkscape:window-x="790"
      inkscape:window-y="24"
-     inkscape:window-maximized="1" />
+     inkscape:window-maximized="0" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -47,15 +47,18 @@
       </cc:Work>
     </rdf:RDF>
   </metadata>
-  <g>
-    <path
-       sodipodi:type="arc"
-       style="fill:#ff0000;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       id="path3033"
-       sodipodi:cx="317.69296"
-       sodipodi:cy="211.41019"
-       sodipodi:rx="78.286819"
-       sodipodi:ry="78.286819"
-       d="m 395.97978,211.41019 a 78.286819,78.286819 0 1 1 -156.57364,0 78.286819,78.286819 0 1 1 156.57364,0 z" />
- </g>
+  <g
+     inkscape:label="Camada 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#0000ff;fill-rule:evenodd;stroke:#000000;stroke-width:1.01263237px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="rect2985"
+       width="491.4249"
+       height="389.66415"
+       x="-60.184902"
+       y="294.05551"
+       ry="5.8596115"
+       transform="matrix(1,0,0.3802532,0.92488243,0,0)" />
+  </g>
 </svg>
