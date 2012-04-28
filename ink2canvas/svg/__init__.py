@@ -8,6 +8,7 @@ from ink2canvas.svg.Path import Path
 from ink2canvas.svg.Polygon import Polygon
 from ink2canvas.svg.Polyline import Polyline
 from ink2canvas.svg.RadialGradientDef import RadialGradientDef
+from ink2canvas.svg.Circle import Circle
 from ink2canvas.svg.Rect import Rect
 from ink2canvas.svg.Text import Text
 from ink2canvas.svg.Use import Use
