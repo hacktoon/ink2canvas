@@ -10,7 +10,7 @@ from ink2canvas.svg.Ellipse import Ellipse
 class TestSvgEllipse(unittest.TestCase):
     def setUp(self):
         self.effect = Effect()
-        self.document = self.effect.parse("arquivos_test/elipse2.svg")
+        self.document = self.effect.parse("arquivos_test/svg_ellipse_unit_test.svg")
         root = self.effect.document.getroot()
         self.node = self.findTag(root, "ellipse")
 

@@ -13,7 +13,7 @@ class TestTextAbstractShape(unittest.TestCase):
     
     def setUp(self):
         self.effect = Effect()
-        self.document = self.effect.parse("arquivos_test/texto.svg")
+        self.document = self.effect.parse("arquivos_test/svg_text_unit_test.svg")
         self.root = self.effect.document.getroot()
         self.canvas = Canvas(0,0)
         self.node = self.findNodeInG(self.root,"text")   

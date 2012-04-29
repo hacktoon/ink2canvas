@@ -1,13 +1,10 @@
 import svg
-import inkex
 from canvas import Canvas
 
-log = inkex.debug  #alias to debug method
-
-class Ink2CanvasCore(inkex.Effect): 
+class Ink2CanvasCore(): 
     
-    def __init__(self):
-        inkex.Effect.__init__(self)
+    def __init__(self, inkex):
+        self.inkex = inkex
         self.canvas = None
     
     def drawClone(self, childNode, element):
@@ -72,7 +69,7 @@ class Ink2CanvasCore(inkex.Effect):
         gradient = self.xpathSingle("//*[@id='%s']" % gradientHref)
         
         # get the color stops
-        colorStops = gradient.get(inkex.addNS("href", "xlink"))      
+        colorStops = gradient.get(self.inkex.addNS("href", "xlink"))      
         colorStopsNodes = self.xpathSingle("//svg:linearGradient[@id='%s']" % colorStops[1:])
         
         colors = []
@@ -88,18 +85,18 @@ class Ink2CanvasCore(inkex.Effect):
         return self.xpathSingle("//*[@id='%s']" % clipId)
 
     def isCloneNode(self, node):
-        cloneHref = node.get(inkex.addNS("cloneHref", "xlink"))
+        cloneHref = node.get(self.inkex.addNS("cloneHref", "xlink"))
         return bool(cloneHref)  
     
     def getCloneNode(self, node):
-        cloneHref = node.get(inkex.addNS("cloneHref", "xlink"))
+        cloneHref = node.get(self.inkex.addNS("cloneHref", "xlink"))
         clone = self.xpathSingle("//*[@id='%s']" % cloneHref[1:])
         return clone
 
     def effect(self):
         svgRoot = self.document.getroot()
-        width = inkex.unittouu(svgRoot.get("width"))
-        height = inkex.unittouu(svgRoot.get("height"))
+        width = self.inkex.unittouu(svgRoot.get("width"))
+        height = self.inkex.unittouu(svgRoot.get("height"))
         self.canvas = Canvas(width, height)
         self.walkInSVGNodes(svgRoot)  
     
