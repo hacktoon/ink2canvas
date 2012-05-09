@@ -107,9 +107,13 @@ class Canvas:
             alpha = self.style["fill-opacity"]
         except:
             alpha = 1
-        if not value.startswith("url("):
+        if not value.startswith("url(") and not value.startswith("gradient="):
             fill = self.getColor(value, alpha)
             self.write("ctx.fillStyle = %s;" % fill)
+        else:
+            if value.startswith("gradient="):
+                value = value.replace("gradient=", "")
+                self.write("ctx.fillStyle = %s;" % value)
 
     def setStroke(self, value):
         try:
@@ -191,6 +195,8 @@ class Canvas:
     def closePath(self, is_closed=False):
         if is_closed:
             self.write("ctx.closePath();")
+            
+        
         if "fill" in self.style and self.style["fill"] != "none":
             self.write("ctx.fill();")
         if "stroke" in self.style and self.style["stroke"] != "none":

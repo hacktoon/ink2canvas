@@ -225,7 +225,7 @@ class TestCanvas(unittest.TestCase):
     def testAddColorStop(self):
         href, pos, color = "href" , 2.0, "color"
         data = (href, pos, color)
-        expectedList = ["\t%s.addColorStop(%f, %s);\n" % data]
+        expectedList = ["\t%s.addColorStop(%f, '%s');\n" % data]
         self.canvas.addColorStop(href, pos, color)
         self.assertEqual(self.canvas.code, expectedList)
            

@@ -3,9 +3,10 @@ from canvas import Canvas
 
 class Ink2CanvasCore(): 
     
-    def __init__(self, inkex):
+    def __init__(self, inkex, effect):
         self.inkex = inkex
         self.canvas = None
+        self.effect = effect
     
     def drawClone(self, childNode, element):
         cloneNode = self.getCloneNode(childNode)
@@ -66,15 +67,14 @@ class Ink2CanvasCore():
         gradientHref = elem.get_gradient_href()
         
         # get the gradient element
-        gradient = self.xpathSingle("//*[@id='%s']" % gradientHref)
+        gradient = self.effect.xpathSingle("//*[@id='%s']" % gradientHref)
         
         # get the color stops
         colorStops = gradient.get(self.inkex.addNS("href", "xlink"))      
-        colorStopsNodes = self.xpathSingle("//svg:linearGradient[@id='%s']" % colorStops[1:])
-        
+        colorStopsNodes = self.effect.xpathSingle("//svg:linearGradient[@id='%s']" % colorStops[1:])
         colors = []
         for color in colorStopsNodes:
-            colors.append(color.get("style"))
+            colors.append(color.get("style")+"offset:"+color.get("offset"))
         if gradient.get("r"):
             return svg.RadialGradientDef(gradient, colors)
         else:

@@ -26,7 +26,7 @@ from Ink2CanvasCore import Ink2CanvasCore
 class Ink2Canvas(inkex.Effect):
     def __init__(self):
         inkex.Effect.__init__(self)
-        self.core = Ink2CanvasCore(inkex)
+        self.core = Ink2CanvasCore(inkex, self)
 
     def effect(self):
         svgRoot = self.document.getroot()
