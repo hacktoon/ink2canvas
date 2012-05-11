@@ -26,12 +26,8 @@
          id="stop3088" />
       <stop
          id="stop3130"
-         offset="0.43405253"
-         style="stop-color:#ba5100;stop-opacity:0.74901961;" />
-      <stop
-         id="stop3128"
          offset="1"
-         style="stop-color:#a70000;stop-opacity:0.49803922;" />
+         style="stop-color:#ba5100;stop-opacity:0.74901961;" />
     </linearGradient>
     <linearGradient
        id="linearGradient2987">
@@ -74,7 +70,7 @@
        cy="158.57202"
        fx="645.37891"
        fy="158.57202"
-       r="90"
+       r="39.064728"
        gradientTransform="matrix(0.57142847,-2.1269838,1.1956965,0.32123174,-38.391884,1622.7057)"
        gradientUnits="userSpaceOnUse" />
   </defs>
@@ -126,12 +122,5 @@
        height="248.57143"
        x="154.28572"
        y="578.07648" />
-    <rect
-       style="fill:url(#radialGradient3096);fill-opacity:1"
-       id="rect3084"
-       width="180"
-       height="222.85715"
-       x="422.85715"
-       y="106.6479" />
   </g>
 </svg>

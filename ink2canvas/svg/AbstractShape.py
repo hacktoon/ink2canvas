@@ -68,6 +68,16 @@ class AbstractShape(Element):
         if self.has_transform() or self.has_clip():
             self.ctx.save()
 
+
+    def createLinearGradient(self):
+        x1, y1, x2, y2 = self.gradient.get_data()
+        self.ctx.createLinearGradient("grad", x1, y1, x2, y2)
+        for stop in self.gradient.stops:
+            color = self.ctx.getColor(stop.split(";")[0].split(":")[1] , stop.split(";")[1].split(":")[1])
+            offset = float(stop.split(";")[2].split(":")[1])
+            self.ctx.addColorStop("grad", offset, color)
+        
+
     def draw(self, is_clip=False):
         data = self.get_data()
         if self.has_transform():
@@ -78,14 +88,13 @@ class AbstractShape(Element):
             self.set_style(style)
             self.ctx.beginPath()
         if not is_clip and self.has_gradient():
-            x1, y1, x2, y2 = self.gradient.get_data()
-            if(isinstance(self.gradient, LinearGradientDef)):
-                self.ctx.createLinearGradient("grad", x1, y1, x2, y2)
             
-            for stop in self.gradient.stops:
-                color = self.ctx.getColor(stop.split(";")[0].split(":")[1] , stop.split(";")[1].split(":")[1])
-                offset = float(stop.split(";")[2].split(":")[1])
-                self.ctx.addColorStop("grad", offset, color)
+            if(isinstance(self.gradient, LinearGradientDef)):
+                self.createLinearGradient()
+            #else:
+                #self.ctx.createRadialGradient("grad", )
+            
+            
             
         # unpacks "data" in parameters to given method
         getattr(self.ctx, self.command)(*data)
