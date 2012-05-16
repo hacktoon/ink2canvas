@@ -3,6 +3,13 @@ from ink2canvas.lib import inkex
 class Element:
     def __init__(self):
         self.children = []
+        self.isClip = False
+        
+    def setIsClip(self, value):
+        self.isClip = value
+    
+    def getIsClip(self):
+        return self.isClip   
     
     def setParent(self, parent):
         self.parent = parent
@@ -26,7 +33,8 @@ class Element:
         self.initDraw()
         self.draw()
         for child in self.children:
-            child.runDraw()
+            if child.getIsClip() == False:
+                child.runDraw()
         self.endDraw()
     
     def attr(self, val, ns=""):

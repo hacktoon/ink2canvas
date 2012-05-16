@@ -63,8 +63,7 @@ class AbstractShape(Element):
     def get_clip_href(self):
         return self.attr("clip-path")[5:-1]
 
-    def start(self, gradient=None):
-        self.gradient = gradient
+    def initDraw(self):
         self.ctx.write("\n// #%s" % self.attr("id"))
         if self.has_transform() or self.has_clip():
             self.ctx.save()
@@ -80,6 +79,7 @@ class AbstractShape(Element):
         
 
     def draw(self, is_clip=False):
+        is_clip = self.getIsClip()
         data = self.get_data()
         if self.has_transform():
             trans_matrix = self.get_transform()
@@ -88,26 +88,14 @@ class AbstractShape(Element):
             style = self.get_style()
             self.set_style(style)
             self.ctx.beginPath()
-        if not is_clip and self.has_gradient():
-            
-            if(isinstance(self.gradient, Lineargradient)):
-                self.createLinearGradient()
-            #else:
-                #self.ctx.createRadialGradient("grad", )
-            
-            
             
         # unpacks "data" in parameters to given method
         getattr(self.ctx, self.command)(*data)
-        
-        
-        if not is_clip and self.has_gradient():
-            self.ctx.setFill("gradient=grad")
-        
+          
         if not is_clip:
             self.ctx.closePath()
             
 
-    def end(self):
+    def endDraw(self):
         if self.has_transform() or self.has_clip():
             self.ctx.restore()

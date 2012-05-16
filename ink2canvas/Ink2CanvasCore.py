@@ -1,5 +1,6 @@
 import svg
 from canvas import Canvas
+from ink2canvas.svg.ClipPath import Clippath
 
 class Ink2CanvasCore(): 
     
@@ -72,7 +73,9 @@ class Ink2CanvasCore():
             
             element.setParent(parentNode)
             
-             
+            if(isinstance(element, Clippath)):
+                element.setIsClip(True)
+
             parentNode.addChild(element)
             self.createTree(tag, element)
 
