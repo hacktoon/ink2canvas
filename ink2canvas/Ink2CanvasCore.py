@@ -1,6 +1,8 @@
 import svg
 from canvas import Canvas
 from ink2canvas.svg.ClipPath import Clippath
+from ink2canvas.svg import Root, LinearGradient, Defs
+from ink2canvas.svg.Element import Element
 
 class Ink2CanvasCore(): 
     
@@ -8,6 +10,7 @@ class Ink2CanvasCore():
         self.inkex = inkex
         self.canvas = None
         self.effect = effect
+        self.root = Root()
     
     def drawClone(self, childNode, element):
         cloneNode = self.getCloneNode(childNode)
@@ -57,27 +60,67 @@ class Ink2CanvasCore():
 #            element.draw(isClip)
 #            self.walkInSVGNodes(childNode, isClip)
 #            element.end()
-
-
-
-    def createTree(self,fileSVG,parentNode):
-        for tag in fileSVG:
-            tagName = self.getNodeTagName(tag)
+    def createClipPathNode(self,element,tag):
+        for subTag in tag:
+            tagName = self.getNodeTagName(subTag)
             className = tagName.capitalize()
 
             #if there's not an implemented class, continues
             if not hasattr(svg, className):
                 continue
             # creates a instance of 'element'
-            element = getattr(svg, className)(tagName, tag, self.canvas)
-            
-            element.setParent(parentNode)
-            
-            if(isinstance(element, Clippath)):
-                element.setIsClip(True)
+            tipoDoClip = getattr(svg, className)(tagName, subTag, self.canvas)
 
-            parentNode.addChild(element)
-            self.createTree(tag, element)
+            self.root.addChildClipPath(element.attr("id"),tipoDoClip)
+
+    def createDrawable(self,element,tag):
+        for eachTag in tag:
+            elementChild = self.createElement(eachTag)
+            if(elementChild == None):
+                continue
+            element.addChild(elementChild)
+            self.createDrawable(elementChild, eachTag)
+                
+        
+    def createModifiers(self,tag):
+        for eachTag in tag:
+            elementChild = self.createElement(eachTag)
+            if(elementChild == None):
+                continue
+            if(isinstance(elementChild, Clippath)):
+                self.createClipPathNode(elementChild,eachTag)
+#            else:
+#              if(isinstance(element, LinearGradient)):
+#                  self.createLinearGradientNode(element,tag)
+#              else:
+#                  if(isinstance(element, RadialGradient)):
+#                      self.createRadialGradientNode(element,tag)
+
+    def createElement(self,tag):
+        tagName = self.getNodeTagName(tag)
+        className = tagName.capitalize()
+
+        #if there's not an implemented class, continues
+        if not hasattr(svg, className):
+            return None
+        # creates a instance of 'element'
+        return  getattr(svg, className)(tagName, tag, self.canvas)
+
+    def createTree(self,fileSVG):
+        for tag in fileSVG:
+            element = self.createElement(tag)
+            if(element == None):
+                continue
+            if(isinstance(element, Defs)):
+                self.createModifiers(tag)
+            #----------------------lembrar que esse else tem q estar depois do ultimo if
+            #da createMifier
+
+            else:
+                self.root.addChildDrawable(element)
+                self.createDrawable(element,tag);
+                        
+            
 
     def getNodeTagName(self, node):
         # remove namespace part from "{http://www.w3.org/2000/svg}elem"

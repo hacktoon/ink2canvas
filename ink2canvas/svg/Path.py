@@ -93,7 +93,6 @@ class Path(AbstractShape):
         self.currentPosition = x2, y2
 
     def draw(self, is_clip=False):
-        is_clip = self.getIsClip()
         path = self.get_data()
         if not is_clip:
             style = self.get_style()

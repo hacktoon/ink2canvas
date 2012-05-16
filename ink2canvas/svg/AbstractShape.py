@@ -79,7 +79,6 @@ class AbstractShape(Element):
         
 
     def draw(self, is_clip=False):
-        is_clip = self.getIsClip()
         data = self.get_data()
         if self.has_transform():
             trans_matrix = self.get_transform()

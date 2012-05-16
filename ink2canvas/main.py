@@ -35,9 +35,9 @@ class Ink2Canvas(inkex.Effect):
         width = inkex.unittouu(svgRoot.get("width"))
         height = inkex.unittouu(svgRoot.get("height"))
         self.core.canvas = Canvas(width, height)
-        root = Element();
-        self.core.createTree(svgRoot, root)
-        root.runDraw()
+        self.core.createTree(svgRoot)
+        for drawable in self.core.root.getDrawable():
+            drawable.runDraw()
 
     def output(self):
         content = self.core.canvas.output()
