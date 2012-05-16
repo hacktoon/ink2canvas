@@ -31,31 +31,50 @@ class Ink2CanvasCore():
             self.canvas.restore()
         self.canvas.clip()
 
-    def walkInSVGNodes(self, rootNode, isClip=False):
-        for childNode in rootNode:
-            tagName = self.getNodeTagName(childNode)
+#    def walkInSVGNodes(self, rootNode, isClip=False):
+#        for childNode in rootNode:
+#            tagName = self.getNodeTagName(childNode)
+#            className = tagName.capitalize()
+#
+#            #if there's not an implemented class, continues
+#            if not hasattr(svg, className):
+#                continue
+#            # creates a instance of 'element'
+#            # similar to 'element = Rect(tagName, childNode, ctx)'
+#            element = getattr(svg, className)(tagName, childNode, self.canvas)
+#            
+#            if self.isCloneNode(childNode):
+#                self.drawClone(childNode, element)
+#                continue
+#            
+#            self.drawGradient(element)
+#               
+#            if not isClip and element.has_clip():
+#                self.drawClip(element)
+#            
+#            #clipping elements are drawn differently
+#            element.draw(isClip)
+#            self.walkInSVGNodes(childNode, isClip)
+#            element.end()
+
+
+
+    def createTree(self,fileSVG,parentNode):
+        for tag in fileSVG:
+            tagName = self.getNodeTagName(tag)
             className = tagName.capitalize()
 
             #if there's not an implemented class, continues
             if not hasattr(svg, className):
                 continue
             # creates a instance of 'element'
-            # similar to 'element = Rect(tagName, childNode, ctx)'
-            element = getattr(svg, className)(tagName, childNode, self.canvas)
+            element = getattr(svg, className)(tagName, tag, self.canvas)
             
-            if self.isCloneNode(childNode):
-                self.drawClone(childNode, element)
-                continue
+            element.setParent(parentNode)
             
-            self.drawGradient(element)
-               
-            if not isClip and element.has_clip():
-                self.drawClip(element)
-            
-            #clipping elements are drawn differently
-            element.draw(isClip)
-            self.walkInSVGNodes(childNode, isClip)
-            element.end()
+             
+            parentNode.addChild(element)
+            self.createTree(tag, element)
 
     def getNodeTagName(self, node):
         # remove namespace part from "{http://www.w3.org/2000/svg}elem"
@@ -78,7 +97,7 @@ class Ink2CanvasCore():
         if gradient.get("r"):
             return svg.RadialGradientDef(gradient, colors)
         else:
-            return svg.LinearGradientDef(gradient, colors)
+            return svg.Lineargradient(gradient, colors)
         
     def getClipDef(self, elem):
         clipId = elem.get_clip_href()

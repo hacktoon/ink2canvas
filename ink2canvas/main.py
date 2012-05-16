@@ -28,6 +28,7 @@ class Ink2Canvas(inkex.Effect):
         inkex.Effect.__init__(self)
         self.core = Ink2CanvasCore(inkex, self)
 
+
     def effect(self):
         svgRoot = self.document.getroot()
         width = inkex.unittouu(svgRoot.get("width"))
