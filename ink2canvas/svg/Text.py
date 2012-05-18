@@ -24,7 +24,7 @@ class Text(AbstractShape):
         y = self.attr("y")
         return x, y
 
-    def draw(self, is_clip=False):
+    def draw(self, isClip=False):
         x, y = self.get_data()
         style = self.get_style()
         if self.has_transform():

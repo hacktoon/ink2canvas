@@ -2,7 +2,7 @@ from ink2canvas.svg.AbstractShape import AbstractShape
 
 class G(AbstractShape):       
         
-    def draw(self, is_clip=False):
+    def draw(self, isClip=False):
         #get layer label, if exists
         gtype = self.attr("groupmode", "inkscape") or "group"
         if self.has_transform():

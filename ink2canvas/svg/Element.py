@@ -22,12 +22,20 @@ class Element:
     def endDraw(self):
         pass
     
-    def runDraw(self):
+    def drawClip(self):
+        pass
+    
+    def runDraw(self, isClip = False):
         self.initDraw()
-        self.draw()
-        for child in self.children:
+        if self.hasClip():
+            self.drawClip()        
+        self.draw(isClip)
+        for child in self.children:     
             child.runDraw()
         self.endDraw()
+    
+    def hasClip(self):
+        return bool(self.attr("clip-path"))
     
     def attr(self, val, ns=""):
         if ns:

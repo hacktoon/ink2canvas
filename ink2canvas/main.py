@@ -22,7 +22,6 @@ import sys
 import inkex
 from canvas import Canvas
 from Ink2CanvasCore import Ink2CanvasCore
-from ink2canvas.svg import Element
  
 class Ink2Canvas(inkex.Effect):
     def __init__(self):

@@ -33,7 +33,7 @@ class TestRect(unittest.TestCase):
     def testExitWithoutRxRy(self):
         self.document = self.effect.parse("arquivos_test/svg_Rect_unit_test_SemRxRy.svg")
         root = self.effect.document.getroot()
-        self.rect = Rect(None, self.node, self.canvas)
+        self.rect = Rect(None, self.node, self.canvas, None)
         self.rect.node = self.findNodeInG(root, 'rect')
         x, y, w, h, rx, ry = self.rect.get_data()
         self.assertEqual(x, 40.0)
@@ -46,7 +46,7 @@ class TestRect(unittest.TestCase):
     def testExitWithRxRy(self):
         self.document = self.effect.parse("arquivos_test/svg_Rect_unit_test_ComRxRy.svg")
         root = self.effect.document.getroot()
-        self.rect = Rect(None, self.node, self.canvas)
+        self.rect = Rect(None, self.node, self.canvas, None)
         self.rect.node = self.findNodeInG(root, 'rect')
         x, y, w, h, rx, ry = self.rect.get_data()
         self.assertEqual(x, 40.0)

@@ -25,7 +25,7 @@ class TestSvgG(unittest.TestCase):
         self.node = self.findTag(root, "g")
             
         self.canvas = Canvas(0, 0)
-        self.g = G(None, self.node, self.canvas)
+        self.g = G(None, self.node, self.canvas, None)
 
     def findTag(self, root, no):
         for node in root:

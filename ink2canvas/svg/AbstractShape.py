@@ -4,12 +4,12 @@ from ink2canvas.lib.simpletransform import parseTransform
 from ink2canvas.svg.LinearGradient import Lineargradient
 
 class AbstractShape(Element):
-    def __init__(self, command, node, ctx):
+    def __init__(self, command, node, ctx, rootTree):
         Element.__init__(self)
         self.node = node
         self.command = command
         self.ctx = ctx
-        self.is_clip = False
+        self.rootTree = rootTree
 
     def get_data(self):
         return
@@ -57,15 +57,12 @@ class AbstractShape(Element):
             return style["fill"][5:-1]
         return
 
-    def has_clip(self):
-        return bool(self.attr("clip-path"))
-
-    def get_clip_href(self):
+    def getClipId(self):
         return self.attr("clip-path")[5:-1]
 
     def initDraw(self):
         self.ctx.write("\n// #%s" % self.attr("id"))
-        if self.has_transform() or self.has_clip():
+        if self.has_transform():
             self.ctx.save()
 
 
@@ -78,12 +75,12 @@ class AbstractShape(Element):
             self.ctx.addColorStop("grad", offset, color)
         
 
-    def draw(self, is_clip=False):
+    def draw(self, isClip=False):
         data = self.get_data()
         if self.has_transform():
             trans_matrix = self.get_transform()
             self.ctx.transform(*trans_matrix) # unpacks argument list
-        if not is_clip:
+        if not isClip:
             style = self.get_style()
             self.set_style(style)
             self.ctx.beginPath()
@@ -91,10 +88,25 @@ class AbstractShape(Element):
         # unpacks "data" in parameters to given method
         getattr(self.ctx, self.command)(*data)
           
-        if not is_clip:
+        if not isClip:
             self.ctx.closePath()
-            
+    
+    def drawClip(self):
+        clipId = self.getClipId()
+        print clipId
+        elementClip = self.rootTree.getClipPath(clipId)
+        self.ctx.beginPath()
+        if (self.has_transform()):
+            self.ctx.save()
+            transMatrix = self.get_transform()
+            self.ctx.transform(*transMatrix)
+        #DRAW
+        elementClip.runDraw(True)
+        if (self.has_transform()):
+            self.ctx.restore()
+        self.ctx.clip()
+        print elementClip      
 
     def endDraw(self):
-        if self.has_transform() or self.has_clip():
+        if self.has_transform():
             self.ctx.restore()

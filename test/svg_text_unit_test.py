@@ -17,7 +17,7 @@ class TestTextAbstractShape(unittest.TestCase):
         self.root = self.effect.document.getroot()
         self.canvas = Canvas(0,0)
         self.node = self.findNodeInG(self.root,"text")   
-        self.text = Text( None,self.node,self.canvas)
+        self.text = Text( None,self.node,self.canvas, None)
 
     def findNodeInG(self, root, tag):
         for node in root:
