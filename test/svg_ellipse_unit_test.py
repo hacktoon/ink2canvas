@@ -15,7 +15,7 @@ class TestSvgEllipse(unittest.TestCase):
         self.node = self.findTag(root, "ellipse")
 
         self.canvas = Canvas(0, 0)    
-        self.ellipse = Ellipse(None, self.node, self.canvas)
+        self.ellipse = Ellipse(None, self.node, self.canvas, None)
         
     def findTag(self, root, no):
         for node in root:

@@ -16,7 +16,7 @@ class TestSvgLine(unittest.TestCase):
         self.node = self.findTag(root, "line")
 
         self.canvas = Canvas(0, 0)    
-        self.line = Line(None, self.node, self.canvas)
+        self.line = Line(None, self.node, self.canvas, None)
         
     def findTag(self, root, no):
         for node in root:
