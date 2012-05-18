@@ -77,16 +77,14 @@ class Ink2CanvasCore():
             self.root.addChildClipPath(element.attr("id"),tipoDoClip)
     
     def createLinearGradient(self,element,tag):
-        print tag
-        print "asd"
-        for subTag in tag:
-            print subTag
+        colorStops = []
+        for stop in tag:
+            colorStops.append(stop.get("style")+"offset:"+stop.get("offset"))
+        #root.addChildLinearGradient()
+        print colorStops
     
     def createRadialGradient(self,element,tag):
-        print tag
-        print "asd"
-        for subTag in tag:
-            print subTag
+        pass
     
     def createDrawable(self,element,tag):
         for eachTag in tag:

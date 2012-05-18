@@ -65,7 +65,6 @@ class AbstractShape(Element):
         if self.has_transform():
             self.ctx.save()
 
-
     def createLinearGradient(self):
         x1, y1, x2, y2 = self.gradient.get_data()
         self.ctx.createLinearGradient("grad", x1, y1, x2, y2)

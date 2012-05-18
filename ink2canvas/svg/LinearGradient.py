@@ -3,8 +3,21 @@ from ink2canvas.svg.GradientDef import GradientDef
 from numpy.ma.core import get_data
 
 class Lineargradient(Defs):
-    def __init__(self, command, node, ctx):
-        Defs.__init__(self, command, node, ctx)
+    def __init__(self, command, node, ctx, root):
+        Defs.__init__(self, command, node, ctx, root)
+        self.colorStops = []
+        self.x1 = 0
+        self.y1 = 0
+        self.x2 = 0
+        self.y2 = 0
+    
+#    def createLinearGradient(self):
+#        x1, y1, x2, y2 = self.gradient.get_data()
+#        self.ctx.createLinearGradient("grad", x1, y1, x2, y2)
+#        for stop in self.gradient.stops:
+#            color = self.ctx.getColor(stop.split(";")[0].split(":")[1] , stop.split(";")[1].split(":")[1])
+#            offset = float(stop.split(";")[2].split(":")[1])
+#            self.ctx.addColorStop("grad", offset, color)
     
     def get_data(self):
         x1 = self.attr("x1")
