@@ -1,10 +1,10 @@
+from ink2canvas.svg.Defs import Defs
 from ink2canvas.svg.GradientDef import GradientDef
-from ink2canvas.svg.Element import Element
 from numpy.ma.core import get_data
 
-class Lineargradient(GradientDef):
+class Lineargradient(Defs):
     def __init__(self, command, node, ctx):
-        Element.__init__(self)
+        Defs.__init__(self, command, node, ctx)
     
     def get_data(self):
         x1 = self.attr("x1")

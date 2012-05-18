@@ -1,7 +1,9 @@
 import svg
 from canvas import Canvas
 from ink2canvas.svg.ClipPath import Clippath
-from ink2canvas.svg import Root, LinearGradient, Defs
+from ink2canvas.svg.RadialGradient import Radialgradient
+from ink2canvas.svg.LinearGradient import Lineargradient
+from ink2canvas.svg import Root, Defs
 from ink2canvas.svg.Element import Element
 
 class Ink2CanvasCore(): 
@@ -72,7 +74,19 @@ class Ink2CanvasCore():
             tipoDoClip = getattr(svg, className)(tagName, subTag, self.canvas)
 
             self.root.addChildClipPath(element.attr("id"),tipoDoClip)
-
+    
+    def createLinearGradient(self,element,tag):
+        print tag
+        print "asd"
+        for subTag in tag:
+            print subTag
+    
+    def createRadialGradient(self,element,tag):
+        print tag
+        print "asd"
+        for subTag in tag:
+            print subTag
+    
     def createDrawable(self,element,tag):
         for eachTag in tag:
             elementChild = self.createElement(eachTag)
@@ -89,12 +103,12 @@ class Ink2CanvasCore():
                 continue
             if(isinstance(elementChild, Clippath)):
                 self.createClipPathNode(elementChild,eachTag)
-#            else:
-#              if(isinstance(element, LinearGradient)):
-#                  self.createLinearGradientNode(element,tag)
-#              else:
-#                  if(isinstance(element, RadialGradient)):
-#                      self.createRadialGradientNode(element,tag)
+            else:
+              if(isinstance(elementChild, Lineargradient)):
+                  self.createLinearGradient(elementChild,eachTag)
+              else:
+                  if(isinstance(elementChild, Radialgradient)):
+                      self.createRadialGradient(elementChild,eachTag)
 
     def createElement(self,tag):
         tagName = self.getNodeTagName(tag)
