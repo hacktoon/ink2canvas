@@ -1,9 +1,8 @@
 from ink2canvas.svg.AbstractShape import AbstractShape
 
 class Circle(AbstractShape):
-    def __init__(self, command, node, ctx):
-        AbstractShape.__init__(self, command, node, ctx)
-        AbstractShape(command, node, ctx)
+    def __init__(self, command, node, ctx, rootTree):
+        AbstractShape.__init__(self, command, node, ctx, rootTree)
         #Nota: Daniel/Gustavo - modificamos AbstractShape(self, command, node, ctx) 
         #porque achamos que estava errado!
         self.command = "arc"

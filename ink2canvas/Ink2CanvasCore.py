@@ -30,6 +30,7 @@ class Ink2CanvasCore():
             self.canvas.save()
             transMatrix = element.get_transform()
             self.canvas.transform(*transMatrix)
+        #DRAW
         self.walkInSVGNodes(clipPath, True)
         if (element.has_transform()):
             self.canvas.restore()
@@ -69,7 +70,7 @@ class Ink2CanvasCore():
             if not hasattr(svg, className):
                 continue
             # creates a instance of 'element'
-            tipoDoClip = getattr(svg, className)(tagName, subTag, self.canvas)
+            tipoDoClip = getattr(svg, className)(tagName, subTag, self.canvas, self.root)
 
             self.root.addChildClipPath(element.attr("id"),tipoDoClip)
 
@@ -104,7 +105,7 @@ class Ink2CanvasCore():
         if not hasattr(svg, className):
             return None
         # creates a instance of 'element'
-        return  getattr(svg, className)(tagName, tag, self.canvas)
+        return  getattr(svg, className)(tagName, tag, self.canvas, self.root)
 
     def createTree(self,fileSVG):
         for tag in fileSVG:
@@ -145,8 +146,9 @@ class Ink2CanvasCore():
         else:
             return svg.Lineargradient(gradient, colors)
         
+    #MUDAR CLIP
     def getClipDef(self, elem):
-        clipId = elem.get_clip_href()
+        clipId = elem.getClipId()
         return self.xpathSingle("//*[@id='%s']" % clipId)
 
     def isCloneNode(self, node):
