@@ -16,7 +16,6 @@ from ink2canvas.Ink2CanvasCore import Ink2CanvasCore
 
 class Test(unittest.TestCase):
 
-
     def setUp(self):
         
         self.effect = Effect()
@@ -25,16 +24,6 @@ class Test(unittest.TestCase):
         self.ink2canvas = Ink2CanvasCore(inkex, self.effect)
         self.root = self.effect.document.getroot()
         self.ink2canvas.canvas = Canvas(500, 500)
-
-    def testName(self):
-        self.element = Element()
-        self.ink2canvas.createTree(self.root, self.element)
-        self.printChildren(self.element)
-    
-    def printChildren(self, element):
-        element.runDraw()
-        print self.ink2canvas.canvas.output()
-        
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
