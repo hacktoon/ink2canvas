@@ -24,10 +24,10 @@ except IndexError:
     html_output = "%s.html" % svg_input.replace(".svg", "")
 
 #creates a svg element tree
-i2c.core.parse(svg_input)
+i2c.parse(svg_input)
 
 #applies the extension effect
-i2c.core.effect()
+i2c.effect()
 
 output_file = open(html_output, "w")
 #get the html code

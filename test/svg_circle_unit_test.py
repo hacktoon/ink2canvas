@@ -11,9 +11,9 @@ from ink2canvas.svg.Circle import Circle
 
 class TestSvgCircle(unittest.TestCase):
     def setUp(self):
-        self.circle = Circle(12, 12, 12)
+        self.circle = Circle(12, 12, 12, None)
         self.effect = Effect()
-        self.document = self.effect.parse("arquivos_test/CirculoVerdadeiro.svg")
+        self.document = self.effect.parse("arquivos_test/svg_circle_unit_test.svg")
         root = self.effect.document.getroot()
         
         for node in root:

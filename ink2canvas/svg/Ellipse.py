@@ -8,10 +8,10 @@ class Ellipse(AbstractShape):
         ry = self.attr("ry")
         return cx, cy, rx, ry
 
-    def draw(self, is_clip=False):
+    def draw(self, isClip=False):
         import math
         cx, cy, rx, ry = self.get_data()
-        if not is_clip:
+        if not isClip:
             style = self.get_style()
             self.set_style(style)
             self.ctx.beginPath()
@@ -26,5 +26,5 @@ class Ellipse(AbstractShape):
         self.ctx.bezierCurveTo(cx - (KAPPA * rx), cy + ry, cx - rx, cy + (KAPPA * ry), cx - rx, cy)
         self.ctx.bezierCurveTo(cx - rx, cy - (KAPPA * ry), cx - (KAPPA * rx), cy - ry, cx, cy - ry)
         
-        if not is_clip:
+        if not isClip:
             self.ctx.closePath()

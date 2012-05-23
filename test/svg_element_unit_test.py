@@ -10,7 +10,7 @@ class TestSvgElement(unittest.TestCase):
     def setUp(self):
         self.element = Element()
         self.effect = Effect()
-        self.document = self.effect.parse("arquivos_test/CirculoVerdadeiro.svg")
+        self.document = self.effect.parse("arquivos_test/svg_element_unit_test.svg")
         self.node = self.effect.document.getroot()
         
     def testAttrWithNs(self):

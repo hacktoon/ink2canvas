@@ -10,13 +10,13 @@ from ink2canvas.svg.Line import Line
 class TestSvgLine(unittest.TestCase):
     def setUp(self):
         self.effect = Effect()
-        self.document = self.effect.parse("arquivos_test/line2.svg")
+        self.document = self.effect.parse("arquivos_test/svg_line_unit_test.svg")
         root = self.effect.document.getroot()
         #self.node = self.findTag(root, "g")
         self.node = self.findTag(root, "line")
 
         self.canvas = Canvas(0, 0)    
-        self.line = Line(None, self.node, self.canvas)
+        self.line = Line(None, self.node, self.canvas, None)
         
     def findTag(self, root, no):
         for node in root:
