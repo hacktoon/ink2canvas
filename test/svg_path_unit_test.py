@@ -18,7 +18,7 @@ class TestSvgPath(unittest.TestCase):
         '''Dados ficticios usados em metodos como pathlineto, pathcurveto, pathmoveto, patharcto. fizemos o 5o elemento (600) maior
         que o resto para nao ser um valor negativo na hora de tirar uma riaz (matherror) em patharcto (gambi?)'''
         self.data =[1.0, 2.0, 3.0, 4.0, 5.0, 600.0, 7.0]
-        self.path = Path(None, self.node, self.canvas)
+        self.path = Path(None, self.node, self.canvas, None)
         
     def findTag(self, root, no):
         for node in root:
