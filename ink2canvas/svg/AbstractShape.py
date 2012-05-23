@@ -62,7 +62,7 @@ class AbstractShape(Element):
 
     def initDraw(self):
         self.ctx.write("\n// #%s" % self.attr("id"))
-        if self.has_transform():
+        if self.has_transform() or self.hasClip():
             self.ctx.save()
 
     def createLinearGradient(self):
@@ -92,7 +92,6 @@ class AbstractShape(Element):
     
     def drawClip(self):
         clipId = self.getClipId()
-        print clipId
         elementClip = self.rootTree.getClipPath(clipId)
         self.ctx.beginPath()
         if (self.has_transform()):
@@ -103,9 +102,8 @@ class AbstractShape(Element):
         elementClip.runDraw(True)
         if (self.has_transform()):
             self.ctx.restore()
-        self.ctx.clip()
-        print elementClip      
+        self.ctx.clip()   
 
     def endDraw(self):
-        if self.has_transform():
+        if self.has_transform() or self.hasClip():
             self.ctx.restore()
