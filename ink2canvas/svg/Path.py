@@ -92,9 +92,9 @@ class Path(AbstractShape):
         self.ctx.translate(-cx, -cy)
         self.currentPosition = x2, y2
 
-    def draw(self, is_clip=False):
+    def draw(self, isClip=False):
         path = self.get_data()
-        if not is_clip:
+        if not isClip:
             style = self.get_style()
             self.set_style(style)
             self.ctx.beginPath()
@@ -112,5 +112,5 @@ class Path(AbstractShape):
             if comm in path_command:
                 path_command[comm](data)
 
-        if not is_clip:
+        if not isClip:
             self.ctx.closePath(comm == "Z")

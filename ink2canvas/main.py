@@ -19,18 +19,31 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 '''
 
 import sys
+import inkex
+from canvas import Canvas
 from Ink2CanvasCore import Ink2CanvasCore
  
-class Ink2Canvas():
-    def __init__(self):   
-        self.core = Ink2CanvasCore()
+class Ink2Canvas(inkex.Effect):
+    def __init__(self):
+        inkex.Effect.__init__(self)
+        self.core = Ink2CanvasCore(inkex, self)
+
+
+    def effect(self):
+        svgRoot = self.document.getroot()
+        width = inkex.unittouu(svgRoot.get("width"))
+        height = inkex.unittouu(svgRoot.get("height"))
+        self.core.canvas = Canvas(width, height)
+        self.core.createTree(svgRoot)
+        for drawable in self.core.root.getDrawable():
+            drawable.runDraw()
 
     def output(self):
-        content = self.canvas.output()
+        content = self.core.canvas.output()
         sys.stdout.write(content.encode("utf-8"))
 
     
 if __name__ == "__main__":
     i2c = Ink2Canvas()
-    i2c.core.affect()
+    i2c.affect()
 
