@@ -2,7 +2,7 @@ import svg
 from canvas import Canvas
 from ink2canvas.svg.ClipPath import Clippath
 from ink2canvas.svg.RadialGradient import Radialgradient
-from ink2canvas.svg.LinearGradient import LinearGradient
+from ink2canvas.svg.LinearGradient import Lineargradient
 from ink2canvas.svg import Root, Defs
 from ink2canvas.svg.Element import Element
 
@@ -82,9 +82,9 @@ class Ink2CanvasCore():
             colorStops.append(stop.get("style")+"offset:"+stop.get("offset"))
         linearGrad = Lineargradient(None, tag, self.canvas, self.root)
         linearGrad.setColorStops(colorStops)
-        print linearGrad.colorStops
-        self.root.addChildLinearGradient(element.attr("id"), linearGrad)
-    
+        self.root.addChildLinearGradient(linearGrad.attr("id"), linearGrad)
+        print self.root.linearGradient
+        
     def createRadialGradient(self,element,tag):
         pass
     
@@ -105,7 +105,7 @@ class Ink2CanvasCore():
             if(isinstance(elementChild, Clippath)):
                 self.createClipPathNode(elementChild,eachTag)
             else:
-                if(isinstance(elementChild, LinearGradient)):
+                if(isinstance(elementChild, Lineargradient)):
                     self.createLinearGradient(elementChild,eachTag)
                 else:
                     if(isinstance(elementChild, Radialgradient)):

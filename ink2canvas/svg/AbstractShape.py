@@ -1,7 +1,7 @@
 from ink2canvas.svg.Element import Element
 from ink2canvas.lib import simplestyle
 from ink2canvas.lib.simpletransform import parseTransform
-from ink2canvas.svg.LinearGradient import LinearGradient
+from ink2canvas.svg.LinearGradient import Lineargradient
 
 class AbstractShape(Element):
     def __init__(self, command, node, ctx, rootTree):
