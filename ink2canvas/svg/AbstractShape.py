@@ -11,6 +11,9 @@ class AbstractShape(Element):
         self.ctx = ctx
         self.rootTree = rootTree
 
+    def getId(self):
+        return self.attr("id")    
+    
     def get_data(self):
         return
 

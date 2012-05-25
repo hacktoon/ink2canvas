@@ -1,7 +1,7 @@
 import svg
 from canvas import Canvas
 from ink2canvas.svg.ClipPath import Clippath
-from ink2canvas.svg import Root, LinearGradient, Defs
+from ink2canvas.svg import Root, LinearGradient, Defs ,G
 from ink2canvas.svg.Element import Element
 
 class Ink2CanvasCore(): 
@@ -11,6 +11,19 @@ class Ink2CanvasCore():
         self.canvas = None
         self.effect = effect
         self.root = Root()
+    
+    def buscaElementoPorId(self,idQueTenhoQueAchar,nosQueDevemSerDesenhados):
+        retorno = None
+        for noEmQuestao in nosQueDevemSerDesenhados:
+            if(noEmQuestao.getId() == idQueTenhoQueAchar):
+                return noEmQuestao
+            if(isinstance(noEmQuestao, G)):
+                retorno = self.buscaElementoPorId(idQueTenhoQueAchar, noEmQuestao.children)
+                if(retorno!=None):
+                    break
+        return retorno
+        
+        
     
     def drawClone(self, childNode, element):
         cloneNode = self.getCloneNode(childNode)
