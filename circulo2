@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Inkscape Output</title>
+</head>
+<body>
+    <canvas id='canvas' width='744' height='1052'></canvas>
+    <script>
+    var ctx = document.getElementById("canvas").getContext("2d");
+    	
+// #path3033
+	ctx.lineJoin = 'miter';
+	ctx.lineWidth = 1.000000;
+	ctx.strokeStyle = 'rgb(0, 0, 0)';
+	ctx.lineCap = 'butt';
+	ctx.font = "Arial";
+	ctx.fillStyle = 'rgb(255, 0, 0)';
+	ctx.beginPath();
+	ctx.moveTo(395.979780, 211.410190);
+	ctx.translate(317.692960, 211.410190);
+	ctx.rotate(0.000000);
+	ctx.scale(1.000000, 1.000000);
+	ctx.arc(0.000000, 0.000000, 78.286820, 0.000000, 3.14159265, 0);
+	ctx.scale(1.000000, 1.000000);
+	ctx.rotate(-0.000000);
+	ctx.translate(-317.692960, -211.410190);
+	ctx.translate(317.692960, 211.410190);
+	ctx.rotate(0.000000);
+	ctx.scale(1.000000, 1.000000);
+	ctx.arc(0.000000, 0.000000, 78.286820, 3.141593, 6.28318531, 0);
+	ctx.scale(1.000000, 1.000000);
+	ctx.rotate(-0.000000);
+	ctx.translate(-317.692960, -211.410190);
+	ctx.closePath();
+	ctx.fill();
+	ctx.stroke();
+
+    </script>
+</body>
+</html>
