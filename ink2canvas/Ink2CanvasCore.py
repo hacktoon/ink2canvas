@@ -156,7 +156,7 @@ class Ink2CanvasCore():
         if gradient.get("r"):
             return svg.RadialGradient(gradient, colors)
         else:
-            return svg.Lineargradient(gradient, colors)
+            return svg.LinearGradient(gradient, colors)
         
     #MUDAR CLIP
     def getClipDef(self, elem):
