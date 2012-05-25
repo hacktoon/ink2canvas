@@ -19,10 +19,10 @@ class Root(object):
         self.clipPath[key] = value;
 
     def addChildLinearGradient(self, key, value):
-        self.clipPath[key] = value;
+        self.linearGradient[key] = value;
 
     def addChildRadialGradient(self, key, value):
-        self.clipPath[key] = value;
+        self.radialGradient[key] = value;
     
     def getDrawable(self):
         return self.drawable

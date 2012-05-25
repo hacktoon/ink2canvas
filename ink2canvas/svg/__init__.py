@@ -4,7 +4,7 @@ from ink2canvas.svg.Ellipse import Ellipse
 from ink2canvas.svg.G import G
 from ink2canvas.svg.GradientDef import GradientDef
 from ink2canvas.svg.Line import Line
-from ink2canvas.svg.LinearGradient import LinearGradient
+from ink2canvas.svg.LinearGradient import Lineargradient
 from ink2canvas.svg.Path import Path
 from ink2canvas.svg.Polygon import Polygon
 from ink2canvas.svg.Polyline import Polyline
