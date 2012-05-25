@@ -3,7 +3,7 @@ import unittest
 from inkex import Effect
 sys.path.append('..')
 
-from ink2canvas.svg.LinearGradient import Lineargradient
+from ink2canvas.svg.LinearGradient import LinearGradient
 
 class LinearGradientTest(unittest.TestCase):
 
@@ -18,7 +18,7 @@ class LinearGradientTest(unittest.TestCase):
             if(tag == 'linearGradient'):
                 self.node = node
                 break   
-        self.linearGradient = Lineargradient(None, self.node, self.canvas, None)
+        self.linearGradient = LinearGradient(None, self.node, self.canvas, None)
         
 
 
