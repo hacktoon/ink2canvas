@@ -10,6 +10,9 @@ class Lineargradient(Defs):
         self.y1 = 0
         self.x2 = 0
         self.y2 = 0
+        
+    def setColorStops(self, colorStops):
+        self.colorStops = colorStops
     
 #    def createLinearGradient(self):
 #        x1, y1, x2, y2 = self.gradient.get_data()

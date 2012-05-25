@@ -80,8 +80,10 @@ class Ink2CanvasCore():
         colorStops = []
         for stop in tag:
             colorStops.append(stop.get("style")+"offset:"+stop.get("offset"))
-        #root.addChildLinearGradient()
-        print colorStops
+        linearGrad = Lineargradient(None, tag, self.canvas, self.root)
+        linearGrad.setColorStops(colorStops)
+        print linearGrad.colorStops
+        self.root.addChildLinearGradient(element.attr("id"), linearGrad)
     
     def createRadialGradient(self,element,tag):
         pass
@@ -154,7 +156,7 @@ class Ink2CanvasCore():
         for color in colorStopsNodes:
             colors.append(color.get("style")+"offset:"+color.get("offset"))
         if gradient.get("r"):
-            return svg.RadialGradient(gradient, colors)
+            return svg.RadialGradientDef(gradient, colors)
         else:
             return svg.Lineargradient(gradient, colors)
         

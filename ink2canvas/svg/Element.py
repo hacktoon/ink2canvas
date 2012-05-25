@@ -30,7 +30,7 @@ class Element:
         if self.hasClip():
             self.drawClip()        
         self.draw(isClip)
-        for child in self.children:     
+        for child in self.children:
             child.runDraw()
         self.endDraw()
     
