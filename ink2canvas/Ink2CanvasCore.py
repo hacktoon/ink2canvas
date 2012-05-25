@@ -2,7 +2,7 @@ import svg
 from canvas import Canvas
 from ink2canvas.svg.ClipPath import Clippath
 from ink2canvas.svg.RadialGradient import Radialgradient
-from ink2canvas.svg.LinearGradient import Lineargradient
+from ink2canvas.svg.LinearGradient import LinearGradient
 from ink2canvas.svg import Root, Defs
 from ink2canvas.svg.Element import Element
 
@@ -105,11 +105,11 @@ class Ink2CanvasCore():
             if(isinstance(elementChild, Clippath)):
                 self.createClipPathNode(elementChild,eachTag)
             else:
-              if(isinstance(elementChild, Lineargradient)):
-                  self.createLinearGradient(elementChild,eachTag)
-              else:
-                  if(isinstance(elementChild, Radialgradient)):
-                      self.createRadialGradient(elementChild,eachTag)
+                if(isinstance(elementChild, LinearGradient)):
+                    self.createLinearGradient(elementChild,eachTag)
+                else:
+                    if(isinstance(elementChild, Radialgradient)):
+                        self.createRadialGradient(elementChild,eachTag)
 
     def createElement(self,tag):
         tagName = self.getNodeTagName(tag)
