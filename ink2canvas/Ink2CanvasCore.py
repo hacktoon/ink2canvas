@@ -83,7 +83,9 @@ class Ink2CanvasCore():
         linearGrad = Lineargradient(None, tag, self.canvas, self.root)
         linearGrad.setColorStops(colorStops)
         self.root.addChildLinearGradient(linearGrad.attr("id"), linearGrad)
-        print self.root.linearGradient
+        if(linearGrad.attr("href","xlink") != None):
+            linearGrad.colorStops = self.root.linearGradient[linearGrad.attr("href","xlink")[1:]].colorStops
+        print linearGrad.colorStops 
         
     def createRadialGradient(self,element,tag):
         pass
