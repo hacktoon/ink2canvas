@@ -1,30 +1,24 @@
 import sys
 import unittest
-from inkex import Effect
+from ink2canvas.main import Ink2Canvas
 sys.path.append('..')
-
-from ink2canvas.svg.LinearGradient import Lineargradient
-from ink2canvas.canvas import Canvas
 
 
 class LinearGradientTest(unittest.TestCase):
     
     def setUp(self):
-        self.canvas = Canvas(0,0)
-        self.effect = Effect()
-        self.document = self.effect.parse("arquivos_test/linearGradient.svg")
-        root = self.effect.document.getroot()
-        self.node = None
-        for node in root:
-            tag = node.tag.split("}")[1]
-            if(tag == 'linearGradient'):
-                self.node = node
-                break   
-        self.linearGradient = Lineargradient(None, self.node, self.canvas, None)
+        self.ink2canvas = Ink2Canvas()
+        file = "arquivos_test/linearGradient.svg"
+        self.ink2canvas.parse(file)
+        self.ink2canvas.effect()
         
     def testIfTheLinearGradientNodeIsCreated(self):
-        pass
-
+        linearGradientDictionary = self.ink2canvas.core.root.linearGradient
+        for linearGradient in linearGradientDictionary:
+            self.assertNotEqual([], linearGradient.colorStops)
+                    
+        
+        
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

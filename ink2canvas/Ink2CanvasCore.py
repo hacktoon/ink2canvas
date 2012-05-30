@@ -158,9 +158,9 @@ class Ink2CanvasCore():
         for color in colorStopsNodes:
             colors.append(color.get("style")+"offset:"+color.get("offset"))
         if gradient.get("r"):
-            return svg.RadialGradientDef(gradient, colors)
+            return svg.RadialGradient(gradient, colors)
         else:
-            return svg.Lineargradient(gradient, colors)
+            return svg.LinearGradient(gradient, colors)
         
     #MUDAR CLIP
     def getClipDef(self, elem):
