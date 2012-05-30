@@ -3,7 +3,6 @@ import unittest
 from ink2canvas.main import Ink2Canvas
 sys.path.append('..')
 
-
 class LinearGradientTest(unittest.TestCase):
     
     def setUp(self):
@@ -14,9 +13,11 @@ class LinearGradientTest(unittest.TestCase):
         
     def testIfTheLinearGradientNodeIsCreated(self):
         linearGradientDictionary = self.ink2canvas.core.root.linearGradient
-        for linearGradient in linearGradientDictionary:
-            self.assertNotEqual([], linearGradient.colorStops)
-                    
+        for linearGradientKey, linearGradientValue in linearGradientDictionary.iteritems():
+            if linearGradientValue.link == None:
+                self.assertNotEqual([], linearGradientValue.colorStops)
+            else:
+                self.assertNotEqual(None, linearGradientValue.link)
         
         
 if __name__ == "__main__":
