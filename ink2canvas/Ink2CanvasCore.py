@@ -77,15 +77,14 @@ class Ink2CanvasCore():
             self.root.addChildClipPath(element.attr("id"),tipoDoClip)
     
     def createLinearGradient(self,element,tag):
-        colorStops = []
+        colorStops = {}
         for stop in tag:
-            colorStops.append(stop.get("style")+"offset:"+stop.get("offset"))
+            colorStops[stop.get("offset")] = stop.get("style")
         linearGrad = Lineargradient(None, tag, self.canvas, self.root)
         linearGrad.setColorStops(colorStops)
         self.root.addChildLinearGradient(linearGrad.attr("id"), linearGrad)
         if(linearGrad.attr("href","xlink") != None):
             linearGrad.link = linearGrad.attr("href","xlink")[1:]
-        print linearGrad.colorStops 
         
     def createRadialGradient(self,element,tag):
         pass

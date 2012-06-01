@@ -5,7 +5,7 @@ from numpy.ma.core import get_data
 class Lineargradient(Defs):
     def __init__(self, command, node, ctx, root):
         Defs.__init__(self, command, node, ctx, root)
-        self.colorStops = []
+        self.colorStops = {}
         self.link = None
         self.x1 = 0
         self.y1 = 0

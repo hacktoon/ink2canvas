@@ -19,7 +19,17 @@ class LinearGradientTest(unittest.TestCase):
             else:
                 self.assertNotEqual(None, linearGradientValue.link)
         
+    def testIfLinearGradientColorsAreCorrect(self):
+        linearGradientDictionary = self.ink2canvas.core.root.linearGradient
+        self.assertEqual(linearGradientDictionary["linearGradient2987"].colorStops["1"], "stop-color:#80e900;stop-opacity:1;") 
+        self.assertEqual(linearGradientDictionary["linearGradient2987"].colorStops["0.5"], "stop-color:#807400;stop-opacity:1;") 
+        self.assertEqual(linearGradientDictionary["linearGradient2987"].colorStops["0"], "stop-color:#800000;stop-opacity:1;") 
+
         
+                    
+
+    
+    
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()
