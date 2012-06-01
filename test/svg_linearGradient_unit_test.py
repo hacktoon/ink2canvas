@@ -26,7 +26,6 @@ class LinearGradientTest(unittest.TestCase):
         self.assertEqual(linearGradientDictionary["linearGradient2987"].colorStops["0"], "stop-color:#800000;stop-opacity:1;")
     
     def testSetLinearGradient(self):
-        self.ink2canvas.core.ctx
         pass
     
 if __name__ == "__main__":
