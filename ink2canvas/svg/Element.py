@@ -28,7 +28,7 @@ class Element:
     
     def drawClip(self):
         pass
-    
+#TODO :   implementar o isClone 
     def runDraw(self, isClip = False):
         self.initDraw()
         if self.hasClip():
