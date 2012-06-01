@@ -7,7 +7,6 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="210mm"
@@ -15,43 +14,9 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.2 r9819"
-   sodipodi:docname="linearGradient.svg">
+   sodipodi:docname="group_unit_test.svg">
   <defs
-     id="defs4">
-    <linearGradient
-       id="linearGradient2987">
-      <stop
-         style="stop-color:#800000;stop-opacity:1;"
-         offset="0"
-         id="stop2989" />
-      <stop
-         id="stop3033"
-         offset="0.5"
-         style="stop-color:#807400;stop-opacity:1;" />
-      <stop
-         style="stop-color:#80e900;stop-opacity:1;"
-         offset="1"
-         id="stop2991" />
-    </linearGradient>
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient2987"
-       id="linearGradient2993"
-       x1="160"
-       y1="200"
-       x2="272"
-       y2="306"
-       gradientUnits="userSpaceOnUse" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient2987"
-       id="linearGradient3078"
-       x1="188"
-       y1="786"
-       x2="391"
-       y2="649"
-       gradientUnits="userSpaceOnUse" />
-  </defs>
+     id="defs4" />
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -61,7 +26,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="0.35"
      inkscape:cx="350"
-     inkscape:cy="1286.9451"
+     inkscape:cy="520"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -78,7 +43,6 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -86,19 +50,32 @@
      inkscape:label="Camada 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <rect
-       style="fill:url(#linearGradient2993);fill-opacity:1"
-       id="rect2985"
-       width="214.28572"
-       height="200"
-       x="120"
-       y="186.6479" />
-    <rect
-       style="fill:url(#linearGradient3078);fill-opacity:1"
-       id="rect3070"
-       width="322.85715"
-       height="248.57143"
-       x="154.28572"
-       y="578.07648" />
+    <g
+       id="g3069"
+       style="fill:#000080"
+       transform="matrix(0.69282611,0.7211047,-0.7211047,0.69282611,458.54136,14.338956)">
+      <rect
+         y="163.79076"
+         x="102.85714"
+         height="165.71428"
+         width="188.57143"
+         id="rect2985" />
+      <path
+         d="m 525.7143,358.07648 c 0,42.60482 -34.53803,77.14286 -77.14286,77.14286 -42.60482,0 -77.14286,-34.53804 -77.14286,-77.14286 0,-42.60483 34.53804,-77.14286 77.14286,-77.14286 42.60483,0 77.14286,34.53803 77.14286,77.14286 z"
+         sodipodi:ry="77.14286"
+         sodipodi:rx="77.14286"
+         sodipodi:cy="358.07648"
+         sodipodi:cx="448.57144"
+         id="path2987"
+         sodipodi:type="arc" />
+      <path
+         d="m 314.28571,502.36218 c 0,46.54972 -46.6903,84.28572 -104.28571,84.28572 -57.59541,0 -104.28571,-37.736 -104.28571,-84.28572 0,-46.54971 46.6903,-84.28571 104.28571,-84.28571 57.59541,0 104.28571,37.736 104.28571,84.28571 z"
+         sodipodi:ry="84.285713"
+         sodipodi:rx="104.28571"
+         sodipodi:cy="502.36218"
+         sodipodi:cx="210"
+         id="path3034"
+         sodipodi:type="arc" />
+    </g>
   </g>
 </svg>

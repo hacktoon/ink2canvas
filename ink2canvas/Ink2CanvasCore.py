@@ -1,7 +1,9 @@
 import svg
 from canvas import Canvas
 from ink2canvas.svg.ClipPath import Clippath
-from ink2canvas.svg import Root, LinearGradient, Defs
+from ink2canvas.svg.RadialGradient import Radialgradient
+from ink2canvas.svg.LinearGradient import Lineargradient
+from ink2canvas.svg import Root, LinearGradient, Defs ,G, Use
 from ink2canvas.svg.Element import Element
 
 class Ink2CanvasCore(): 
@@ -11,6 +13,11 @@ class Ink2CanvasCore():
         self.canvas = None
         self.effect = effect
         self.root = Root()
+    
+    
+        
+    def isClone(self):
+        return isinstance(self, Use);
     
     def drawClone(self, childNode, element):
         cloneNode = self.getCloneNode(childNode)
@@ -36,31 +43,7 @@ class Ink2CanvasCore():
             self.canvas.restore()
         self.canvas.clip()
 
-#    def walkInSVGNodes(self, rootNode, isClip=False):
-#        for childNode in rootNode:
-#            tagName = self.getNodeTagName(childNode)
-#            className = tagName.capitalize()
-#
-#            #if there's not an implemented class, continues
-#            if not hasattr(svg, className):
-#                continue
-#            # creates a instance of 'element'
-#            # similar to 'element = Rect(tagName, childNode, ctx)'
-#            element = getattr(svg, className)(tagName, childNode, self.canvas)
-#            
-#            if self.isCloneNode(childNode):
-#                self.drawClone(childNode, element)
-#                continue
-#            
-#            self.drawGradient(element)
-#               
-#            if not isClip and element.has_clip():
-#                self.drawClip(element)
-#            
-#            #clipping elements are drawn differently
-#            element.draw(isClip)
-#            self.walkInSVGNodes(childNode, isClip)
-#            element.end()
+#    
     def createClipPathNode(self,element,tag):
         for subTag in tag:
             tagName = self.getNodeTagName(subTag)
@@ -73,12 +56,26 @@ class Ink2CanvasCore():
             tipoDoClip = getattr(svg, className)(tagName, subTag, self.canvas, self.root)
 
             self.root.addChildClipPath(element.attr("id"),tipoDoClip)
-
+    
+    def createLinearGradient(self,element,tag):
+        colorStops = {}
+        for stop in tag:
+            colorStops[stop.get("offset")] = stop.get("style")
+        linearGrad = Lineargradient(None, tag, self.canvas, self.root)
+        linearGrad.setColorStops(colorStops)
+        self.root.addChildLinearGradient(linearGrad.attr("id"), linearGrad)
+        if(linearGrad.attr("href","xlink") != None):
+            linearGrad.link = linearGrad.attr("href","xlink")[1:]
+        
+    def createRadialGradient(self,element,tag):
+        pass
+    
     def createDrawable(self,element,tag):
         for eachTag in tag:
             elementChild = self.createElement(eachTag)
             if(elementChild == None):
                 continue
+            elementChild.setParent(element)
             element.addChild(elementChild)
             self.createDrawable(elementChild, eachTag)
                 
@@ -90,12 +87,12 @@ class Ink2CanvasCore():
                 continue
             if(isinstance(elementChild, Clippath)):
                 self.createClipPathNode(elementChild,eachTag)
-#            else:
-#              if(isinstance(element, LinearGradient)):
-#                  self.createLinearGradientNode(element,tag)
-#              else:
-#                  if(isinstance(element, RadialGradient)):
-#                      self.createRadialGradientNode(element,tag)
+            else:
+                if(isinstance(elementChild, Lineargradient)):
+                    self.createLinearGradient(elementChild,eachTag)
+                else:
+                    if(isinstance(elementChild, Radialgradient)):
+                        self.createRadialGradient(elementChild,eachTag)
 
     def createElement(self,tag):
         tagName = self.getNodeTagName(tag)
@@ -114,9 +111,6 @@ class Ink2CanvasCore():
                 continue
             if(isinstance(element, Defs)):
                 self.createModifiers(tag)
-            #----------------------lembrar que esse else tem q estar depois do ultimo if
-            #da createMifier
-
             else:
                 self.root.addChildDrawable(element)
                 self.createDrawable(element,tag);
@@ -142,9 +136,9 @@ class Ink2CanvasCore():
         for color in colorStopsNodes:
             colors.append(color.get("style")+"offset:"+color.get("offset"))
         if gradient.get("r"):
-            return svg.RadialGradientDef(gradient, colors)
+            return svg.RadialGradient(gradient, colors)
         else:
-            return svg.Lineargradient(gradient, colors)
+            return svg.LinearGradient(gradient, colors)
         
     #MUDAR CLIP
     def getClipDef(self, elem):
@@ -159,11 +153,4 @@ class Ink2CanvasCore():
         cloneHref = node.get(self.inkex.addNS("cloneHref", "xlink"))
         clone = self.xpathSingle("//*[@id='%s']" % cloneHref[1:])
         return clone
-
-    def effect(self):
-        svgRoot = self.document.getroot()
-        width = self.inkex.unittouu(svgRoot.get("width"))
-        height = self.inkex.unittouu(svgRoot.get("height"))
-        self.canvas = Canvas(width, height)
-        self.walkInSVGNodes(svgRoot)  
     

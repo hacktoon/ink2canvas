@@ -68,8 +68,7 @@ class Canvas:
 
     def createLinearGradient(self, href, x1, y1, x2, y2):
         data = (href, x1, y1, x2, y2)
-        self.write("var %s = \
-                   ctx.createLinearGradient(%f,%f,%f,%f);" % data)
+        self.write("var %s = ctx.createLinearGradient(%f,%f,%f,%f);" % data)
 
     def createRadialGradient(self, href, cx1, cy1, rx, cx2, cy2, ry):
         data = (href, cx1, cy1, rx, cx2, cy2, ry)

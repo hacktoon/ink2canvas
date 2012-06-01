@@ -3,9 +3,13 @@ from ink2canvas.lib import inkex
 class Element:
     def __init__(self):
         self.children = []
+        self.parent = None
         
     def setParent(self, parent):
         self.parent = parent
+    
+    def getParent(self):
+        return self.parent
     
     def getChildren(self):
         return self.children
@@ -24,13 +28,13 @@ class Element:
     
     def drawClip(self):
         pass
-    
+#TODO :   implementar o isClone 
     def runDraw(self, isClip = False):
         self.initDraw()
         if self.hasClip():
             self.drawClip()        
         self.draw(isClip)
-        for child in self.children:     
+        for child in self.children:
             child.runDraw()
         self.endDraw()
     

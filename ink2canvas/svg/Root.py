@@ -4,6 +4,8 @@ Created on 16/05/2012
 @author: tasso
 '''
 
+from ink2canvas.svg.G import G
+
 class Root(object):
 
     def __init__(self):
@@ -12,6 +14,17 @@ class Root(object):
         self.linearGradient = {}
         self.radialGradient = {}
 
+    def buscaElementoPorId(self,idQueTenhoQueAchar,nosQueDevemSerDesenhados):
+        retorno = None
+        for noEmQuestao in nosQueDevemSerDesenhados:
+            if(noEmQuestao.getId() == idQueTenhoQueAchar):
+                return noEmQuestao
+            if(isinstance(noEmQuestao, G)):
+                retorno = self.buscaElementoPorId(idQueTenhoQueAchar, noEmQuestao.children)
+                if(retorno!=None):
+                    break
+        return retorno
+
     def addChildDrawable(self, child):
         self.drawable.append(child)
 
@@ -19,10 +32,10 @@ class Root(object):
         self.clipPath[key] = value;
 
     def addChildLinearGradient(self, key, value):
-        self.clipPath[key] = value;
+        self.linearGradient[key] = value;
 
     def addChildRadialGradient(self, key, value):
-        self.clipPath[key] = value;
+        self.radialGradient[key] = value;
     
     def getDrawable(self):
         return self.drawable
