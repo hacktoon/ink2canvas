@@ -6,7 +6,7 @@ class Use(AbstractShape):
         drawables = self.rootTree.getDrawable()
         OriginName = self.getCloneId()
         OriginObject = self.rootTree.buscaElementoPorId(OriginName,drawables)
-        OriginObject.draw()
+        OriginObject.runDraw()
 #        self.ctx.closePath();
       
     def draw(self, isClip=False):
