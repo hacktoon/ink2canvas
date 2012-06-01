@@ -1,5 +1,6 @@
 import sys
 import unittest
+import filecmp
 from ink2canvas.main import Ink2Canvas
 sys.path.append('..')
 
@@ -26,7 +27,12 @@ class LinearGradientTest(unittest.TestCase):
         self.assertEqual(linearGradientDictionary["linearGradient2987"].colorStops["0"], "stop-color:#800000;stop-opacity:1;")
     
     def testSetLinearGradient(self):
-        pass
+        output_file = open("arquivos_test/linearGradient.html", "w")
+        content = self.ink2canvas.core.canvas.output()
+        output_file.write(content.encode("utf-8"))
+        output_file.close()
+        self.assertTrue(filecmp.cmp("arquivos_test/linearGradient.html", "arquivos_test/linearGradientQueDeveriaSair.html"))
+
     
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
