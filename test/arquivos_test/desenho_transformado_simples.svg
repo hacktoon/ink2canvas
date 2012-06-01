@@ -7,7 +7,6 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="210mm"
@@ -15,24 +14,9 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.2 r9819"
-   sodipodi:docname="svg_clone_quadrados.svg">
+   sodipodi:docname="desenho_transformado_simples.svg">
   <defs
-     id="defs4">
-    <clipPath
-       clipPathUnits="userSpaceOnUse"
-       id="clipPath3053">
-      <path
-         sodipodi:type="arc"
-         style="fill:#00ff00"
-         id="path3055"
-         sodipodi:cx="454.28571"
-         sodipodi:cy="365.21933"
-         sodipodi:rx="140"
-         sodipodi:ry="98.571426"
-         d="m 594.28571,365.21933 a 140,98.571426 0 1 1 -280,0 140,98.571426 0 1 1 280,0 z"
-         transform="matrix(1.0006559,0.03622437,0,1,0,0)" />
-    </clipPath>
-  </defs>
+     id="defs4" />
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -59,7 +43,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -68,31 +52,13 @@
      inkscape:groupmode="layer"
      id="layer1">
     <rect
-       style="fill:#00ff00;fill-rule:evenodd;stroke:#000000;stroke-width:1.09354091px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="fill:#0000ff;fill-rule:evenodd;stroke:#000000;stroke-width:1.01099312px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        id="rect2985"
-       width="566.742"
-       height="173.00368"
-       x="22.992863"
-       y="171.23662"
-       ry="3.8151295"
-       transform="matrix(0.99934454,-0.03620063,0,1,0,0)"
-       clip-path="url(#clipPath3053)" />
-    <use
-       x="0"
-       y="0"
-       xlink:href="#rect2985"
-       id="use2987"
-       transform="matrix(0.66299599,0.49900123,-0.53655861,0.61658838,434.41401,383.27571)"
-       width="744.09448"
-       height="1052.3622"
-       style="fill:#ff00ff" />
-    <use
-       x="0"
-       y="0"
-       xlink:href="#rect2985"
-       id="use3027"
-       transform="matrix(0.49584066,0,0,0.41787945,488.10545,362.43239)"
-       width="744.09448"
-       height="1052.3622" />
+       width="440.96619"
+       height="271.42856"
+       x="93.449791"
+       y="95.994255"
+       ry="5.8596115"
+       transform="matrix(0.97837109,0.20685746,0,1,0,0)" />
   </g>
 </svg>

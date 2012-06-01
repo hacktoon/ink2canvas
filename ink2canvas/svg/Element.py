@@ -3,6 +3,7 @@ from ink2canvas.lib import inkex
 class Element:
     def __init__(self):
         self.children = []
+       
         
     def setParent(self, parent):
         self.parent = parent
@@ -24,7 +25,7 @@ class Element:
     
     def drawClip(self):
         pass
-    
+#TODO :   implementar o isClone 
     def runDraw(self, isClip = False):
         self.initDraw()
         if self.hasClip():

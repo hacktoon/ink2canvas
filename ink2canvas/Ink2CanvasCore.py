@@ -1,7 +1,7 @@
 import svg
 from canvas import Canvas
 from ink2canvas.svg.ClipPath import Clippath
-from ink2canvas.svg import Root, LinearGradient, Defs ,G
+from ink2canvas.svg import Root, LinearGradient, Defs ,G, Use
 from ink2canvas.svg.Element import Element
 
 class Ink2CanvasCore(): 
@@ -12,18 +12,10 @@ class Ink2CanvasCore():
         self.effect = effect
         self.root = Root()
     
-    def buscaElementoPorId(self,idQueTenhoQueAchar,nosQueDevemSerDesenhados):
-        retorno = None
-        for noEmQuestao in nosQueDevemSerDesenhados:
-            if(noEmQuestao.getId() == idQueTenhoQueAchar):
-                return noEmQuestao
-            if(isinstance(noEmQuestao, G)):
-                retorno = self.buscaElementoPorId(idQueTenhoQueAchar, noEmQuestao.children)
-                if(retorno!=None):
-                    break
-        return retorno
+    
         
-        
+    def isClone(self):
+        return isinstance(self, Use);
     
     def drawClone(self, childNode, element):
         cloneNode = self.getCloneNode(childNode)
@@ -49,31 +41,7 @@ class Ink2CanvasCore():
             self.canvas.restore()
         self.canvas.clip()
 
-#    def walkInSVGNodes(self, rootNode, isClip=False):
-#        for childNode in rootNode:
-#            tagName = self.getNodeTagName(childNode)
-#            className = tagName.capitalize()
-#
-#            #if there's not an implemented class, continues
-#            if not hasattr(svg, className):
-#                continue
-#            # creates a instance of 'element'
-#            # similar to 'element = Rect(tagName, childNode, ctx)'
-#            element = getattr(svg, className)(tagName, childNode, self.canvas)
-#            
-#            if self.isCloneNode(childNode):
-#                self.drawClone(childNode, element)
-#                continue
-#            
-#            self.drawGradient(element)
-#               
-#            if not isClip and element.has_clip():
-#                self.drawClip(element)
-#            
-#            #clipping elements are drawn differently
-#            element.draw(isClip)
-#            self.walkInSVGNodes(childNode, isClip)
-#            element.end()
+#    
     def createClipPathNode(self,element,tag):
         for subTag in tag:
             tagName = self.getNodeTagName(subTag)

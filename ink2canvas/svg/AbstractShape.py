@@ -1,7 +1,8 @@
 from ink2canvas.svg.Element import Element
 from ink2canvas.lib import simplestyle
 from ink2canvas.lib.simpletransform import parseTransform
-from ink2canvas.svg.LinearGradient import Lineargradient
+
+
 
 class AbstractShape(Element):
     def __init__(self, command, node, ctx, rootTree):
@@ -67,8 +68,8 @@ class AbstractShape(Element):
         self.ctx.write("\n// #%s" % self.attr("id"))
         if self.has_transform() or self.hasClip():
             self.ctx.save()
-
-
+            
+    
     def createLinearGradient(self):
         x1, y1, x2, y2 = self.gradient.get_data()
         self.ctx.createLinearGradient("grad", x1, y1, x2, y2)
@@ -87,10 +88,11 @@ class AbstractShape(Element):
             style = self.get_style()
             self.set_style(style)
             self.ctx.beginPath()
-            
+       
+                
         # unpacks "data" in parameters to given method
         getattr(self.ctx, self.command)(*data)
-          
+        
         if not isClip:
             self.ctx.closePath()
     
