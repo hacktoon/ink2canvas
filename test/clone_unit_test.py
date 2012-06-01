@@ -52,12 +52,9 @@ class Test(unittest.TestCase):
     def testProcuraIdDoClone(self):
         self.criaListaDeUse(self.root.getDrawable())
         for cadaUse in self.ListofUses:
-            print cadaUse
             idQueTenhoQueAchar = cadaUse.getCloneId()
-            print idQueTenhoQueAchar
             self.assertIsNotNone(idQueTenhoQueAchar)
             elementoDoId = self.ink2canvas.core.root.buscaElementoPorId(idQueTenhoQueAchar,self.root.getDrawable())
-            print elementoDoId
             self.assertIsNotNone(elementoDoId)
     
     def testCLoneBuffer(self):
