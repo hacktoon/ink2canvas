@@ -36,7 +36,7 @@ class Ink2Canvas(inkex.Effect):
         if tmpWidth == None:        
             width = 800
         else:
-            width = inkex.unittouu()
+            width = inkex.unittouu(tmpWidth)
             
         tmpHeight = svgRoot.get("height")
         if tmpHeight == None:
