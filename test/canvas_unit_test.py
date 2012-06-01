@@ -208,8 +208,7 @@ class TestCanvas(unittest.TestCase):
         href = "str"
         x1, y1, x2, y2 = 0.0 , 2.0 , 3.0, 4.0
         data = (href, x1, y1, x2, y2)
-        expectedList = ["\tvar %s = \
-                   ctx.createLinearGradient(%f,%f,%f,%f);\n" % data]
+        expectedList = ["\tvar %s = ctx.createLinearGradient(%f,%f,%f,%f);\n" % data]
         self.canvas.createLinearGradient(href,x1, y1, x2, y2)
         self.assertEqual(self.canvas.code, expectedList)          
     

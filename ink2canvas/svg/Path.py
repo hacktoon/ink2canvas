@@ -112,5 +112,8 @@ class Path(AbstractShape):
             if comm in path_command:
                 path_command[comm](data)
 
+        self.set_gradient()
+
+        
         if not isClip:
             self.ctx.closePath(comm == "Z")

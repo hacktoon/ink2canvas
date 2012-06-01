@@ -54,13 +54,10 @@ class TestSvgPath(unittest.TestCase):
         self.assertEqual(self.path.ctx.code, ['\tctx.translate(300.125000, 3.625000);\n', '\tctx.rotate(0.052360);\n', '\tctx.scale(0.500000, 1.000000);\n', '\tctx.arc(0.000000, 0.000000, 599.408034, 3.121031, 6.26262379, -4);\n', '\tctx.scale(2.000000, 1.000000);\n', '\tctx.rotate(-0.052360);\n', '\tctx.translate(-300.125000, -3.625000);\n'])
 
     def testDraw(self):
-        #print self.path.ctx.code
         self.maxDiff = None
         self.path.draw(False)
         self.assertEqual(self.path.ctx.code, ["\tctx.lineJoin = 'miter';\n", "\tctx.strokeStyle = 'rgb(0, 0, 0)';\n", "\tctx.lineCap = 'butt';\n", '\tctx.lineWidth = 1.000000;\n', "\tctx.fillStyle = 'rgb(255, 0, 0)';\n", '\tctx.beginPath();\n', '\tctx.transform(0.707107, -0.707107, 0.707107, 0.707107, -44.476826, 225.540250);\n', '\tctx.moveTo(447.497570, 166.458400);\n', '\tctx.translate(250.012754, 166.472848);\n', '\tctx.rotate(0.000000);\n', '\tctx.scale(1.000000, 0.342711);\n', '\tctx.arc(0.000000, 0.000000, 197.484820, -0.000213, 3.14180613, 0);\n', '\tctx.scale(1.000000, 2.917910);\n', '\tctx.rotate(-0.000000);\n', '\tctx.translate(-250.012754, -166.472848);\n', '\tctx.translate(250.012754, 166.443952);\n', '\tctx.rotate(0.000000);\n', '\tctx.scale(1.000000, 0.342711);\n', '\tctx.arc(0.000000, 0.000000, 197.484820, 3.141379, 6.28339879, 0);\n', '\tctx.scale(1.000000, 2.917910);\n', '\tctx.rotate(-0.000000);\n', '\tctx.translate(-250.012754, -166.443952);\n', '\tctx.closePath();\n', '\tctx.fill();\n', '\tctx.stroke();\n'])
-        #style = self.path.get_style()
-        #self.path.set_style(style)
-
+       
 if __name__ == '__main__':
     unittest.main()
 

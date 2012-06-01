@@ -26,5 +26,8 @@ class Ellipse(AbstractShape):
         self.ctx.bezierCurveTo(cx - (KAPPA * rx), cy + ry, cx - rx, cy + (KAPPA * ry), cx - rx, cy)
         self.ctx.bezierCurveTo(cx - rx, cy - (KAPPA * ry), cx - (KAPPA * rx), cy - ry, cx, cy - ry)
         
+        self.set_gradient()
+
+        
         if not isClip:
             self.ctx.closePath()

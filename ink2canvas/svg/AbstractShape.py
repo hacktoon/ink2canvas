@@ -1,7 +1,8 @@
 from ink2canvas.svg.Element import Element
 from ink2canvas.lib import simplestyle
 from ink2canvas.lib.simpletransform import parseTransform
-from ink2canvas.svg.LinearGradient import Lineargradient
+
+
 
 class AbstractShape(Element):
     def __init__(self, command, node, ctx, rootTree):
@@ -11,11 +12,20 @@ class AbstractShape(Element):
         self.ctx = ctx
         self.rootTree = rootTree
 
+    def getId(self):
+        return self.attr("id")    
+    
     def get_data(self):
         return
 
     def get_style(self):
         style = simplestyle.parseStyle(self.attr("style"))
+        if style == {}:
+            parent = self.getParent()
+            while (parent != None and style == {}):
+                style = simplestyle.parseStyle(parent.attr("style"))
+                parent = parent.getParent()        
+        
         #remove any trailing space in dict keys/values
         style = dict([(str.strip(k), str.strip(v)) for k,v in style.items()])
         return style
@@ -65,7 +75,6 @@ class AbstractShape(Element):
         if self.has_transform() or self.hasClip():
             self.ctx.save()
 
-
     def createLinearGradient(self):
         x1, y1, x2, y2 = self.gradient.get_data()
         self.ctx.createLinearGradient("grad", x1, y1, x2, y2)
@@ -84,12 +93,30 @@ class AbstractShape(Element):
             style = self.get_style()
             self.set_style(style)
             self.ctx.beginPath()
-            
+       
+                
         # unpacks "data" in parameters to given method
         getattr(self.ctx, self.command)(*data)
-          
+
+        self.set_gradient()
+        
         if not isClip:
             self.ctx.closePath()
+    
+    def set_gradient(self):
+        if not(self.has_gradient()):
+            return
+        linearGradientId = self.get_gradient_href()
+        linearGradient = self.rootTree.getLinearGradient(linearGradientId)
+        if(linearGradient.link != None):
+            linearGradient.colorStops = self.rootTree.getLinearGradient(linearGradient.link).colorStops
+        x1, y1, x2, y2 = linearGradient.get_data()
+        self.ctx.createLinearGradient("grad", x1, y1, x2, y2)
+        for stopKey, stopValue in linearGradient.colorStops.iteritems():
+            offset = float(stopKey)
+            color = self.ctx.getColor(stopValue.split(";")[0].split(":")[1] , stopValue.split(";")[1].split(":")[1] )
+            self.ctx.addColorStop("grad", offset, color)
+        self.ctx.setFill("gradient=grad")
     
     def drawClip(self):
         clipId = self.getClipId()

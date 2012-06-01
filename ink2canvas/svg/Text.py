@@ -38,3 +38,4 @@ class Text(AbstractShape):
             _x = float(tspan.get("x"))
             _y = float(tspan.get("y"))
             self.ctx.fillText(text, _x, _y)
+        self.set_gradient()
