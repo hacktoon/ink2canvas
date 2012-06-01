@@ -94,6 +94,7 @@ class Ink2CanvasCore():
             elementChild = self.createElement(eachTag)
             if(elementChild == None):
                 continue
+            elementChild.setParent(element)
             element.addChild(elementChild)
             self.createDrawable(elementChild, eachTag)
                 
@@ -129,9 +130,6 @@ class Ink2CanvasCore():
                 continue
             if(isinstance(element, Defs)):
                 self.createModifiers(tag)
-            #----------------------lembrar que esse else tem q estar depois do ultimo if
-            #da createMifier
-
             else:
                 self.root.addChildDrawable(element)
                 self.createDrawable(element,tag);
@@ -174,11 +172,4 @@ class Ink2CanvasCore():
         cloneHref = node.get(self.inkex.addNS("cloneHref", "xlink"))
         clone = self.xpathSingle("//*[@id='%s']" % cloneHref[1:])
         return clone
-
-    def effect(self):
-        svgRoot = self.document.getroot()
-        width = self.inkex.unittouu(svgRoot.get("width"))
-        height = self.inkex.unittouu(svgRoot.get("height"))
-        self.canvas = Canvas(width, height)
-        self.walkInSVGNodes(svgRoot)  
     

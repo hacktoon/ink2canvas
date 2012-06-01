@@ -3,9 +3,13 @@ from ink2canvas.lib import inkex
 class Element:
     def __init__(self):
         self.children = []
+        self.parent = None
         
     def setParent(self, parent):
         self.parent = parent
+    
+    def getParent(self):
+        return self.parent
     
     def getChildren(self):
         return self.children

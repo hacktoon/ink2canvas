@@ -16,6 +16,12 @@ class AbstractShape(Element):
 
     def get_style(self):
         style = simplestyle.parseStyle(self.attr("style"))
+        if style == {}:
+            parent = self.getParent()
+            while (parent != None and style == {}):
+                style = simplestyle.parseStyle(parent.attr("style"))
+                parent = parent.getParent()        
+        
         #remove any trailing space in dict keys/values
         style = dict([(str.strip(k), str.strip(v)) for k,v in style.items()])
         return style
