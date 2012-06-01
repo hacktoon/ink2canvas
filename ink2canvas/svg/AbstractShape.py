@@ -82,20 +82,29 @@ class AbstractShape(Element):
         if not isClip:
             style = self.get_style()
             self.set_style(style)
-            self.set_gradient()
             self.ctx.beginPath()
             
         # unpacks "data" in parameters to given method
         getattr(self.ctx, self.command)(*data)
-          
+        self.set_gradient()
+        
         if not isClip:
             self.ctx.closePath()
     
     def set_gradient(self):
-        if self.has_gradient():
-            linearGradientId = self.get_gradient_href()
+        if not(self.has_gradient()):
+            return
+        linearGradientId = self.get_gradient_href()
         linearGradient = self.rootTree.getLinearGradient(linearGradientId)
+        if(linearGradient.link != None):
+            linearGradient.colorStops = self.rootTree.getLinearGradient(linearGradient.link).colorStops
         x1, y1, x2, y2 = linearGradient.get_data()
+        self.ctx.createLinearGradient("grad", x1, y1, x2, y2)
+        for stopKey, stopValue in linearGradient.colorStops.iteritems():
+            offset = float(stopKey)
+            color = self.ctx.getColor(stopValue.split(";")[0].split(":")[1] , stopValue.split(";")[1].split(":")[1] )
+            self.ctx.addColorStop("grad", offset, color)
+        self.ctx.setFill("gradient=grad")
     
     def drawClip(self):
         clipId = self.getClipId()
