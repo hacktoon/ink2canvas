@@ -68,7 +68,7 @@
      inkscape:groupmode="layer"
      id="layer1">
     <rect
-       style="fill:#00ff00;fill-rule:evenodd;stroke:#000000;stroke-width:1.09354091px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="fill:#008080;fill-rule:evenodd;stroke:#000000;stroke-width:1.09354090999999998px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        id="rect2985"
        width="566.742"
        height="173.00368"
@@ -93,6 +93,7 @@
        id="use3027"
        transform="matrix(0.49584066,0,0,0.41787945,488.10545,362.43239)"
        width="744.09448"
-       height="1052.3622" />
+       height="1052.3622"
+       style="fill:#782121" />
   </g>
 </svg>
