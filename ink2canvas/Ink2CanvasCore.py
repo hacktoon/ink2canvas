@@ -68,7 +68,14 @@ class Ink2CanvasCore():
             linearGrad.link = linearGrad.attr("href","xlink")[1:]
         
     def createRadialGradient(self,element,tag):
-        pass
+        colorStops = {}
+        for stop in tag:
+            colorStops[stop.get("offset")] = stop.get("style")
+        radialGrad = Radialgradient(None, tag, self.canvas, self.root)
+        radialGrad.setColorStops(colorStops)
+        self.root.addChildRadialGradient(radialGrad.attr("id"), radialGrad)
+        if(radialGrad.attr("href","xlink") != None):
+            radialGrad.link = radialGrad.attr("href","xlink")[1:]
     
     def createDrawable(self,element,tag):
         for eachTag in tag:

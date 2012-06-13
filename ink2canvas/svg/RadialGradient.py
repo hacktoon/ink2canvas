@@ -11,6 +11,9 @@ class Radialgradient(Defs):
         self.fy= 0
         self.r = 0
     
+    def setColorStops(self, colorStops):
+        self.colorStops = colorStops
+    
     def get_data(self):
         cx = self.attr("cx")
         cy = self.attr("cy")

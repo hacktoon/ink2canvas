@@ -57,9 +57,11 @@ class AbstractShape(Element):
         style = self.get_style()
         if key in style:
             styleParamater = style[key]
-            return styleParamater.startswith("url(#linear") or \
-                   styleParamater.startswith("url(#radial")
-        return False
+            if styleParamater.startswith("url(#linear"):
+                return "linear"
+            if styleParamater.startswith("url(#radial"):
+                return "radial"
+        return None
 
     def get_gradient_href(self, key):
         style = self.get_style()
@@ -104,21 +106,33 @@ class AbstractShape(Element):
             self.ctx.closePath()
     
     def set_gradient(self):
-        if (self.has_gradient("fill")):
-            self.setComponentGradient("fill")
+        gradType = self.has_gradient("fill")
+        if (gradType):
+            self.setComponentGradient("fill", gradType)
             self.ctx.setFill("gradient=grad")
-        if (self.has_gradient("stroke")):
-            self.setComponentGradient("stroke")
-            self.ctx.setStroke("gradient=grad")      
+        gradType = self.has_gradient("stroke")
+        if (gradType):
+            self.setComponentGradient("stroke", gradType)
+            self.ctx.setStroke("gradient=grad")
+            
+    def setComponentGradient(self, key, gradType):
+        gradientId = self.get_gradient_href(key)
+        if(gradType == "linear"):
+            gradient = self.rootTree.getLinearGradient(gradientId)
+        if(gradType == "radial"):
+            gradient = self.rootTree.getRadialGradient(gradientId)
         
-    def setComponentGradient(self, key):
-        linearGradientId = self.get_gradient_href(key)
-        linearGradient = self.rootTree.getLinearGradient(linearGradientId)
-        if(linearGradient.link != None):
-            linearGradient.colorStops = self.rootTree.getLinearGradient(linearGradient.link).colorStops
-        x1, y1, x2, y2 = linearGradient.get_data()
-        self.ctx.createLinearGradient("grad", x1, y1, x2, y2)
-        for stopKey, stopValue in linearGradient.colorStops.iteritems():
+        if(gradient.link != None):
+            gradient.colorStops = self.rootTree.getLinearGradient(gradient.link).colorStops
+            
+        if(gradType == "linear"):
+            x1, y1, x2, y2 = gradient.get_data()
+            self.ctx.createLinearGradient("grad", x1, y1, x2, y2)
+        if(gradType == "radial"):
+            cx, cy, fx, fy, r = gradient.get_data()
+            self.ctx.createRadialGradient("grad", cx, cy, 0, fx, fy, r)
+            
+        for stopKey, stopValue in gradient.colorStops.iteritems():
             offset = float(stopKey)
             color = self.ctx.getColor(stopValue.split(";")[0].split(":")[1] , stopValue.split(";")[1].split(":")[1] )
             self.ctx.addColorStop("grad", offset, color)
