@@ -100,25 +100,36 @@ class AbstractShape(Element):
         # unpacks "data" in parameters to given method
         getattr(self.ctx, self.command)(*data)
 
-        self.set_gradient()
+        gradientFill = self.set_gradientFill()
+        gradientStroke = self.set_gradientStroke()
         
-        if not isClip:
+        if not isClip: 
             self.ctx.closePath()
+            if(not gradientFill):        
+                self.ctx.fill()
+            if(not gradientStroke):
+                self.ctx.stroke()
+            
     
-    def set_gradient(self):
+    def set_gradientFill(self):
         gradType = self.has_gradient("fill")
         if (gradType):
             gradient = self.setComponentGradient("fill", gradType)
-            self.ctx.setFill("gradient=grad")
-            #if(self.hasGradientTransform(gradient)):
-                #self.ctx.restore()
-        
+            self.ctx.setFill("gradient=grad")           
+            if(self.hasGradientTransform(gradient)):
+                self.ctx.fill();
+                self.ctx.restore()
+                return True
+            
+    def set_gradientStroke(self):   
         gradType = self.has_gradient("stroke")
         if (gradType):
             gradient = self.setComponentGradient("stroke", gradType)
             self.ctx.setStroke("gradient=grad")
-           # if(self.hasGradientTransform(gradient)):
-            #    self.ctx.restore()
+            if(self.hasGradientTransform(gradient)):
+                self.ctx.stroke();
+                self.ctx.restore()
+                return True
         
             
     def hasGradientTransform(self, gradient):
@@ -142,7 +153,7 @@ class AbstractShape(Element):
             gradient.colorStops = self.rootTree.getLinearGradient(gradient.link).colorStops
             
         if(self.hasGradientTransform(gradient)):
-            #self.ctx.save()
+            self.ctx.save()
             self.setGradientTransform(gradient)    
             
         if(gradType == "linear"):

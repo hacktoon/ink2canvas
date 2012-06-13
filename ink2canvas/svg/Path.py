@@ -112,8 +112,12 @@ class Path(AbstractShape):
             if comm in path_command:
                 path_command[comm](data)
 
-        self.set_gradient()
-
+        gradientFill = self.set_gradientFill()
+        gradientStroke = self.set_gradientStroke()
         
-        if not isClip:
+        if not isClip: 
             self.ctx.closePath(comm == "Z")
+            if(not gradientFill):        
+                self.ctx.fill()
+            if(not gradientStroke):
+                self.ctx.stroke()

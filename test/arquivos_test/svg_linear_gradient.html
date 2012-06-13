@@ -13,6 +13,8 @@
 // #layer1
 	
 // #path2985
+	ctx.miterLimit = 4;
+	ctx.lineWidth = 2.000000;
 	ctx.beginPath();
 	ctx.moveTo(471.428560, 465.219330);
 	ctx.translate(314.285705, 465.219330);
@@ -29,23 +31,17 @@
 	ctx.scale(1.000000, 1.009174);
 	ctx.rotate(-0.000000);
 	ctx.translate(-314.285705, -465.219330);
-	ctx.save();
-	ctx.transform(-0.266181, 0.788774, -2.324393, -0.784392, 1726.501900, 625.072050);
-	var grad = ctx.createRadialGradient(312.508580,596.359920,0.000000,312.508580,596.359920,157.142850);
-	grad.addColorStop(1.000000, 'rgb(255, 0, 0)');
-	grad.addColorStop(0.000000, 'rgb(255, 111, 0)');
+	var grad = ctx.createLinearGradient(245.714280,406.647890,328.571440,515.219300);
+	grad.addColorStop(1.000000, 'rgba(255, 0, 0, 0.0)');
+	grad.addColorStop(0.000000, 'rgb(255, 0, 0)');
 	ctx.fillStyle = grad;
-	ctx.fill();
-	ctx.restore();
-	ctx.save();
-	ctx.transform(-0.338908, -0.156680, 0.415819, -0.899442, 104.934740, 1137.223200);
-	var grad = ctx.createRadialGradient(259.514590,605.042300,0.000000,259.514590,605.042300,157.142850);
+	var grad = ctx.createLinearGradient(342.857150,389.505040,251.428570,526.647890);
 	grad.addColorStop(1.000000, 'rgba(0, 0, 0, 0.0)');
 	grad.addColorStop(0.000000, 'rgb(0, 0, 0)');
 	ctx.strokeStyle = grad;
-	ctx.stroke();
-	ctx.restore();
 	ctx.closePath();
+	ctx.fill();
+	ctx.stroke();
 
     </script>
 </body>
