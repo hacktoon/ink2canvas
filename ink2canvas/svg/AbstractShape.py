@@ -115,6 +115,15 @@ class AbstractShape(Element):
             self.setComponentGradient("stroke", gradType)
             self.ctx.setStroke("gradient=grad")
             
+    def hasGradientTransform(self, gradient):
+        return bool(gradient.attr("gradientTransform"))
+    
+    def setGradientTransform(self, gradient):
+        dataString = gradient.attr("gradientTransform")
+        dataValues = parseTransform(dataString)
+        print dataValues
+        
+            
     def setComponentGradient(self, key, gradType):
         gradientId = self.get_gradient_href(key)
         if(gradType == "linear"):
@@ -124,6 +133,10 @@ class AbstractShape(Element):
         
         if(gradient.link != None):
             gradient.colorStops = self.rootTree.getLinearGradient(gradient.link).colorStops
+            
+        if(gradient.hasGradientTransform(gradient)):
+            self.ctx.save()
+            self.setGradientTransform(gradient)    
             
         if(gradType == "linear"):
             x1, y1, x2, y2 = gradient.get_data()
@@ -136,6 +149,9 @@ class AbstractShape(Element):
             offset = float(stopKey)
             color = self.ctx.getColor(stopValue.split(";")[0].split(":")[1] , stopValue.split(";")[1].split(":")[1] )
             self.ctx.addColorStop("grad", offset, color)
+        
+        if(gradient.hasGradientTransform(gradient)):
+            self.ctx.restore()
     
     def drawClip(self):
         clipId = self.getClipId()
