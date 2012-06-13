@@ -119,7 +119,13 @@ class Canvas:
             alpha = self.style["stroke-opacity"]
         except:
             alpha = 1
-        self.write("ctx.strokeStyle = %s;" % self.getColor(value, alpha))
+        if not value.startswith("url(") and not value.startswith("gradient="):
+            stroke = self.getColor(value, alpha)
+            self.write("ctx.strokeStyle = %s;" % stroke)
+        else:
+            if value.startswith("gradient="):
+                value = value.replace("gradient=", "")
+                self.write("ctx.strokeStyle = %s;" % value)
 
     def setStrokeWidth(self, value):
         self.write("ctx.lineWidth = %f;" % inkex.unittouu(value))

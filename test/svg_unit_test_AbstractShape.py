@@ -89,16 +89,16 @@ class TestSvgAbstractShape(unittest.TestCase):
         canvas.node = self.returnsGnode(canvas.root,"path")
         canvas.abstractShape = AbstractShape( None,canvas.node,self.canvas, None)
         
-        self.assertEqual(canvas.abstractShape.has_gradient(), True)
+        self.assertEqual(canvas.abstractShape.has_gradient("fill"), True)
         
         canvas.document = canvas.effect.parse("arquivos_test/svg_unit_test_AbstractShape_transformado_GradienteRadial.svg")
         canvas.root = canvas.effect.document.getroot()
         canvas.node = self.returnsGnode(canvas.root,"path")
         canvas.abstractShape = AbstractShape( None,canvas.node,self.canvas, None)
         
-        self.assertEqual(canvas.abstractShape.has_gradient(), True)
+        self.assertEqual(canvas.abstractShape.has_gradient("fill"), True)
         
-        self.assertNotEqual(self.abstractShape.has_gradient(),True)
+        self.assertNotEqual(self.abstractShape.has_gradient("fill"),True)
         
     def test_getGradientHref(self):
         retorno ="linearGradient3022"
@@ -109,10 +109,10 @@ class TestSvgAbstractShape(unittest.TestCase):
         canvas.node = self.returnsGnode(canvas.root,"path")
         canvas.abstractShape = AbstractShape( None,canvas.node,self.canvas, None)
         
-        self.assertEqual(retorno,canvas.abstractShape.get_gradient_href())
+        self.assertEqual(retorno,canvas.abstractShape.get_gradient_href("fill"))
         
         retorno ="ovalGradient3022"
-        self.assertNotEqual(retorno,canvas.abstractShape.get_gradient_href())
+        self.assertNotEqual(retorno,canvas.abstractShape.get_gradient_href("fill"))
     
     def test_hasClip(self):
         canvas = Canvas(0,1)

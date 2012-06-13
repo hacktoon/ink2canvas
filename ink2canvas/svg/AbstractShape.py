@@ -53,18 +53,18 @@ class AbstractShape(Element):
         m12, m22, dy = matrix[1]
         return m11, m12, m21, m22, dx, dy
 
-    def has_gradient(self):
+    def has_gradient(self, key):
         style = self.get_style()
-        if "fill" in style:
-            fill = style["fill"]
-            return fill.startswith("url(#linear") or \
-                   fill.startswith("url(#radial")
+        if key in style:
+            styleParamater = style[key]
+            return styleParamater.startswith("url(#linear") or \
+                   styleParamater.startswith("url(#radial")
         return False
 
-    def get_gradient_href(self):
+    def get_gradient_href(self, key):
         style = self.get_style()
-        if "fill" in style:
-            return style["fill"][5:-1]
+        if key in style:
+            return style[key][5:-1]
         return
 
     def getClipId(self):
@@ -104,9 +104,15 @@ class AbstractShape(Element):
             self.ctx.closePath()
     
     def set_gradient(self):
-        if not(self.has_gradient()):
-            return
-        linearGradientId = self.get_gradient_href()
+        if (self.has_gradient("fill")):
+            self.setComponentGradient("fill")
+            self.ctx.setFill("gradient=grad")
+        if (self.has_gradient("stroke")):
+            self.setComponentGradient("stroke")
+            self.ctx.setStroke("gradient=grad")      
+        
+    def setComponentGradient(self, key):
+        linearGradientId = self.get_gradient_href(key)
         linearGradient = self.rootTree.getLinearGradient(linearGradientId)
         if(linearGradient.link != None):
             linearGradient.colorStops = self.rootTree.getLinearGradient(linearGradient.link).colorStops
@@ -116,7 +122,6 @@ class AbstractShape(Element):
             offset = float(stopKey)
             color = self.ctx.getColor(stopValue.split(";")[0].split(":")[1] , stopValue.split(";")[1].split(":")[1] )
             self.ctx.addColorStop("grad", offset, color)
-        self.ctx.setFill("gradient=grad")
     
     def drawClip(self):
         clipId = self.getClipId()
