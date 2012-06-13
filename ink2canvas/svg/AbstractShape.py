@@ -108,21 +108,28 @@ class AbstractShape(Element):
     def set_gradient(self):
         gradType = self.has_gradient("fill")
         if (gradType):
-            self.setComponentGradient("fill", gradType)
+            gradient = self.setComponentGradient("fill", gradType)
             self.ctx.setFill("gradient=grad")
+            #if(self.hasGradientTransform(gradient)):
+                #self.ctx.restore()
+        
         gradType = self.has_gradient("stroke")
         if (gradType):
-            self.setComponentGradient("stroke", gradType)
+            gradient = self.setComponentGradient("stroke", gradType)
             self.ctx.setStroke("gradient=grad")
+           # if(self.hasGradientTransform(gradient)):
+            #    self.ctx.restore()
+        
             
     def hasGradientTransform(self, gradient):
         return bool(gradient.attr("gradientTransform"))
     
     def setGradientTransform(self, gradient):
         dataString = gradient.attr("gradientTransform")
-        dataValues = parseTransform(dataString)
-        print dataValues
-        
+        dataMatrix = parseTransform(dataString)
+        m11, m21, dx = dataMatrix[0]
+        m12, m22, dy = dataMatrix[1]
+        self.ctx.transform(m11, m12, m21, m22, dx, dy)
             
     def setComponentGradient(self, key, gradType):
         gradientId = self.get_gradient_href(key)
@@ -134,8 +141,8 @@ class AbstractShape(Element):
         if(gradient.link != None):
             gradient.colorStops = self.rootTree.getLinearGradient(gradient.link).colorStops
             
-        if(gradient.hasGradientTransform(gradient)):
-            self.ctx.save()
+        if(self.hasGradientTransform(gradient)):
+            #self.ctx.save()
             self.setGradientTransform(gradient)    
             
         if(gradType == "linear"):
@@ -150,8 +157,8 @@ class AbstractShape(Element):
             color = self.ctx.getColor(stopValue.split(";")[0].split(":")[1] , stopValue.split(";")[1].split(":")[1] )
             self.ctx.addColorStop("grad", offset, color)
         
-        if(gradient.hasGradientTransform(gradient)):
-            self.ctx.restore()
+        
+        return gradient
     
     def drawClip(self):
         clipId = self.getClipId()
