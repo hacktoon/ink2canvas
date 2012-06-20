@@ -13,7 +13,7 @@ class TestSvgCircle(unittest.TestCase):
     def setUp(self):
         self.circle = Circle(12, 12, 12, None)
         self.effect = Effect()
-        self.document = self.effect.parse("arquivos_test/svg_circle_unit_test.svg")
+        self.document = self.effect.parse("arquivos_test/unit_test_svg_circle.svg")
         root = self.effect.document.getroot()
         
         for node in root:

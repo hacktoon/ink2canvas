@@ -8,12 +8,12 @@ sys.path.append('..')
 class Test(unittest.TestCase):
     def setUp(self):
         self.ink2canvasGrouped = Ink2Canvas()
-        file2 = "arquivos_test/group_unit_test_grouped.svg"
+        file2 = "arquivos_test/unit_test_group_grouped.svg"
         self.ink2canvasGrouped.parse(file2)
         self.ink2canvasGrouped.effect()
 
         self.ink2canvasGroupedEdited = Ink2Canvas()
-        file3 = "arquivos_test/group_unit_test_grouped_edited.svg"
+        file3 = "arquivos_test/unit_test_group_grouped_edited.svg"
         self.ink2canvasGroupedEdited.parse(file3)
         self.ink2canvasGroupedEdited.effect()
 

@@ -10,9 +10,6 @@ from inkex import Effect
 sys.path.append('..')
 
 from ink2canvas.svg.G import G
-from ink2canvas.svg.AbstractShape import AbstractShape
-from ink2canvas.svg.Element import Element
-import inkex
 from ink2canvas.canvas import Canvas
 
 class TestSvgG(unittest.TestCase):
@@ -20,7 +17,7 @@ class TestSvgG(unittest.TestCase):
     def setUp(self):
         self.effect = Effect()
         
-        self.document = self.effect.parse("arquivos_test/svg_g_unit_test.svg")
+        self.document = self.effect.parse("arquivos_test/unit_test_svg_g.svg")
         root = self.effect.document.getroot()   
         self.node = self.findTag(root, "g")
             

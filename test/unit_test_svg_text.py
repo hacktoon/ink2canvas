@@ -4,7 +4,6 @@ from inkex import Effect
 sys.path.append('..')
 
 from ink2canvas.svg.Text import Text
-from ink2canvas.svg.Element import Element
 
 from ink2canvas.canvas import Canvas
 
@@ -13,7 +12,7 @@ class TestTextAbstractShape(unittest.TestCase):
     
     def setUp(self):
         self.effect = Effect()
-        self.document = self.effect.parse("arquivos_test/svg_text_unit_test.svg")
+        self.document = self.effect.parse("arquivos_test/unit_test_svg_text.svg")
         self.root = self.effect.document.getroot()
         self.canvas = Canvas(0,0)
         self.node = self.findNodeInG(self.root,"text")   
