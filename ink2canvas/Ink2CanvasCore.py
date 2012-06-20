@@ -21,8 +21,8 @@ class Ink2CanvasCore():
     
     def drawClone(self, childNode, element):
         cloneNode = self.getCloneNode(childNode)
-        if (element.has_transform()):
-            transMatrix = element.get_transform()
+        if (element.hasTransform()):
+            transMatrix = element.getTransform()
             self.canvas.transform(*transMatrix)
         self.walkInSVGNodes([cloneNode])
 
@@ -33,13 +33,13 @@ class Ink2CanvasCore():
     def drawClip(self, element):
         clipPath = self.getClipDef(element)
         self.canvas.beginPath()
-        if (element.has_transform()):
+        if (element.hasTransform()):
             self.canvas.save()
-            transMatrix = element.get_transform()
+            transMatrix = element.getTransform()
             self.canvas.transform(*transMatrix)
         #DRAW
         self.walkInSVGNodes(clipPath, True)
-        if (element.has_transform()):
+        if (element.hasTransform()):
             self.canvas.restore()
         self.canvas.clip()
 
@@ -129,9 +129,9 @@ class Ink2CanvasCore():
         return node.tag.split("}")[1]
     
     def getGradientDef(self, elem):
-        if not elem.has_gradient():
+        if not elem.hasGradient():
             return None
-        gradientHref = elem.get_gradient_href()
+        gradientHref = elem.getGradientHref()
         
         # get the gradient element
         gradient = self.effect.xpathSingle("//*[@id='%s']" % gradientHref)

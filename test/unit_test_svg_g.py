@@ -33,7 +33,7 @@ class TestSvgG(unittest.TestCase):
 
     def testDraw(self):
         self.g.draw(False);
-        self.assertEqual(self.g.ctx.code, ['\tctx.transform(-0.866025, 0.500000, -0.500000, -0.866025, 0.000000, 0.000000);\n'])
+        self.assertEqual(self.g.canvasContext.code, ['\tctx.transform(-0.866025, 0.500000, -0.500000, -0.866025, 0.000000, 0.000000);\n'])
 
 if __name__ == "__main__":
     unittest.main()

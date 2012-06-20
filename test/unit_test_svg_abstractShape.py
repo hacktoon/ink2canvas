@@ -31,7 +31,7 @@ class TestSvgAbstractShape(unittest.TestCase):
         self.abstractShape = AbstractShape( None,self.node,self.canvas, None)
 
     def testGetStyle(self):
-        style = self.abstractShape.get_style()
+        style = self.abstractShape.getStyle()
         strStyle = "fill:#ff0000;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
         hashStyle = dict([i.split(":") for i in strStyle.split(";") if len(i)])
         self.assertEqual(hashStyle,style)
@@ -48,14 +48,14 @@ class TestSvgAbstractShape(unittest.TestCase):
         canvas.setStrokeWidth("1px")
         canvas.setFill("#ff0000")
                       
-        stringStyle =self.abstractShape.get_style() 
-        self.abstractShape.set_style(stringStyle)
+        stringStyle =self.abstractShape.getStyle() 
+        self.abstractShape.setStyle(stringStyle)
         
-        self.assertEqual(canvas.code, self.abstractShape.ctx.code)
-        self.assertEqual(self.abstractShape.ctx.style,stringStyle) 
+        self.assertEqual(canvas.code, self.abstractShape.canvasContext.code)
+        self.assertEqual(self.abstractShape.canvasContext.style,stringStyle) 
         
     def testHas_transform(self):
-        self.assertNotEqual(True, self.abstractShape.has_transform())
+        self.assertNotEqual(True, self.abstractShape.hasTransform())
         
         canvas = Canvas(0,1)
         canvas.effect = Effect()
@@ -64,7 +64,7 @@ class TestSvgAbstractShape(unittest.TestCase):
         canvas.node = self.returnsGnode(canvas.root,"rect")
         canvas.abstractShape = AbstractShape( None,canvas.node,self.canvas, None)
         
-        self.assertEqual(True, canvas.abstractShape.has_transform())
+        self.assertEqual(True, canvas.abstractShape.hasTransform())
 
     def testGet_transform(self):
         "matrix(1,0,0.3802532,0.92488243,0,0)"
@@ -77,7 +77,7 @@ class TestSvgAbstractShape(unittest.TestCase):
         canvas.node = self.returnsGnode(canvas.root,"rect")
         canvas.abstractShape = AbstractShape( None,canvas.node,self.canvas, None)
         
-        vetor = canvas.abstractShape.get_transform()
+        vetor = canvas.abstractShape.getTransform()
         
         self.assertEqual(m11, vetor)
     def testHas_Gradient(self):
@@ -89,16 +89,16 @@ class TestSvgAbstractShape(unittest.TestCase):
         canvas.node = self.returnsGnode(canvas.root,"path")
         canvas.abstractShape = AbstractShape( None,canvas.node,self.canvas, None)
         
-        self.assertEqual(canvas.abstractShape.has_gradient("fill"), "linear")
+        self.assertEqual(canvas.abstractShape.hasGradient("fill"), "linear")
         
         canvas.document = canvas.effect.parse("arquivos_test/unit_test_svg_abstractShape_transformado_GradienteRadial.svg")
         canvas.root = canvas.effect.document.getroot()
         canvas.node = self.returnsGnode(canvas.root,"path")
         canvas.abstractShape = AbstractShape( None,canvas.node,self.canvas, None)
         
-        self.assertEqual(canvas.abstractShape.has_gradient("fill"), "radial")
+        self.assertEqual(canvas.abstractShape.hasGradient("fill"), "radial")
         
-        self.assertNotEqual(self.abstractShape.has_gradient("fill"),"linear")
+        self.assertNotEqual(self.abstractShape.hasGradient("fill"),"linear")
         
     def test_getGradientHref(self):
         retorno ="linearGradient3022"
@@ -109,10 +109,10 @@ class TestSvgAbstractShape(unittest.TestCase):
         canvas.node = self.returnsGnode(canvas.root,"path")
         canvas.abstractShape = AbstractShape( None,canvas.node,self.canvas, None)
         
-        self.assertEqual(retorno,canvas.abstractShape.get_gradient_href("fill"))
+        self.assertEqual(retorno,canvas.abstractShape.gradientHelper.getGradientHref("fill"))
         
         retorno ="ovalGradient3022"
-        self.assertNotEqual(retorno,canvas.abstractShape.get_gradient_href("fill"))
+        self.assertNotEqual(retorno,canvas.abstractShape.gradientHelper.getGradientHref("fill"))
     
     def test_hasClip(self):
         canvas = Canvas(0,1)
@@ -141,7 +141,7 @@ class TestSvgAbstractShape(unittest.TestCase):
         canvas2.write("\n// #path3033")
         self.abstractShape.initDraw()
         
-        self.assertEqual(self.abstractShape.ctx.code,canvas2.code)
+        self.assertEqual(self.abstractShape.canvasContext.code,canvas2.code)
 
         canvas3 = Canvas(0,3)
         canvas3.effect = Effect()
@@ -155,7 +155,7 @@ class TestSvgAbstractShape(unittest.TestCase):
         canvas4.save()
                
         canvas3.abstractShape.initDraw()
-        self.assertEqual(canvas3.abstractShape.ctx.code,canvas4.code)
+        self.assertEqual(canvas3.abstractShape.canvasContext.code,canvas4.code)
         
         #canvas.save
         
@@ -169,11 +169,11 @@ class TestSvgAbstractShape(unittest.TestCase):
         
         rect.draw()
         
-        self.assertEqual(rect.ctx.code,['\tctx.transform(1.000000, 0.000000, 0.380253, 0.924882, 0.000000, 0.000000);\n', "\tctx.lineJoin = 'miter';\n", "\tctx.strokeStyle = 'rgb(0, 0, 0)';\n", "\tctx.lineCap = 'butt';\n", '\tctx.lineWidth = 1.012632;\n', "\tctx.fillStyle = 'rgb(0, 0, 255)';\n", '\tctx.beginPath();\n', '\tctx.moveTo(-60.184902, 299.915122);\n', '\tctx.lineTo(-60.184902, 677.860048);\n', '\tctx.quadraticCurveTo(-60.184902, 683.719660, -60.184902, 683.719660);\n', '\tctx.lineTo(431.239998, 683.719660);\n', '\tctx.quadraticCurveTo(431.239998, 683.719660, 431.239998, 677.860048);\n', '\tctx.lineTo(431.239998, 299.915122);\n', '\tctx.quadraticCurveTo(431.239998, 294.055510, 431.239998, 294.055510);\n', '\tctx.lineTo(-60.184902, 294.055510);\n', '\tctx.quadraticCurveTo(-60.184902, 294.055510, -60.184902, 299.915122);\n', '\tctx.fill();\n', '\tctx.stroke();\n'])
+        self.assertEqual(rect.canvasContext.code,['\tctx.transform(1.000000, 0.000000, 0.380253, 0.924882, 0.000000, 0.000000);\n', "\tctx.lineJoin = 'miter';\n", "\tctx.strokeStyle = 'rgb(0, 0, 0)';\n", "\tctx.lineCap = 'butt';\n", '\tctx.lineWidth = 1.012632;\n', "\tctx.fillStyle = 'rgb(0, 0, 255)';\n", '\tctx.beginPath();\n', '\tctx.moveTo(-60.184902, 299.915122);\n', '\tctx.lineTo(-60.184902, 677.860048);\n', '\tctx.quadraticCurveTo(-60.184902, 683.719660, -60.184902, 683.719660);\n', '\tctx.lineTo(431.239998, 683.719660);\n', '\tctx.quadraticCurveTo(431.239998, 683.719660, 431.239998, 677.860048);\n', '\tctx.lineTo(431.239998, 299.915122);\n', '\tctx.quadraticCurveTo(431.239998, 294.055510, 431.239998, 294.055510);\n', '\tctx.lineTo(-60.184902, 294.055510);\n', '\tctx.quadraticCurveTo(-60.184902, 294.055510, -60.184902, 299.915122);\n', '\tctx.fill();\n', '\tctx.stroke();\n'])
         
     def test_end(self):
         self.abstractShape.endDraw()
-        self.assertEqual(self.abstractShape.ctx.code, [])
+        self.assertEqual(self.abstractShape.canvasContext.code, [])
         
         canvas1 = Canvas(0,3)
         canvas1.effect = Effect()
@@ -186,7 +186,7 @@ class TestSvgAbstractShape(unittest.TestCase):
         canvas2 = Canvas(0,2)
         canvas2.restore()
         
-        self.assertEqual(canvas1.abstractShape.ctx.code, canvas2.code)
+        self.assertEqual(canvas1.abstractShape.canvasContext.code, canvas2.code)
          
         
 if __name__ == '__main__':

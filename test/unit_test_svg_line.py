@@ -25,7 +25,7 @@ class TestSvgLine(unittest.TestCase):
         return ""  
  
     def testGet_Data(self):
-        x, y = self.line.get_data()
+        x, y = self.line.getData()
         self.assertEqual(x, ('M', (100.0, 300.0)) )
         self.assertEqual(y, ('L', (300.0, 100.0)) )
         

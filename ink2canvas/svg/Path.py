@@ -2,22 +2,22 @@ from ink2canvas.svg.AbstractShape import AbstractShape
 from ink2canvas.lib.simplepath import parsePath
 
 class Path(AbstractShape):
-    def get_data(self):
+    def getData(self):
         #path data is already converted to float
         return parsePath(self.attr("d"))
 
     def pathMoveTo(self, data):
-        self.ctx.moveTo(data[0], data[1])
+        self.canvasContext.moveTo(data[0], data[1])
         self.currentPosition = data[0], data[1]
 
     def pathLineTo(self, data):
-        self.ctx.lineTo(data[0], data[1])
+        self.canvasContext.lineTo(data[0], data[1])
         self.currentPosition = data[0], data[1]
 
     def pathCurveTo(self, data):
         x1, y1, x2, y2 = data[0], data[1], data[2], data[3]
         x, y = data[4], data[5]
-        self.ctx.bezierCurveTo(x1, y1, x2, y2, x, y)
+        self.canvasContext.bezierCurveTo(x1, y1, x2, y2, x, y)
         self.currentPosition = x, y
 
     def pathArcTo(self, data):
@@ -83,24 +83,24 @@ class Path(AbstractShape):
         sx = 1 if rx > ry else rx / ry
         sy = ry / rx if rx > ry else 1
 
-        self.ctx.translate(cx, cy)
-        self.ctx.rotate(angle)
-        self.ctx.scale(sx, sy)
-        self.ctx.arc(0, 0, r, a1, a1 + ad, 1 - sweepflag)
-        self.ctx.scale(1/sx, 1/sy)
-        self.ctx.rotate(-angle)
-        self.ctx.translate(-cx, -cy)
+        self.canvasContext.translate(cx, cy)
+        self.canvasContext.rotate(angle)
+        self.canvasContext.scale(sx, sy)
+        self.canvasContext.arc(0, 0, r, a1, a1 + ad, 1 - sweepflag)
+        self.canvasContext.scale(1/sx, 1/sy)
+        self.canvasContext.rotate(-angle)
+        self.canvasContext.translate(-cx, -cy)
         self.currentPosition = x2, y2
 
     def draw(self, isClip=False):
-        path = self.get_data()
+        path = self.getData()
         if not isClip:
-            style = self.get_style()
-            self.set_style(style)
-            self.ctx.beginPath()
-        if self.has_transform():
-            trans_matrix = self.get_transform()
-            self.ctx.transform(*trans_matrix) # unpacks argument list
+            style = self.getStyle()
+            self.setStyle(style)
+            self.canvasContext.beginPath()
+        if self.hasTransform():
+            trans_matrix = self.getTransform()
+            self.canvasContext.transform(*trans_matrix) # unpacks argument list
 
         #Draws path commands
         path_command = {"M": self.pathMoveTo,
@@ -112,12 +112,12 @@ class Path(AbstractShape):
             if comm in path_command:
                 path_command[comm](data)
 
-        gradientFill = self.set_gradientFill()
-        gradientStroke = self.set_gradientStroke()
+        gradientFill = self.gradientHelper.setGradientFill()
+        gradientStroke = self.gradientHelper.setGradientStroke()
         
         if not isClip: 
-            self.ctx.closePath(comm == "Z")
+            self.canvasContext.closePath(comm == "Z")
             if(not gradientFill):        
-                self.ctx.fill()
+                self.canvasContext.fill()
             if(not gradientStroke):
-                self.ctx.stroke()
+                self.canvasContext.stroke()
