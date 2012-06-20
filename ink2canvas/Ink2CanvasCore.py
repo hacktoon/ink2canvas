@@ -2,7 +2,7 @@ import svg
 from ink2canvas.svg.ClipPath import Clippath
 from ink2canvas.svg.RadialGradient import Radialgradient
 from ink2canvas.svg.LinearGradient import Lineargradient
-from ink2canvas.svg import Root, Defs, Use
+from ink2canvas.svg import Root, Defs
 
 class Ink2CanvasCore(): 
     
@@ -11,9 +11,6 @@ class Ink2CanvasCore():
         self.canvas = None
         self.effect = effect
         self.root = Root()
-    
-    def isClone(self):
-        return isinstance(self, Use);
         
     def createClipPathNode(self,element,tag):
         for subTag in tag:
