@@ -16,3 +16,4 @@ from ink2canvas.svg.Use import Use
 from ink2canvas.svg.Defs import Defs
 from ink2canvas.svg.ClipPath import Clippath
 from ink2canvas.svg.Root import Root
+from ink2canvas.svg.Image import Image
