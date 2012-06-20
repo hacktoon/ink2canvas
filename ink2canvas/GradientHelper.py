@@ -5,8 +5,25 @@ class GradientHelper(object):
     def __init__(self, abstractShape):
         self.abstractShape = abstractShape
       
+    def hasGradient(self, key):
+        style = self.abstractShape.getStyle()
+        
+        if key in style:
+            styleParamater = style[key]
+            if styleParamater.startswith("url(#linear"):
+                return "linear"
+            if styleParamater.startswith("url(#radial"):
+                return "radial"
+        return None
+
+    def getGradientHref(self, key):
+        style = self.abstractShape.getStyle()
+        if key in style:
+            return style[key][5:-1]
+        return
+      
     def setGradientFill(self):
-        gradType = self.abstractShape.hasGradient("fill")
+        gradType = self.hasGradient("fill")
         if (gradType):
             gradient = self.setComponentGradient("fill", gradType)
             self.abstractShape.canvasContext.setFill("gradient=grad")           
@@ -16,7 +33,7 @@ class GradientHelper(object):
                 return True
             
     def setGradientStroke(self):   
-        gradType = self.abstractShape.hasGradient("stroke")
+        gradType = self.hasGradient("stroke")
         if (gradType):
             gradient = self.setComponentGradient("stroke", gradType)
             self.abstractShape.canvasContext.setStroke("gradient=grad")
@@ -24,7 +41,6 @@ class GradientHelper(object):
                 self.abstractShape.canvasContext.stroke();
                 self.abstractShape.canvasContext.restore()
                 return True
-        
             
     def hasGradientTransform(self, gradient):
         return bool(gradient.attr("gradientTransform"))
@@ -61,8 +77,7 @@ class GradientHelper(object):
             offset = float(stopKey)
             color = self.abstractShape.canvasContext.getColor(stopValue.split(";")[0].split(":")[1] , stopValue.split(";")[1].split(":")[1] )
             self.abstractShape.canvasContext.addColorStop("grad", offset, color)
-        
-        
+
         return gradient
     
     def createLinearGradient(self):
@@ -71,10 +86,4 @@ class GradientHelper(object):
         for stop in self.gradient.stops:
             color = self.canvasContext.getColor(stop.split(";")[0].split(":")[1] , stop.split(";")[1].split(":")[1])
             offset = float(stop.split(";")[2].split(":")[1])
-            self.abstractShape.canvasContext.addColorStop("grad", offset, color)
-            
-    def getGradientHref(self, key):
-        style = self.abstractShape.getStyle()
-        if key in style:
-            return style[key][5:-1]
-        return
+            self.abstractShape.canvasContext.addColorStop("grad", offset, color)    

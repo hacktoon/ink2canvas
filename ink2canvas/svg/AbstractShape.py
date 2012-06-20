@@ -51,19 +51,7 @@ class AbstractShape(Element):
         matrix = parseTransform(data)
         m11, m21, dx = matrix[0]
         m12, m22, dy = matrix[1]
-        return m11, m12, m21, m22, dx, dy
-
-    def hasGradient(self, key):
-        style = self.getStyle()
-        if key in style:
-            styleParamater = style[key]
-            if styleParamater.startswith("url(#linear"):
-                return "linear"
-            if styleParamater.startswith("url(#radial"):
-                return "radial"
-        return None
-
-    
+        return m11, m12, m21, m22, dx, dy   
 
     def getClipId(self):
         return self.attr("clip-path")[5:-1]
@@ -73,7 +61,6 @@ class AbstractShape(Element):
         if self.hasTransform() or self.hasClip():
             self.canvasContext.save()
         
-
     def draw(self, isClip=False):
         data = self.getData()
         if self.hasTransform():
@@ -96,10 +83,7 @@ class AbstractShape(Element):
                 self.canvasContext.fill()
             if(not gradientStroke):
                 self.canvasContext.stroke()
-            
-    
 
-    
     def drawClip(self):
         clipId = self.getClipId()
         elementClip = self.rootTree.getClipPath(clipId)

@@ -89,16 +89,16 @@ class TestSvgAbstractShape(unittest.TestCase):
         canvas.node = self.returnsGnode(canvas.root,"path")
         canvas.abstractShape = AbstractShape( None,canvas.node,self.canvas, None)
         
-        self.assertEqual(canvas.abstractShape.hasGradient("fill"), "linear")
+        self.assertEqual(canvas.abstractShape.gradientHelper.hasGradient("fill"), "linear")
         
         canvas.document = canvas.effect.parse("arquivos_test/unit_test_svg_abstractShape_transformado_GradienteRadial.svg")
         canvas.root = canvas.effect.document.getroot()
         canvas.node = self.returnsGnode(canvas.root,"path")
         canvas.abstractShape = AbstractShape( None,canvas.node,self.canvas, None)
         
-        self.assertEqual(canvas.abstractShape.hasGradient("fill"), "radial")
+        self.assertEqual(canvas.abstractShape.gradientHelper.hasGradient("fill"), "radial")
         
-        self.assertNotEqual(self.abstractShape.hasGradient("fill"),"linear")
+        self.assertNotEqual(self.abstractShape.gradientHelper.hasGradient("fill"),"linear")
         
     def test_getGradientHref(self):
         retorno ="linearGradient3022"
