@@ -10,8 +10,8 @@ class Use(AbstractShape):
       
     def draw(self, isClip=False):
         if self.hasTransform():
-            trans_matrix = self.getTransform()
-            self.canvasContext.transform(*trans_matrix)
+            transMatrix = self.getTransform()
+            self.canvasContext.transform(*transMatrix)
         self.drawClone()
         
     def getCloneId(self):

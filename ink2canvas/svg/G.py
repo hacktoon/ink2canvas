@@ -6,5 +6,5 @@ class G(AbstractShape):
         #get layer label, if exists
         gtype = self.attr("groupmode", "inkscape") or "group"
         if self.hasTransform():
-            trans_matrix = self.getTransform()
-            self.canvasContext.transform(*trans_matrix)
+            transMatrix = self.getTransform()
+            self.canvasContext.transform(*transMatrix)
