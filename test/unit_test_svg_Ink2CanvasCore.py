@@ -1,13 +1,9 @@
-'''
-Created on May 11, 2012
 
-@author: bublecamp
-'''
 import unittest
 import sys
 sys.path.append('..')
 
-class Test(unittest.TestCase):
+class TestSvgInk2Canvas(unittest.TestCase):
 
     def setUp(self):
         pass

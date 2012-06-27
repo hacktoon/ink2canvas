@@ -1,11 +1,10 @@
 import sys
 import unittest
-from inkex import Effect
 from ink2canvas.main import Ink2Canvas
 sys.path.append('..')
 
 
-class Test(unittest.TestCase):
+class TestSvgGroup(unittest.TestCase):
     def setUp(self):
         self.ink2canvasGrouped = Ink2Canvas()
         file2 = "arquivos_test/unit_test_group_grouped.svg"

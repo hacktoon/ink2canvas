@@ -1,13 +1,10 @@
 import sys
 import unittest
-from inkex import Effect
-sys.path.append('..')
 
+sys.path.append('..') 
+from inkex import Effect
 from ink2canvas.svg.Circle import Circle
 
-    #Nota: O inkscape nao gera imagens com o tag circle.
-    #Ao inves, gera com o tag g->path->arc
-    #Entao para o ink2canvas a funcao circle pode ser inutil   
 
 class TestSvgCircle(unittest.TestCase):
     def setUp(self):
@@ -22,20 +19,20 @@ class TestSvgCircle(unittest.TestCase):
                 self.node = node
                 break
  
-    def testGet_Data_Cx(self):
+    def testGetDataCx(self):
         self.circle.node = self.node
-        retCx, retCy, retR , zero, DoisPi, OpostoDeFalse = self.circle.getData()
-        self.assertEqual(retCx, 600)
+        data = self.circle.getData()
+        self.assertEqual(data[0], 600)
         
-    def testGet_Data_Cy(self):
+    def testGetDataCy(self):
         self.circle.node = self.node
-        retCx, retCy, retR , zero, DoisPi, OpostoDeFalse = self.circle.getData()
-        self.assertEqual(retCy, 200)
+        data = self.circle.getData()
+        self.assertEqual(data[1], 200)
         
-    def testGet_Data_R(self):
+    def testGetDataR(self):
         self.circle.node = self.node
-        retCx, retCy, retR , zero, DoisPi, OpostoDeFalse = self.circle.getData()
-        self.assertEqual(retR, 100)
+        data = self.circle.getData()
+        self.assertEqual(data[2], 100)
 
 if __name__ == '__main__':
     unittest.main()

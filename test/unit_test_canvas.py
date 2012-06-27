@@ -1,8 +1,9 @@
 import sys
 import unittest
-sys.path.append('..')
 
+sys.path.append('..')
 from ink2canvas.canvas import Canvas
+
 
 class TestCanvas(unittest.TestCase):
     def setUp(self):

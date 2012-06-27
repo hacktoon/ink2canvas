@@ -5,7 +5,7 @@ class Use(AbstractShape):
     def drawClone(self):
         drawables = self.rootTree.getDrawable()
         OriginName = self.getCloneId()
-        OriginObject = self.rootTree.buscaElementoPorId(OriginName,drawables)
+        OriginObject = self.rootTree.searchElementById(OriginName,drawables)
         OriginObject.runDraw()
       
     def draw(self, isClip=False):

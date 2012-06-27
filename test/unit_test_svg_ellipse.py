@@ -1,10 +1,11 @@
 import sys
 import unittest
-from inkex import Effect
-sys.path.append('..')
 
+sys.path.append('..')
+from inkex import Effect
 from ink2canvas.canvas import Canvas
 from ink2canvas.svg.Ellipse import Ellipse
+
 
 class TestSvgEllipse(unittest.TestCase):
     def setUp(self):
@@ -12,7 +13,6 @@ class TestSvgEllipse(unittest.TestCase):
         self.document = self.effect.parse("arquivos_test/unit_test_svg_ellipse.svg")
         root = self.effect.document.getroot()
         self.node = self.findTag(root, "ellipse")
-
         self.canvas = Canvas(0, 0)    
         self.ellipse = Ellipse(None, self.node, self.canvas, None)
         
@@ -23,7 +23,7 @@ class TestSvgEllipse(unittest.TestCase):
                 return node
         return ""  
  
-    def testGet_Data(self):
+    def testGetData(self):
         x, y, z, w = self.ellipse.getData()
         self.assertEqual(x, 60)
         self.assertEqual(y, 70)

@@ -12,7 +12,7 @@ class TestSvg_image_unit_test(unittest.TestCase):
 
     def setUp(self):
         self.effect = Effect()
-        self.document = self.effect.parse("arquivos_test/svg_image_unit_test.svg")
+        self.document = self.effect.parse("arquivos_test/unit_test_image2.svg")
         root = self.effect.document.getroot()   
         self.node = self.findTag(root, "g")
         self.node = self.findTag(self.node, "image")    
@@ -26,7 +26,7 @@ class TestSvg_image_unit_test(unittest.TestCase):
                 return node
         return ""   
     
-    def testGet_Data(self):
+    def testGetData(self):
         x, y, weight, height, href = self.image.get_data()
         href = href[-12:]
         array = [x ,y, weight, height, href]
