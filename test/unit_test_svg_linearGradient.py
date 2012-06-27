@@ -4,7 +4,7 @@ import filecmp
 from ink2canvas.main import Ink2Canvas
 sys.path.append('..')
 
-class LinearGradientTest(unittest.TestCase):
+class TestSvgLinearGradient(unittest.TestCase):
     
     def setUp(self):
         self.ink2canvas = Ink2Canvas()
@@ -35,5 +35,4 @@ class LinearGradientTest(unittest.TestCase):
 
     
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()
