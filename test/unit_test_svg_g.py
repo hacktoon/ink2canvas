@@ -1,8 +1,3 @@
-'''
-Created on Apr 13, 2012
-
-@author: bublecamp
-'''
 import unittest
 import sys
 from inkex import Effect
