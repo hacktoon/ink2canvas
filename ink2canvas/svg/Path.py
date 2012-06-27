@@ -31,8 +31,8 @@ class Path(AbstractShape):
         rx = data[0]
         ry = data[1]
         angle = data[2] * (math.pi / 180.0)
-        arcflag = data[3]
-        sweepflag = data[4]
+        arcFlag = data[3]
+        sweepFlag = data[4]
 
         if x1 == x2 and y1 == y2:
             return
@@ -50,7 +50,7 @@ class Path(AbstractShape):
         #compute (cx', cy')
         numr = (rx**2 * ry**2) - (rx**2 * _y1**2) - (ry**2 * _x1**2)
         demr = (rx**2 * _y1**2) + (ry**2 * _x1**2)
-        sig = -1 if arcflag == sweepflag else 1
+        sig = -1 if arcFlag == sweepFlag else 1
         sig = sig * math.sqrt(numr / demr)
         if math.isnan(sig): sig = 0;
         _cx = sig * rx * _y1 / ry
@@ -76,8 +76,8 @@ class Path(AbstractShape):
         if r(u,v) <= -1: ad = math.pi
         if r(u,v) >= 1: ad = 0
 
-        if sweepflag == 0 and ad > 0: ad = ad - 2 * math.pi;
-        if sweepflag == 1 and ad < 0: ad = ad + 2 * math.pi;
+        if sweepFlag == 0 and ad > 0: ad = ad - 2 * math.pi;
+        if sweepFlag == 1 and ad < 0: ad = ad + 2 * math.pi;
 
         r = rx if rx > ry else ry
         sx = 1 if rx > ry else rx / ry
@@ -86,7 +86,7 @@ class Path(AbstractShape):
         self.canvasContext.translate(cx, cy)
         self.canvasContext.rotate(angle)
         self.canvasContext.scale(sx, sy)
-        self.canvasContext.arc(0, 0, r, a1, a1 + ad, 1 - sweepflag)
+        self.canvasContext.arc(0, 0, r, a1, a1 + ad, 1 - sweepFlag)
         self.canvasContext.scale(1/sx, 1/sy)
         self.canvasContext.rotate(-angle)
         self.canvasContext.translate(-cx, -cy)
@@ -99,18 +99,18 @@ class Path(AbstractShape):
             self.setStyle(style)
             self.canvasContext.beginPath()
         if self.hasTransform():
-            trans_matrix = self.getTransform()
-            self.canvasContext.transform(*trans_matrix) # unpacks argument list
+            transMatrix = self.getTransform()
+            self.canvasContext.transform(*transMatrix) # unpacks argument list
 
         #Draws path commands
-        path_command = {"M": self.pathMoveTo,
+        pathCommand = {"M": self.pathMoveTo,
                        "L": self.pathLineTo,
                        "C": self.pathCurveTo,
                        "A": self.pathArcTo}
         for pt in path:
             comm, data = pt
-            if comm in path_command:
-                path_command[comm](data)
+            if comm in pathCommand:
+                pathCommand[comm](data)
 
         gradientFill = self.gradientHelper.setGradientFill()
         gradientStroke = self.gradientHelper.setGradientStroke()

@@ -14,8 +14,9 @@ class TestSvgPath(unittest.TestCase):
         self.node = self.findTag(root, "g")
         self.node = self.findTag(self.node, "path")    
         self.canvas = Canvas(0, 0)
-        '''Dados ficticios usados em metodos como pathlineto, pathcurveto, pathmoveto, patharcto. fizemos o 5o elemento (600) maior
-        que o resto para nao ser um valor negativo na hora de tirar uma riaz (matherror) em patharcto (gambi?)'''
+        '''Fictional data used in methods such as pathlineto, pathcurveto, pathmoveto, patharcto. we made it so that
+        the 5th parameters (600) is larger then the others, guaranteeing this way that the sqrt value is not a negative
+        value in patharcto.'''
         self.data =[1.0, 2.0, 3.0, 4.0, 5.0, 600.0, 7.0]
         self.path = Path(None, self.node, self.canvas, None)
         
@@ -26,7 +27,7 @@ class TestSvgPath(unittest.TestCase):
                 return node
         return ""   
     
-    def testGet_Data(self):
+    def testGetData(self):
         vetor = self.path.getData()
         vetorDaElipse = [['M', [447.49757, 166.4584]], ['A', [197.48482, 67.680222, 0.0, 1, 1, 52.527939, 166.4584]], ['A', [197.48482, 67.680222, 0.0, 1, 1, 447.49757, 166.4584]], ['Z', []]]
         self.assertEqual(vetor, vetorDaElipse)

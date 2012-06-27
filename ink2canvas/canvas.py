@@ -85,18 +85,6 @@ class Canvas:
         else:
             return "'rgb(%d, %d, %d)'" % (r, g, b)
 
-    def setGradient(self, href):
-        """
-        for stop in gstops:
-            style = simplestyle.parseStyle(stop.get("style"))
-            stop_color = style["stop-color"]
-            opacity = style["stop-opacity"]
-            color = self.getColor(stop_color, opacity)
-            pos = float(stop.get("offset"))
-            self.addColorStop(href, pos, color)
-        """
-        return None
-
     def setOpacity(self, value):
         self.write("ctx.globalAlpha = %.1f;" % float(value))
 

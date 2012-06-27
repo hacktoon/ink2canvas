@@ -19,12 +19,12 @@ class Ellipse(AbstractShape):
             trans_matrix = self.getTransform()
             self.canvasContext.transform(*trans_matrix) # unpacks argument list
 
-        KAPPA = 4 * ((math.sqrt(2) - 1) / 3)
+        auxiliarNumber = 4 * ((math.sqrt(2) - 1) / 3)
         self.canvasContext.moveTo(cx, cy - ry)
-        self.canvasContext.bezierCurveTo(cx + (KAPPA * rx), cy - ry,  cx + rx, cy - (KAPPA * ry), cx + rx, cy)
-        self.canvasContext.bezierCurveTo(cx + rx, cy + (KAPPA * ry), cx + (KAPPA * rx), cy + ry, cx, cy + ry)
-        self.canvasContext.bezierCurveTo(cx - (KAPPA * rx), cy + ry, cx - rx, cy + (KAPPA * ry), cx - rx, cy)
-        self.canvasContext.bezierCurveTo(cx - rx, cy - (KAPPA * ry), cx - (KAPPA * rx), cy - ry, cx, cy - ry)
+        self.canvasContext.bezierCurveTo(cx + (auxiliarNumber * rx), cy - ry,  cx + rx, cy - (auxiliarNumber * ry), cx + rx, cy)
+        self.canvasContext.bezierCurveTo(cx + rx, cy + (auxiliarNumber * ry), cx + (auxiliarNumber * rx), cy + ry, cx, cy + ry)
+        self.canvasContext.bezierCurveTo(cx - (auxiliarNumber * rx), cy + ry, cx - rx, cy + (auxiliarNumber * ry), cx - rx, cy)
+        self.canvasContext.bezierCurveTo(cx - rx, cy - (auxiliarNumber * ry), cx - (auxiliarNumber * rx), cy - ry, cx, cy - ry)
 
         gradientFill = self.gradientHelper.setGradientFill()
         gradientStroke = self.gradientHelper.setGradientStroke()
