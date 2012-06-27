@@ -24,7 +24,7 @@ class TestSvgAbstractShape(unittest.TestCase):
     def setUp(self):
         self.canvas = Canvas(0,0)
         self.effect = Effect()
-        self.document = self.effect.parse("arquivos_test/unit_test_svg_abstractShape.svg")
+        self.document = self.effect.parse("TestFiles/unit_test_svg_abstractShape.svg")
         self.root = self.effect.document.getroot()
         self.node = self.returnsGnode(self.root,"path")
         self.abstractShape = AbstractShape( None,self.node,self.canvas, None)
@@ -58,7 +58,7 @@ class TestSvgAbstractShape(unittest.TestCase):
         
         canvas = Canvas(0,1)
         canvas.effect = Effect()
-        canvas.document = canvas.effect.parse("arquivos_test/unit_test_svg_abstractShape_transformado.svg")
+        canvas.document = canvas.effect.parse("TestFiles/unit_test_svg_abstractShape_transformado.svg")
         canvas.root = canvas.effect.document.getroot()
         canvas.node = self.returnsGnode(canvas.root,"rect")
         canvas.abstractShape = AbstractShape( None,canvas.node,self.canvas, None)
@@ -71,7 +71,7 @@ class TestSvgAbstractShape(unittest.TestCase):
         
         canvas = Canvas(0,1)
         canvas.effect = Effect()
-        canvas.document = canvas.effect.parse("arquivos_test/unit_test_svg_abstractShape_transformado.svg")
+        canvas.document = canvas.effect.parse("TestFiles/unit_test_svg_abstractShape_transformado.svg")
         canvas.root = canvas.effect.document.getroot()
         canvas.node = self.returnsGnode(canvas.root,"rect")
         canvas.abstractShape = AbstractShape( None,canvas.node,self.canvas, None)
@@ -84,14 +84,14 @@ class TestSvgAbstractShape(unittest.TestCase):
         
         canvas = Canvas(0,1)
         canvas.effect = Effect()
-        canvas.document = canvas.effect.parse("arquivos_test/unit_test_svg_abstractShape_transformado_GradienteLinear.svg")
+        canvas.document = canvas.effect.parse("TestFiles/unit_test_svg_abstractShape_transformado_GradienteLinear.svg")
         canvas.root = canvas.effect.document.getroot()
         canvas.node = self.returnsGnode(canvas.root,"path")
         canvas.abstractShape = AbstractShape( None,canvas.node,self.canvas, None)
         
         self.assertEqual(canvas.abstractShape.gradientHelper.hasGradient("fill"), "linear")
         
-        canvas.document = canvas.effect.parse("arquivos_test/unit_test_svg_abstractShape_transformado_GradienteRadial.svg")
+        canvas.document = canvas.effect.parse("TestFiles/unit_test_svg_abstractShape_transformado_GradienteRadial.svg")
         canvas.root = canvas.effect.document.getroot()
         canvas.node = self.returnsGnode(canvas.root,"path")
         canvas.abstractShape = AbstractShape( None,canvas.node,self.canvas, None)
@@ -104,7 +104,7 @@ class TestSvgAbstractShape(unittest.TestCase):
         returnValue ="linearGradient3022"
         canvas = Canvas(0,1)
         canvas.effect = Effect()
-        canvas.document = canvas.effect.parse("arquivos_test/unit_test_svg_abstractShape_transformado_GradienteLinear.svg")
+        canvas.document = canvas.effect.parse("TestFiles/unit_test_svg_abstractShape_transformado_GradienteLinear.svg")
         canvas.root = canvas.effect.document.getroot()
         canvas.node = self.returnsGnode(canvas.root,"path")
         canvas.abstractShape = AbstractShape( None,canvas.node,self.canvas, None)
@@ -117,7 +117,7 @@ class TestSvgAbstractShape(unittest.TestCase):
     def testHasClip(self):
         canvas = Canvas(0,1)
         canvas.effect = Effect()
-        canvas.document = canvas.effect.parse("arquivos_test/unit_test_svg_abstractShape_transformado_Clip.svg")
+        canvas.document = canvas.effect.parse("TestFiles/unit_test_svg_abstractShape_transformado_Clip.svg")
         canvas.root = canvas.effect.document.getroot()
         canvas.node = self.returnsGnode(canvas.root,"path")
         canvas.abstractShape = AbstractShape( None,canvas.node,self.canvas, None)
@@ -129,7 +129,7 @@ class TestSvgAbstractShape(unittest.TestCase):
         returnValue = "clipPath3191"
         canvas = Canvas(0,1)
         canvas.effect = Effect()
-        canvas.document = canvas.effect.parse("arquivos_test/unit_test_svg_abstractShape_transformado_Clip.svg")
+        canvas.document = canvas.effect.parse("TestFiles/unit_test_svg_abstractShape_transformado_Clip.svg")
         canvas.root = canvas.effect.document.getroot()
         canvas.node = self.returnsGnode(canvas.root,"path")
         canvas.abstractShape = AbstractShape( None,canvas.node,self.canvas, None)
@@ -145,7 +145,7 @@ class TestSvgAbstractShape(unittest.TestCase):
 
         canvas3 = Canvas(0,3)
         canvas3.effect = Effect()
-        canvas3.document = canvas3.effect.parse("arquivos_test/unit_test_svg_abstractShape_transformado_Clip.svg")
+        canvas3.document = canvas3.effect.parse("TestFiles/unit_test_svg_abstractShape_transformado_Clip.svg")
         canvas3.root = canvas3.effect.document.getroot()
         canvas3.node = self.returnsGnode(canvas3.root,"path")
         canvas3.abstractShape = AbstractShape( None,canvas3.node,canvas3, None)
@@ -160,7 +160,7 @@ class TestSvgAbstractShape(unittest.TestCase):
     def testDraw(self):
         canvas = Canvas(0,1)
         canvas.effect = Effect()
-        canvas.document = canvas.effect.parse("arquivos_test/unit_test_svg_abstractShape_transformado.svg")
+        canvas.document = canvas.effect.parse("TestFiles/unit_test_svg_abstractShape_transformado.svg")
         canvas.root = canvas.effect.document.getroot()
         canvas.node = self.returnsGnode(canvas.root,"rect")
         rect = Rect("rect",canvas.node,canvas, None)
@@ -175,7 +175,7 @@ class TestSvgAbstractShape(unittest.TestCase):
         
         canvas1 = Canvas(0,3)
         canvas1.effect = Effect()
-        canvas1.document = canvas1.effect.parse("arquivos_test/unit_test_svg_abstractShape_transformado.svg")
+        canvas1.document = canvas1.effect.parse("TestFiles/unit_test_svg_abstractShape_transformado.svg")
         canvas1.root = canvas1.effect.document.getroot()
         canvas1.node = self.returnsGnode(canvas1.root,"rect")
         canvas1.abstractShape = AbstractShape( None,canvas1.node,canvas1, None)

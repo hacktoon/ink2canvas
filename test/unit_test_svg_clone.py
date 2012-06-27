@@ -8,7 +8,7 @@ class TestSvgClone(unittest.TestCase):
     
     def setUp(self):
         self.ink2canvas = Ink2Canvas()
-        svgInput = "arquivos_test/unit_test_clone_quadrados.svg"
+        svgInput = "TestFiles/unit_test_clone_quadrados.svg"
         self.ink2canvas.parse(svgInput)
         self.ink2canvas.effect()
         self.root = self.ink2canvas.core.root 
@@ -47,7 +47,7 @@ class TestSvgClone(unittest.TestCase):
             self.assertIsNotNone(IdElement)
     
     def testCLoneBuffer(self):
-        svg_input = "arquivos_test/unit_test_clone_identico.svg"
+        svg_input = "TestFiles/unit_test_clone_identico.svg"
         self.ink2canvas.parse(svg_input)
         self.ink2canvas.effect()
         self.root = self.ink2canvas.core.root 

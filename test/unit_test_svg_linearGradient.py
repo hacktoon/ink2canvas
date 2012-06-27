@@ -8,7 +8,7 @@ class TestSvgLinearGradient(unittest.TestCase):
     
     def setUp(self):
         self.ink2canvas = Ink2Canvas()
-        file = "arquivos_test/unit_test_svg_linearGradient.svg"
+        file = "TestFiles/unit_test_svg_linearGradient.svg"
         self.ink2canvas.parse(file)
         self.ink2canvas.effect()
         
@@ -27,11 +27,11 @@ class TestSvgLinearGradient(unittest.TestCase):
         self.assertEqual(linearGradientDictionary["linearGradient2987"].colorStops["0"], "stop-color:#800000;stop-opacity:1;")
     
     def testSetLinearGradient(self):
-        output_file = open("arquivos_test/unit_test_svg_linearGradient.html", "w")
+        output_file = open("TestFiles/unit_test_svg_linearGradient.html", "w")
         content = self.ink2canvas.core.canvas.output()
         output_file.write(content.encode("utf-8"))
         output_file.close()
-        self.assertTrue(filecmp.cmp("arquivos_test/unit_test_svg_linearGradient.html", "arquivos_test/unit_test_svg_linearGradientQueDeveriaSair.html"))
+        self.assertTrue(filecmp.cmp("TestFiles/unit_test_svg_linearGradient.html", "TestFiles/unit_test_svg_linearGradientQueDeveriaSair.html"))
 
     
 if __name__ == "__main__":
