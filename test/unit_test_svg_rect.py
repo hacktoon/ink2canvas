@@ -1,15 +1,12 @@
-'''
-Created on Apr 25, 2012
 
-@author: bublecamp
-'''
 import unittest
 import sys
-from inkex import Effect
-sys.path.append('..')
 
+sys.path.append('..')
+from inkex import Effect
 from ink2canvas.svg.Rect import Rect
 from ink2canvas.canvas import Canvas
+
 
 class TestRect(unittest.TestCase):
     def setUp(self):
@@ -56,7 +53,6 @@ class TestRect(unittest.TestCase):
         self.assertEqual(rx, 5.0)
         self.assertEqual(ry, 10.0)
     
-
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

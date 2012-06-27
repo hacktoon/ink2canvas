@@ -1,11 +1,11 @@
 import unittest
 import sys
-from inkex import Effect
 
 sys.path.append('..')
-
+from inkex import Effect
 from ink2canvas.svg.G import G
 from ink2canvas.canvas import Canvas
+
 
 class TestSvgG(unittest.TestCase):
 

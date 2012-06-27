@@ -1,10 +1,9 @@
 import sys
 import unittest
-from inkex import Effect
+
 sys.path.append('..')
-
+from inkex import Effect
 from ink2canvas.svg.Text import Text
-
 from ink2canvas.canvas import Canvas
 
 class TestText(unittest.TestCase):

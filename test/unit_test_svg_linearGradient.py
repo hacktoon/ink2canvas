@@ -1,8 +1,10 @@
 import sys
 import unittest
 import filecmp
-from ink2canvas.main import Ink2Canvas
+
 sys.path.append('..')
+from ink2canvas.main import Ink2Canvas
+
 
 class TestSvgLinearGradient(unittest.TestCase):
     

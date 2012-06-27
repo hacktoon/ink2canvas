@@ -1,7 +1,8 @@
 import sys
 import unittest
-from ink2canvas.main import Ink2Canvas
+
 sys.path.append('..')
+from ink2canvas.main import Ink2Canvas
 
 
 class TestSvgGroup(unittest.TestCase):
@@ -19,9 +20,6 @@ class TestSvgGroup(unittest.TestCase):
     def testCompareUngroupedAndGroupedEquals(self):
         self.assertEquals(self.ink2canvasGroupedEdited.core.canvas.output(), 
                           self.ink2canvasGrouped.core.canvas.output())
-        
-
-
         
 
 

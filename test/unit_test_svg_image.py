@@ -2,10 +2,10 @@ import sys
 import unittest
 
 sys.path.append('..')
-
 from inkex import Effect
 from ink2canvas.canvas import Canvas
 from ink2canvas.svg.Image  import Image
+
 
 class TestSvg_image_unit_test(unittest.TestCase):
 

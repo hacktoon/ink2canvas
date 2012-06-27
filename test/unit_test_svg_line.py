@@ -1,10 +1,11 @@
 import sys
 import unittest
-from inkex import Effect
-sys.path.append('..')
 
+sys.path.append('..')
+from inkex import Effect
 from ink2canvas.canvas import Canvas
 from ink2canvas.svg.Line import Line
+
 
 class TestSvgLine(unittest.TestCase):
     def setUp(self):

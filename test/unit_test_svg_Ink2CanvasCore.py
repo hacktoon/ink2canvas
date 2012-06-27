@@ -1,7 +1,9 @@
 
 import unittest
 import sys
+
 sys.path.append('..')
+
 
 class TestSvgInk2Canvas(unittest.TestCase):
 
