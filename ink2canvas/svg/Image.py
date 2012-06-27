@@ -24,7 +24,7 @@ class Image(AbstractShape):
         
         self.ctx.write("\n\tvar image = new Image();")
         self.ctx.write("\n\timage.src = '" + href +"';")
-        self.ctx.write("\n\tctx.drawImage(image, %f,%f);" %(x,y))
+        self.ctx.write("\n\tctx.drawImage(image, %f,%f,%f,%f);" %(x,y,width, height))
         
         if not isClip: 
             self.ctx.closePath()
