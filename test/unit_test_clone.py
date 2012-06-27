@@ -15,7 +15,7 @@ class Test(unittest.TestCase):
     
     def setUp(self):
         self.ink2canvas = Ink2Canvas()
-        svg_input = "arquivos_test/svg_clone_quadrados.svg"
+        svg_input = "arquivos_test/unit_test_clone_quadrados.svg"
         self.ink2canvas.parse(svg_input)
         self.ink2canvas.effect()
         self.root = self.ink2canvas.core.root 
@@ -58,24 +58,13 @@ class Test(unittest.TestCase):
             self.assertIsNotNone(elementoDoId)
     
     def testCLoneBuffer(self):
-        svg_input = "arquivos_test/svg_clone_identico_unit_test.svg"
+        svg_input = "arquivos_test/unit_test_clone_identico.svg"
         self.ink2canvas.parse(svg_input)
         self.ink2canvas.effect()
         self.root = self.ink2canvas.core.root 
         self.ListofUses = []
         pass
-#    def testCloneSemTranformacao(self):
-#        svg_input = "arquivos_test/svg_clone_identico_unit_test.svg"
-#        self.ink2canvas.parse(svg_input)
-#        self.ink2canvas.effect()
-#        self.root = self.ink2canvas.core.root 
-#        self.ListofUses = []
-#        output_file = open("arquivos_test/saidaTeste.html", "w")
-#        content = self.ink2canvas.core.canvas.output()
-#        output_file.write(content.encode("utf-8"))
-#        output_file.close()
-#            
-            
+    
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testCLoneCreate']
     unittest.main()

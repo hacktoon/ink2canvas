@@ -13,7 +13,7 @@ class TestSvgCircle(unittest.TestCase):
     def setUp(self):
         self.circle = Circle(12, 12, 12, None)
         self.effect = Effect()
-        self.document = self.effect.parse("arquivos_test/svg_circle_unit_test.svg")
+        self.document = self.effect.parse("arquivos_test/unit_test_svg_circle.svg")
         root = self.effect.document.getroot()
         
         for node in root:
@@ -24,17 +24,17 @@ class TestSvgCircle(unittest.TestCase):
  
     def testGet_Data_Cx(self):
         self.circle.node = self.node
-        retCx, retCy, retR , zero, DoisPi, OpostoDeFalse = self.circle.get_data()
+        retCx, retCy, retR , zero, DoisPi, OpostoDeFalse = self.circle.getData()
         self.assertEqual(retCx, 600)
         
     def testGet_Data_Cy(self):
         self.circle.node = self.node
-        retCx, retCy, retR , zero, DoisPi, OpostoDeFalse = self.circle.get_data()
+        retCx, retCy, retR , zero, DoisPi, OpostoDeFalse = self.circle.getData()
         self.assertEqual(retCy, 200)
         
     def testGet_Data_R(self):
         self.circle.node = self.node
-        retCx, retCy, retR , zero, DoisPi, OpostoDeFalse = self.circle.get_data()
+        retCx, retCy, retR , zero, DoisPi, OpostoDeFalse = self.circle.getData()
         self.assertEqual(retR, 100)
 
 if __name__ == '__main__':
