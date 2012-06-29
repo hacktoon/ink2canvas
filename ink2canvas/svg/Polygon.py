@@ -1,7 +1,7 @@
 from ink2canvas.svg.Path import Path
 
 class Polygon(Path):
-    def get_data(self):
+    def getData(self):
         points = self.attr("points").strip().split(" ")
         points = map(lambda x: x.split(","), points)
         comm = []

@@ -1,21 +1,18 @@
-'''
-Created on Apr 25, 2012
 
-@author: bublecamp
-'''
 import unittest
 import sys
-from inkex import Effect
-sys.path.append('..')
 
+sys.path.append('..')
+from inkex import Effect
 from ink2canvas.svg.Rect import Rect
 from ink2canvas.canvas import Canvas
+
 
 class TestRect(unittest.TestCase):
     def setUp(self):
         self.effect = Effect()
         self.document = None
-        self.effect.parse("arquivos_test/svg_Rect_unit_test_ComRxRy.svg")
+        self.effect.parse("TestFiles/unit_test_svg_Rect_WithRxRy.svg")
         self.node = None
         self.canvas = Canvas(0, 0)
               
@@ -31,11 +28,11 @@ class TestRect(unittest.TestCase):
                 return node
         
     def testExitWithoutRxRy(self):
-        self.document = self.effect.parse("arquivos_test/svg_Rect_unit_test_SemRxRy.svg")
+        self.document = self.effect.parse("TestFiles/unit_test_svg_Rect_WithoutRxRy.svg")
         root = self.effect.document.getroot()
         self.rect = Rect(None, self.node, self.canvas, None)
         self.rect.node = self.findNodeInG(root, 'rect')
-        x, y, w, h, rx, ry = self.rect.get_data()
+        x, y, w, h, rx, ry = self.rect.getData()
         self.assertEqual(x, 40.0)
         self.assertEqual(y, 30.0)
         self.assertEqual(w, 100.0)
@@ -44,11 +41,11 @@ class TestRect(unittest.TestCase):
         self.assertEqual(ry, 0)
         
     def testExitWithRxRy(self):
-        self.document = self.effect.parse("arquivos_test/svg_Rect_unit_test_ComRxRy.svg")
+        self.document = self.effect.parse("TestFiles/unit_test_svg_Rect_WithRxRy.svg")
         root = self.effect.document.getroot()
         self.rect = Rect(None, self.node, self.canvas, None)
         self.rect.node = self.findNodeInG(root, 'rect')
-        x, y, w, h, rx, ry = self.rect.get_data()
+        x, y, w, h, rx, ry = self.rect.getData()
         self.assertEqual(x, 40.0)
         self.assertEqual(y, 30.0)
         self.assertEqual(w, 100.0)
@@ -56,7 +53,6 @@ class TestRect(unittest.TestCase):
         self.assertEqual(rx, 5.0)
         self.assertEqual(ry, 10.0)
     
-
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

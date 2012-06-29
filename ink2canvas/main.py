@@ -34,13 +34,13 @@ class Ink2Canvas(inkex.Effect):
         
         tmpWidth = svgRoot.get("width")
         if tmpWidth == None:        
-            width = 800
+            width = inkex.unittouu("800")
         else:
-            width = inkex.unittouu()
+            width = inkex.unittouu(tmpWidth)
             
         tmpHeight = svgRoot.get("height")
         if tmpHeight == None:
-            height = 600
+            height = inkex.unittouu("600")
         else:
             height = inkex.unittouu(tmpHeight)
             

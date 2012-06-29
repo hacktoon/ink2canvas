@@ -2,22 +2,22 @@ from ink2canvas.svg.AbstractShape import AbstractShape
 from ink2canvas.lib.simplepath import parsePath
 
 class Path(AbstractShape):
-    def get_data(self):
+    def getData(self):
         #path data is already converted to float
         return parsePath(self.attr("d"))
 
     def pathMoveTo(self, data):
-        self.ctx.moveTo(data[0], data[1])
+        self.canvasContext.moveTo(data[0], data[1])
         self.currentPosition = data[0], data[1]
 
     def pathLineTo(self, data):
-        self.ctx.lineTo(data[0], data[1])
+        self.canvasContext.lineTo(data[0], data[1])
         self.currentPosition = data[0], data[1]
 
     def pathCurveTo(self, data):
         x1, y1, x2, y2 = data[0], data[1], data[2], data[3]
         x, y = data[4], data[5]
-        self.ctx.bezierCurveTo(x1, y1, x2, y2, x, y)
+        self.canvasContext.bezierCurveTo(x1, y1, x2, y2, x, y)
         self.currentPosition = x, y
 
     def pathArcTo(self, data):
@@ -31,8 +31,8 @@ class Path(AbstractShape):
         rx = data[0]
         ry = data[1]
         angle = data[2] * (math.pi / 180.0)
-        arcflag = data[3]
-        sweepflag = data[4]
+        arcFlag = data[3]
+        sweepFlag = data[4]
 
         if x1 == x2 and y1 == y2:
             return
@@ -50,7 +50,7 @@ class Path(AbstractShape):
         #compute (cx', cy')
         numr = (rx**2 * ry**2) - (rx**2 * _y1**2) - (ry**2 * _x1**2)
         demr = (rx**2 * _y1**2) + (ry**2 * _x1**2)
-        sig = -1 if arcflag == sweepflag else 1
+        sig = -1 if arcFlag == sweepFlag else 1
         sig = sig * math.sqrt(numr / demr)
         if math.isnan(sig): sig = 0;
         _cx = sig * rx * _y1 / ry
@@ -76,44 +76,48 @@ class Path(AbstractShape):
         if r(u,v) <= -1: ad = math.pi
         if r(u,v) >= 1: ad = 0
 
-        if sweepflag == 0 and ad > 0: ad = ad - 2 * math.pi;
-        if sweepflag == 1 and ad < 0: ad = ad + 2 * math.pi;
+        if sweepFlag == 0 and ad > 0: ad = ad - 2 * math.pi;
+        if sweepFlag == 1 and ad < 0: ad = ad + 2 * math.pi;
 
         r = rx if rx > ry else ry
         sx = 1 if rx > ry else rx / ry
         sy = ry / rx if rx > ry else 1
 
-        self.ctx.translate(cx, cy)
-        self.ctx.rotate(angle)
-        self.ctx.scale(sx, sy)
-        self.ctx.arc(0, 0, r, a1, a1 + ad, 1 - sweepflag)
-        self.ctx.scale(1/sx, 1/sy)
-        self.ctx.rotate(-angle)
-        self.ctx.translate(-cx, -cy)
+        self.canvasContext.translate(cx, cy)
+        self.canvasContext.rotate(angle)
+        self.canvasContext.scale(sx, sy)
+        self.canvasContext.arc(0, 0, r, a1, a1 + ad, 1 - sweepFlag)
+        self.canvasContext.scale(1/sx, 1/sy)
+        self.canvasContext.rotate(-angle)
+        self.canvasContext.translate(-cx, -cy)
         self.currentPosition = x2, y2
 
     def draw(self, isClip=False):
-        path = self.get_data()
+        path = self.getData()
         if not isClip:
-            style = self.get_style()
-            self.set_style(style)
-            self.ctx.beginPath()
-        if self.has_transform():
-            trans_matrix = self.get_transform()
-            self.ctx.transform(*trans_matrix) # unpacks argument list
+            style = self.getStyle()
+            self.setStyle(style)
+            self.canvasContext.beginPath()
+        if self.hasTransform():
+            transMatrix = self.getTransform()
+            self.canvasContext.transform(*transMatrix) # unpacks argument list
 
         #Draws path commands
-        path_command = {"M": self.pathMoveTo,
+        pathCommand = {"M": self.pathMoveTo,
                        "L": self.pathLineTo,
                        "C": self.pathCurveTo,
                        "A": self.pathArcTo}
         for pt in path:
             comm, data = pt
-            if comm in path_command:
-                path_command[comm](data)
+            if comm in pathCommand:
+                pathCommand[comm](data)
 
-        self.set_gradient()
-
+        gradientFill = self.gradientHelper.setGradientFill()
+        gradientStroke = self.gradientHelper.setGradientStroke()
         
-        if not isClip:
-            self.ctx.closePath(comm == "Z")
+        if not isClip: 
+            self.canvasContext.closePath(comm == "Z")
+            if(not gradientFill):        
+                self.canvasContext.fill()
+            if(not gradientStroke):
+                self.canvasContext.stroke()

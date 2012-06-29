@@ -72,8 +72,7 @@ class Canvas:
 
     def createRadialGradient(self, href, cx1, cy1, rx, cx2, cy2, ry):
         data = (href, cx1, cy1, rx, cx2, cy2, ry)
-        self.write("var %s = ctx.createRadialGradient\
-                   (%f,%f,%f,%f,%f,%f);" % data)
+        self.write("var %s = ctx.createRadialGradient(%f,%f,%f,%f,%f,%f);" % data)
 
     def addColorStop(self, href, pos, color):
         self.write("%s.addColorStop(%f, %s);" % (href, pos, color))
@@ -85,18 +84,6 @@ class Canvas:
             return "'rgba(%d, %d, %d, %.1f)'" % (r, g, b, a)
         else:
             return "'rgb(%d, %d, %d)'" % (r, g, b)
-
-    def setGradient(self, href):
-        """
-        for stop in gstops:
-            style = simplestyle.parseStyle(stop.get("style"))
-            stop_color = style["stop-color"]
-            opacity = style["stop-opacity"]
-            color = self.getColor(stop_color, opacity)
-            pos = float(stop.get("offset"))
-            self.addColorStop(href, pos, color)
-        """
-        return None
 
     def setOpacity(self, value):
         self.write("ctx.globalAlpha = %.1f;" % float(value))
@@ -119,7 +106,13 @@ class Canvas:
             alpha = self.style["stroke-opacity"]
         except:
             alpha = 1
-        self.write("ctx.strokeStyle = %s;" % self.getColor(value, alpha))
+        if not value.startswith("url(") and not value.startswith("gradient="):
+            stroke = self.getColor(value, alpha)
+            self.write("ctx.strokeStyle = %s;" % stroke)
+        else:
+            if value.startswith("gradient="):
+                value = value.replace("gradient=", "")
+                self.write("ctx.strokeStyle = %s;" % value)
 
     def setStrokeWidth(self, value):
         self.write("ctx.lineWidth = %f;" % inkex.unittouu(value))
@@ -191,14 +184,16 @@ class Canvas:
     def restore(self):
         self.write("ctx.restore();")
 
+    def fill(self):
+        if "fill" in self.style and self.style["fill"] != "none":
+            self.write("ctx.fill();")
+        
+    def stroke(self):
+        if "stroke" in self.style and self.style["stroke"] != "none":
+            self.write("ctx.stroke();")
+        
     def closePath(self, is_closed=False):
         if is_closed:
             self.write("ctx.closePath();")
-            
-        
-        if "fill" in self.style and self.style["fill"] != "none":
-            self.write("ctx.fill();")
-        if "stroke" in self.style and self.style["stroke"] != "none":
-            self.write("ctx.stroke();")
     def clip(self):
         self.write("ctx.clip();")
