@@ -1,8 +1,9 @@
 import sys
 import unittest
-sys.path.append('..')
 
+sys.path.append('..')
 from ink2canvas.canvas import Canvas
+
 
 class TestCanvas(unittest.TestCase):
     def setUp(self):
@@ -216,8 +217,7 @@ class TestCanvas(unittest.TestCase):
         href = "str"
         cx1, cy1, rx, cx2, cy2, ry = 0.0 , 2.0, 3.0, 4.0, 5.0, 6.0
         data = (href, cx1, cy1, rx, cx2, cy2, ry)
-        expectedList = ["\tvar %s = ctx.createRadialGradient\
-                   (%f,%f,%f,%f,%f,%f);\n" % data]
+        expectedList = ["\tvar %s = ctx.createRadialGradient(%f,%f,%f,%f,%f,%f);\n" % data]
         self.canvas.createRadialGradient(href, cx1, cy1, rx, cx2, cy2, ry)
         self.assertEqual(self.canvas.code, expectedList)
     
@@ -316,28 +316,37 @@ class TestCanvas(unittest.TestCase):
     def testRestore(self):
         self.canvas.restore()
         self.assertEqual(self.canvas.code[0],"\tctx.restore();\n")
-        
-    def testSetGradient(self):
-        retorno = self.canvas.setGradient(None)
-        self.assertEqual(retorno,None)
-        
+                    
     def testClosePath(self):
-        text1, text2, text3 = "ctx.closePath();","ctx.fill();","ctx.stroke();"
+        text = "ctx.closePath();"
         self.canvas.closePath(False)
         self.assertEquals(self.canvas.code, [])
         
-        self.canvas.style["fill"] = "none"
-        self.canvas.style["stroke"] = "none"
         self.canvas.closePath(True)                                    
-        self.assertEqual(self.canvas.code[0],"\t"+text1+"\n")
-
+        self.assertEqual(self.canvas.code[0],"\t"+text+"\n")
+        
+    def testFillWithValue(self):
+        text = "ctx.fill();"
         self.canvas.style["fill"] = "fill"
+        self.canvas.fill()
+        self.assertEqual(self.canvas.code[0],"\t"+text+"\n")
+    
+    def testFillWithoutValue(self):
+        self.canvas.style["fill"] = "none"
+        self.canvas.fill()
+        self.assertEqual(self.canvas.code,[])
+    
+    def testStrokeWithValue(self):
+        text = "ctx.stroke();"
         self.canvas.style["stroke"] = "stroke"
-        self.canvas.closePath(True)
-        self.assertEqual(self.canvas.code[1],"\t"+text1+"\n")
-        self.assertEqual(self.canvas.code[2],"\t"+text2+"\n")
-        self.assertEqual(self.canvas.code[3],"\t"+text3+"\n")
-
+        self.canvas.stroke()
+        self.assertEqual(self.canvas.code[0],"\t"+text+"\n")
+    
+    def testStrokeWithoutValue(self):
+        self.canvas.style["stroke"] = "none"
+        self.canvas.stroke()
+        self.assertEqual(self.canvas.code,[])
+        
         
 if __name__ == '__main__':
     unittest.main()

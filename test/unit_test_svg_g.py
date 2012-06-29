@@ -1,26 +1,18 @@
-'''
-Created on Apr 13, 2012
-
-@author: bublecamp
-'''
 import unittest
 import sys
-from inkex import Effect
 
 sys.path.append('..')
-
+from inkex import Effect
 from ink2canvas.svg.G import G
-from ink2canvas.svg.AbstractShape import AbstractShape
-from ink2canvas.svg.Element import Element
-import inkex
 from ink2canvas.canvas import Canvas
+
 
 class TestSvgG(unittest.TestCase):
 
     def setUp(self):
         self.effect = Effect()
         
-        self.document = self.effect.parse("arquivos_test/svg_g_unit_test.svg")
+        self.document = self.effect.parse("TestFiles/unit_test_svg_g.svg")
         root = self.effect.document.getroot()   
         self.node = self.findTag(root, "g")
             
@@ -36,7 +28,7 @@ class TestSvgG(unittest.TestCase):
 
     def testDraw(self):
         self.g.draw(False);
-        self.assertEqual(self.g.ctx.code, ['\tctx.transform(-0.866025, 0.500000, -0.500000, -0.866025, 0.000000, 0.000000);\n'])
+        self.assertEqual(self.g.canvasContext.code, ['\tctx.transform(-0.866025, 0.500000, -0.500000, -0.866025, 0.000000, 0.000000);\n'])
 
 if __name__ == "__main__":
     unittest.main()

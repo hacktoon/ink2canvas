@@ -14,13 +14,13 @@ class Root(object):
         self.linearGradient = {}
         self.radialGradient = {}
 
-    def buscaElementoPorId(self,idQueTenhoQueAchar,nosQueDevemSerDesenhados):
+    def searchElementById(self,idQueTenhoQueAchar,nosQueDevemSerDesenhados):
         retorno = None
         for noEmQuestao in nosQueDevemSerDesenhados:
             if(noEmQuestao.getId() == idQueTenhoQueAchar):
                 return noEmQuestao
             if(isinstance(noEmQuestao, G)):
-                retorno = self.buscaElementoPorId(idQueTenhoQueAchar, noEmQuestao.children)
+                retorno = self.searchElementById(idQueTenhoQueAchar, noEmQuestao.children)
                 if(retorno!=None):
                     break
         return retorno

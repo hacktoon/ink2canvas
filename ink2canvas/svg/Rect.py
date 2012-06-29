@@ -1,7 +1,7 @@
 from ink2canvas.svg.AbstractShape import AbstractShape
 
 class Rect(AbstractShape):
-    def get_data(self):
+    def getData(self):
         x = self.attr("x")
         y = self.attr("y")
         w = self.attr("width")

@@ -1,13 +1,11 @@
 from ink2canvas.svg.AbstractShape import AbstractShape
 
 class Circle(AbstractShape):
-    def __init__(self, command, node, ctx, rootTree):
-        AbstractShape.__init__(self, command, node, ctx, rootTree)
-        #Nota: Daniel/Gustavo - modificamos AbstractShape(self, command, node, ctx) 
-        #porque achamos que estava errado!
+    def __init__(self, command, node, canvasContext, rootTree):
+        AbstractShape.__init__(self, command, node, canvasContext, rootTree)
         self.command = "arc"
 
-    def get_data(self):
+    def getData(self):
         import math
         cx = self.attr("cx")
         cy = self.attr("cy")

@@ -1,18 +1,17 @@
 import sys
 import unittest
-from inkex import Effect
-sys.path.append('..')
 
-import inkex
+sys.path.append('..')
+from inkex import Effect
 from ink2canvas.canvas import Canvas
 from ink2canvas.svg.Line import Line
+
 
 class TestSvgLine(unittest.TestCase):
     def setUp(self):
         self.effect = Effect()
-        self.document = self.effect.parse("arquivos_test/svg_line_unit_test.svg")
+        self.document = self.effect.parse("TestFiles/unit_test_svg_line.svg")
         root = self.effect.document.getroot()
-        #self.node = self.findTag(root, "g")
         self.node = self.findTag(root, "line")
 
         self.canvas = Canvas(0, 0)    
@@ -25,8 +24,8 @@ class TestSvgLine(unittest.TestCase):
                 return node
         return ""  
  
-    def testGet_Data(self):
-        x, y = self.line.get_data()
+    def testGetData(self):
+        x, y = self.line.getData()
         self.assertEqual(x, ('M', (100.0, 300.0)) )
         self.assertEqual(y, ('L', (300.0, 100.0)) )
         
