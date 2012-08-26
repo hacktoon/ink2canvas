@@ -1,5 +1,4 @@
 from ink2canvas.svg.AbstractShape import AbstractShape
-from pip._pkgutil import get_data
 
 class Image(AbstractShape):
 
