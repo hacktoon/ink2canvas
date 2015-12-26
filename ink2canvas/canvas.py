@@ -115,7 +115,7 @@ class Canvas:
                 self.write("ctx.strokeStyle = %s;" % value)
 
     def setStrokeWidth(self, value):
-        self.write("ctx.lineWidth = %f;" % inkex.unittouu(value))
+        self.write("ctx.lineWidth = %f;" % self.unittouu(value))
 
     def setStrokeLinecap(self, value):
         self.write("ctx.lineCap = '%s';" % value)
