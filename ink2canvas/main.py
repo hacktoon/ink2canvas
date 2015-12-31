@@ -34,15 +34,15 @@ class Ink2Canvas(inkex.Effect):
         
         tmpWidth = svgRoot.get("width")
         if tmpWidth == None:        
-            width = inkex.unittouu("800")
+            width = self.unittouu("800")
         else:
-            width = inkex.unittouu(tmpWidth)
+            width = self.unittouu(tmpWidth)
             
         tmpHeight = svgRoot.get("height")
         if tmpHeight == None:
-            height = inkex.unittouu("600")
+            height = self.unittouu("600")
         else:
-            height = inkex.unittouu(tmpHeight)
+            height = self.unittouu(tmpHeight)
             
         self.core.canvas = Canvas(width, height)
         self.core.createTree(svgRoot)
