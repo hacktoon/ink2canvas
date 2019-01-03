@@ -11,22 +11,22 @@ class Image(AbstractShape):
         return x, y, width, height, href
     
     def draw(self, isClip=False):
-        if self.has_transform():
-            trans_matrix = self.get_transform()
-            self.ctx.transform(*trans_matrix) # unpacks argument list
+        if self.hasTransform():
+            trans_matrix = self.getTransform()
+            self.canvasContext.transform(*trans_matrix) # unpacks argument list
         if not isClip:
-            style = self.get_style()
-            self.set_style(style)
-            self.ctx.beginPath()
+            style = self.getStyle()
+            self.setStyle(style)
+            self.canvasContext.beginPath()
 
         x, y, width, height, href = self.get_data()
         
-        self.ctx.write("\n\tvar image = new Image();")
-        self.ctx.write("\n\timage.src = '" + href +"';")
-        self.ctx.write("\n\tctx.drawImage(image, %f,%f,%f,%f);" %(x,y,width, height))
+        self.canvasContext.write("\n\tvar image = new Image();")
+        self.canvasContext.write("\n\timage.src = '" + href +"';")
+        self.canvasContext.write("\n\tctx.drawImage(image, %f,%f,%f,%f);" %(x,y,width, height))
         
         if not isClip: 
-            self.ctx.closePath()
+            self.canvasContext.closePath()
         
         
 

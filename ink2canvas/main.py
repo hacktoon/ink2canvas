@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 '''
 
 import sys
-import inkex
+from lib import inkex
 from canvas import Canvas
 from Ink2CanvasCore import Ink2CanvasCore
  
@@ -34,15 +34,15 @@ class Ink2Canvas(inkex.Effect):
         
         tmpWidth = svgRoot.get("width")
         if tmpWidth == None:        
-            width = self.unittouu("800")
+            width = inkex.unittouu("800")
         else:
-            width = self.unittouu(tmpWidth)
+            width = inkex.unittouu(tmpWidth)
             
         tmpHeight = svgRoot.get("height")
         if tmpHeight == None:
-            height = self.unittouu("600")
+            height = inkex.unittouu("600")
         else:
-            height = self.unittouu(tmpHeight)
+            height = inkex.unittouu(tmpHeight)
             
         self.core.canvas = Canvas(width, height)
         self.core.createTree(svgRoot)
