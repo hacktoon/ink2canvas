@@ -14,7 +14,8 @@ try:
     svg_input = sys.argv[1]
 except IndexError:
     print "Provide a SVG file to be parsed.\n"
-    print "Usage: python standalone.py INPUT [OUTPUT]"
+    print "Usage: python standalone.py INPUT [OUTPUT]\n"
+    print "For stdout use dash (-) as OUTPUT."
     sys.exit()
 
 #catch optional second argument for output file
@@ -29,7 +30,10 @@ i2c.parse(svg_input)
 #applies the extension effect
 i2c.effect()
 
-output_file = open(html_output, "w")
+if html_output != '-':
+    output_file = open(html_output, "w")
+else:
+    output_file = sys.stdout
 #get the html code
 content = i2c.core.canvas.output()
 output_file.write(content.encode("utf-8"))
