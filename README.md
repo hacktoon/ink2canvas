@@ -26,6 +26,8 @@ Open Inkscape file and choose "HTML5 output" option at "Save as" menu.
 
 python standalone.py INPUT [OUTPUT]
 
+OUTPUT can be defined as dash (-) for stdout output.
+
 You can find good SVG sample files at [Croczilla](http://croczilla.com/bits_and_pieces/svg/samples).
     
 ## Project Map
