@@ -27,7 +27,7 @@ class AbstractShape(Element):
                 parent = parent.getParent()        
         
         #remove any trailing space in dict keys/values
-        style = dict([(str.strip(k), str.strip(v)) for k,v in style.items()])
+        style = dict([(str.strip(str(k)), str.strip(str(v))) for k,v in style.items()])
         return style
 
     def setStyle(self, style):
