@@ -60,6 +60,9 @@ class Canvas:
         for x in style.values():
             if x != "":
                 self.styleCache.update(style)
+
+    
+
     
 
 
@@ -69,6 +72,25 @@ class Canvas:
     def createLinearGradient(self, href, x1, y1, x2, y2):
         data = (href, x1, y1, x2, y2)
         self.write("var %s = ctx.createLinearGradient(%f,%f,%f,%f);" % data)
+
+
+    def getGradient(self, gradient_id):
+        try:
+            gradient_element = self.findGradientElementById(gradient_id)
+            if gradient_element is not None:
+                gradient_type = gradient_element.get("gradientUnits", "objectBoundingBox")
+                if gradient_type == "userSpaceOnUse":
+                    # Handle userSpaceOnUse gradient
+                    return self.parseUserSpaceOnUseGradient(gradient_element)
+                elif gradient_type == "objectBoundingBox":
+                    # Handle objectBoundingBox gradient
+                    return self.parseObjectBoundingBoxGradient(gradient_element)
+        except Exception as e:
+            print(f"Error retrieving gradient {gradient_id}: {e}")
+        
+        # Return a default value or handle errors appropriately.
+        return "linearGradient(0, 0, 1, 1)"  # Placeholder value
+    
 
     def createRadialGradient(self, href, cx1, cy1, rx, cx2, cy2, ry):
         data = (href, cx1, cy1, rx, cx2, cy2, ry)
